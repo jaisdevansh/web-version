@@ -37,6 +37,9 @@ export default function EventsPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['events', page],
     queryFn: () => fetchEvents(page),
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    gcTime: 1000 * 60 * 30, // Keep in memory for 30 minutes
+    refetchOnWindowFocus: false, // Don't refetch when switching tabs
   });
 
   const events: EventData[] = data?.data || [];
