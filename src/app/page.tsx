@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import { ShieldCheck, Ticket, Users, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Ticket, Users, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 const SLIDES = [
     {
@@ -169,6 +169,64 @@ export default function WelcomeScreen() {
                         View All Features <ArrowRight className="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" />
                     </Link>
                 </motion.div>
+
+                {/* Deep Dive Feature: Guest Management */}
+                <div className="mt-32 border-t border-white/5 pt-32">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                        <motion.div 
+                            initial={{ opacity: 0, x: -50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true, margin: "-100px" }}
+                            transition={{ duration: 0.8 }}
+                            className="space-y-8"
+                        >
+                            <div className="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+                                <Users className="w-7 h-7 text-purple-400" />
+                            </div>
+                            <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight leading-tight">
+                                A Frictionless Front Door Experience
+                            </h2>
+                            <p className="text-lg text-white/60 font-light leading-relaxed">
+                                Your door staff shouldn't be scrolling through clipboards. Our sub-100ms sync engine ensures that guestlists, promoter tracking, and ban-lists are instantly updated across all devices.
+                            </p>
+                            <ul className="space-y-4">
+                                {['Sub-100ms Offline Sync', 'Promoter Performance Tracking', 'Instant ID Verification', 'VIP Arrival Alerts'].map((item, i) => (
+                                    <li key={i} className="flex items-center space-x-3 text-white/80">
+                                        <CheckCircle2 className="w-5 h-5 text-purple-500" />
+                                        <span>{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </motion.div>
+                        
+                        <motion.div 
+                            initial={{ opacity: 0, x: 50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true, margin: "-100px" }}
+                            transition={{ duration: 0.8 }}
+                            className="relative"
+                        >
+                            <div className="aspect-[4/3] rounded-3xl bg-gradient-to-br from-purple-900/40 to-indigo-900/20 border border-white/10 p-1 flex items-center justify-center overflow-hidden shadow-2xl relative group">
+                                <div className="absolute inset-0 bg-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                <img 
+                                    src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1200&auto=format&fit=crop" 
+                                    alt="Front Door Scanning" 
+                                    className="w-full h-full object-cover rounded-2xl opacity-60 mix-blend-screen"
+                                />
+                                {/* Floating UI Element */}
+                                <div className="absolute top-8 left-8 bg-black/80 backdrop-blur-xl border border-white/10 p-5 rounded-2xl shadow-2xl transform group-hover:scale-105 transition-transform duration-500">
+                                    <div className="flex items-center space-x-4">
+                                        <ShieldCheck className="w-8 h-8 text-indigo-400" />
+                                        <div>
+                                            <p className="text-white font-medium">Identity Verified</p>
+                                            <p className="text-indigo-300 text-sm">Welcome back, Alex.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                </div>
             </div>
         </div>
 
