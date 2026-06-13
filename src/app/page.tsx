@@ -5,6 +5,10 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import FeaturesPage from '@/app/features/page';
+import AboutPage from '@/app/about/page';
+import ContactPage from '@/app/contact/page';
+
 const SLIDES = [
     {
         id: '1',
@@ -37,6 +41,7 @@ export default function WelcomeScreen() {
     }, []);
 
     return (
+        <main className="w-full flex flex-col min-h-screen bg-black overflow-x-hidden">
         <div className="relative flex min-h-screen w-full flex-col items-center justify-between overflow-hidden bg-black text-white selection:bg-blue-500/30">
             {/* Background Image Carousel */}
             <AnimatePresence mode="wait">
@@ -57,7 +62,7 @@ export default function WelcomeScreen() {
             {/* Logo Section */}
             <div className="relative z-10 mt-20 flex flex-col items-center pointer-events-none">
                 <div className="flex h-[130px] w-[130px] items-center justify-center rounded-full bg-white/5 backdrop-blur-sm border border-white/20 shadow-[0_0_40px_rgba(255,255,255,0.1)]">
-                    <span className="text-4xl font-light tracking-[0.3em] text-white/90 translate-x-[0.15em]">E C</span>
+                    <span className="text-4xl font-light tracking-[0.1em] text-white/90 translate-x-[0.05em]">EC</span>
                 </div>
                 <div className="mt-8 flex flex-col items-center">
                     <h1 className="text-3xl font-light tracking-[0.55em] text-white translate-x-[0.275em]">ENTRY CLUB</h1>
@@ -118,5 +123,19 @@ export default function WelcomeScreen() {
                 </div>
             </div>
         </div>
+
+        {/* Scrolling Sections */}
+        <div className="relative z-20 bg-black flex flex-col">
+            <div id="features">
+                <FeaturesPage />
+            </div>
+            <div id="about">
+                <AboutPage />
+            </div>
+            <div id="contact">
+                <ContactPage />
+            </div>
+        </div>
+        </main>
     );
 }
