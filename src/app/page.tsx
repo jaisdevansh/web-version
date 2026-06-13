@@ -5,9 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import FeaturesPage from '@/app/features/page';
-import AboutPage from '@/app/about/page';
-import ContactPage from '@/app/contact/page';
+import { ShieldCheck, Ticket, Users, ArrowRight } from 'lucide-react';
 
 const SLIDES = [
     {
@@ -125,15 +123,70 @@ export default function WelcomeScreen() {
         </div>
 
         {/* Scrolling Sections */}
-        <div className="relative z-20 bg-black flex flex-col">
-            <div id="features">
-                <FeaturesPage />
+        {/* Features Preview */}
+        <div className="relative z-20 bg-black py-24 px-6">
+            <div className="max-w-6xl mx-auto">
+                <div className="text-center mb-16">
+                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Premium Features</h2>
+                    <p className="text-white/50 text-lg">Everything you need to manage your exclusive venue.</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="p-8 rounded-3xl bg-white/[0.03] border border-white/[0.05] hover:bg-white/[0.08] transition-all">
+                        <Ticket className="w-8 h-8 text-blue-400 mb-6" />
+                        <h3 className="text-xl font-bold text-white mb-3">Smart Ticketing</h3>
+                        <p className="text-white/50 leading-relaxed">Sell GA tickets and manage VIP table minimums flawlessly.</p>
+                    </div>
+                    <div className="p-8 rounded-3xl bg-white/[0.03] border border-white/[0.05] hover:bg-white/[0.08] transition-all">
+                        <Users className="w-8 h-8 text-purple-400 mb-6" />
+                        <h3 className="text-xl font-bold text-white mb-3">Guest Management</h3>
+                        <p className="text-white/50 leading-relaxed">Instant offline sync for guestlists and promoter tracking.</p>
+                    </div>
+                    <div className="p-8 rounded-3xl bg-white/[0.03] border border-white/[0.05] hover:bg-white/[0.08] transition-all">
+                        <ShieldCheck className="w-8 h-8 text-indigo-400 mb-6" />
+                        <h3 className="text-xl font-bold text-white mb-3">Bank-Grade Security</h3>
+                        <p className="text-white/50 leading-relaxed">Dynamic QR codes and end-to-end encryption eliminate fraud.</p>
+                    </div>
+                </div>
+                <div className="text-center mt-12">
+                    <Link href="/features" className="text-blue-400 hover:text-blue-300 font-semibold inline-flex items-center">
+                        View All Features <ArrowRight className="w-4 h-4 ml-2" />
+                    </Link>
+                </div>
             </div>
-            <div id="about">
-                <AboutPage />
+        </div>
+
+        {/* About Preview */}
+        <div className="relative z-20 bg-[#050505] py-24 px-6 border-y border-white/5">
+            <div className="max-w-4xl mx-auto text-center space-y-8">
+                <h2 className="text-3xl md:text-5xl font-bold text-white">The Entry Club Story</h2>
+                <p className="text-lg text-white/60 font-light leading-relaxed">
+                    Founded by industry veterans, Entry Club was built to solve the real-world operational challenges faced by premium venue owners, promoters, and event organizers every single night.
+                </p>
+                <Link href="/about" className="inline-block px-8 py-4 bg-white/10 hover:bg-white/20 text-white rounded-full font-semibold transition-all">
+                    Read Our Full Story
+                </Link>
             </div>
-            <div id="contact">
-                <ContactPage />
+        </div>
+
+        {/* Contact Form Preview */}
+        <div className="relative z-20 bg-black py-24 px-6">
+            <div className="max-w-3xl mx-auto">
+                <div className="text-center mb-12">
+                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Get in Touch</h2>
+                    <p className="text-white/50">Ready to elevate your venue? Drop us a line.</p>
+                </div>
+                <div className="bg-white/[0.02] border border-white/10 rounded-3xl p-8 backdrop-blur-xl">
+                    <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); alert('Message sent!'); }}>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <input type="text" placeholder="Name" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors" />
+                            <input type="email" placeholder="Email" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors" />
+                        </div>
+                        <textarea placeholder="Your Message" rows={4} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors resize-none"></textarea>
+                        <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-colors">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
         </main>
