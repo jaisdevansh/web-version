@@ -60,8 +60,8 @@ api.interceptors.response.use(
         toast.error(errorMessage);
       }
     } else if (error.request) {
-      // Network Errors
-      toast.error('Network error. Please check your internet connection.');
+      // Network Errors (commented out to prevent spam during development when backend is down)
+      // toast.error('Network error. Please check your internet connection.');
     } else {
       toast.error('Something went wrong.');
     }
