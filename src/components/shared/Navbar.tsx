@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Sparkles } from 'lucide-react';
 
+import { MobileSidebar } from '@/components/shared/Sidebar';
+
 export default function Navbar() {
   const [mounted, setMounted] = useState(false);
   const { isAuthenticated, logout } = useAuthStore();
@@ -21,6 +23,11 @@ export default function Navbar() {
       <div className="container mx-auto flex h-16 md:h-20 items-center justify-between px-4 md:px-8">
         {/* Left: Logo */}
         <div className="flex items-center md:w-1/3 shrink-0">
+          {mounted && pathname?.startsWith('/dashboard') && (
+            <div className="mr-2 md:hidden">
+              <MobileSidebar />
+            </div>
+          )}
           <Link href="/" className="flex items-center space-x-2 group">
             <span className="font-bold text-base md:text-xl tracking-tight text-white drop-shadow-md">
               ENTRY CLUB

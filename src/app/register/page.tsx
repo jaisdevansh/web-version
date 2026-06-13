@@ -224,7 +224,7 @@ export default function RegisterPage() {
             </div>
           </div>
           
-          <Button variant="outline" type="button" className="w-full h-12 rounded-xl border-white/10 bg-white/5 hover:bg-white/10 text-white" disabled={isLoading} onClick={handleGoogleLogin}>
+          <Button variant="outline" type="button" className="w-full h-12 rounded-xl border border-white/20 bg-white text-black hover:bg-gray-100 font-semibold shadow-lg transition-all" disabled={isLoading} onClick={handleGoogleLogin}>
             <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
               <path
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
