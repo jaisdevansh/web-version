@@ -48,7 +48,7 @@ export default function RegisterPage() {
       setCurrentImageIndex((prev) => (prev + 1) % images.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [images.length]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
