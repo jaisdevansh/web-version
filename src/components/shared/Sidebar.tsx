@@ -9,7 +9,6 @@ const sidebarItems = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'My Tickets', href: '/dashboard/tickets', icon: Ticket },
   { name: 'Activity History', href: '/dashboard/history', icon: Clock },
-  { name: 'Notifications', href: '/dashboard/notifications', icon: Bell },
   { name: 'Profile', href: '/profile', icon: User },
 
 ];
