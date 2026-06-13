@@ -18,11 +18,11 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/5 bg-black/40 backdrop-blur-xl supports-[backdrop-filter]:bg-black/20">
-      <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-8">
+      <div className="container mx-auto flex h-16 md:h-20 items-center justify-between px-4 md:px-8">
         {/* Left: Logo */}
-        <div className="flex items-center md:w-1/3">
+        <div className="flex items-center md:w-1/3 shrink-0">
           <Link href="/" className="flex items-center space-x-2 group">
-            <span className="font-bold text-xl tracking-tight text-white drop-shadow-md hidden sm:inline-block">
+            <span className="font-bold text-base md:text-xl tracking-tight text-white drop-shadow-md">
               ENTRY CLUB
             </span>
           </Link>
@@ -45,26 +45,33 @@ export default function Navbar() {
               About
               <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-purple-500 transition-all duration-300 group-hover:w-full"></span>
             </Link>
+            <Link
+              href="/contact"
+              className="relative text-blue-400 hover:text-white transition-colors duration-300 group"
+            >
+              Contact
+              <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-indigo-500 transition-all duration-300 group-hover:w-full"></span>
+            </Link>
           </nav>
         </div>
         
         {/* Right: Actions */}
-        <div className="flex items-center justify-end space-x-2 md:w-1/3">
-          <nav className="flex items-center space-x-3">
+        <div className="flex items-center justify-end md:w-1/3 shrink-0">
+          <nav className="flex items-center space-x-2 md:space-x-3">
             {!mounted ? null : isAuthenticated ? (
               <>
                 <Link href="/dashboard">
-                  <Button variant="ghost" className="text-white hover:bg-white/10 hover:text-white rounded-full px-6">Dashboard</Button>
+                  <Button variant="ghost" className="text-white hover:bg-white/10 hover:text-white rounded-full px-3 md:px-6 h-8 md:h-10 text-xs md:text-sm">Dashboard</Button>
                 </Link>
-                <Button variant="outline" onClick={logout} className="border-none bg-red-600 text-white hover:bg-red-700 rounded-full px-6 cursor-pointer">Log out</Button>
+                <Button onClick={logout} className="bg-red-600/90 hover:bg-red-500 text-white border border-red-500/30 rounded-full px-4 md:px-6 h-8 md:h-10 text-xs md:text-sm cursor-pointer shadow-[0_0_15px_rgba(220,38,38,0.3)] transition-all">Log out</Button>
               </>
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" className="text-white/70 hover:text-white hover:bg-white/5 rounded-full px-6">Log in</Button>
+                  <Button variant="ghost" className="text-white/70 hover:text-white hover:bg-white/5 rounded-full px-3 md:px-6 h-8 md:h-10 text-xs md:text-sm">Log in</Button>
                 </Link>
                 <Link href="/register">
-                  <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-500 hover:to-indigo-500 border-0 rounded-full px-8 shadow-lg shadow-blue-500/25 transition-all hover:shadow-blue-500/40 hover:-translate-y-0.5">
+                  <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-500 hover:to-indigo-500 border-0 rounded-full px-4 md:px-8 h-8 md:h-10 text-xs md:text-sm shadow-lg shadow-blue-500/25 transition-all hover:shadow-blue-500/40 hover:-translate-y-0.5">
                     Sign up
                   </Button>
                 </Link>

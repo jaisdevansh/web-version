@@ -2,6 +2,66 @@
 
 import { motion } from "framer-motion";
 import { ShieldCheck, TrendingUp, Zap, Lock, Globe, Users } from "lucide-react";
+import { useState, useEffect } from "react";
+
+function LiveStats({ itemVariants }: { itemVariants: any }) {
+  const [venues, setVenues] = useState(542);
+  const [tickets, setTickets] = useState(10482930);
+  const [kyc, setKyc] = useState(64);
+  const [uptime, setUptime] = useState(99.99);
+
+  useEffect(() => {
+    // Venues slowly increase
+    const vInterval = setInterval(() => {
+      setVenues(prev => prev + 1);
+    }, 8500);
+
+    // Tickets increase quickly
+    const tInterval = setInterval(() => {
+      setTickets(prev => prev + Math.floor(Math.random() * 5) + 1);
+    }, 1200);
+
+    // KYC fluctuates
+    const kInterval = setInterval(() => {
+      setKyc(Math.floor(Math.random() * 30) + 45); // between 45 and 75ms
+    }, 2000);
+
+    // Uptime fluctuates slightly
+    const uInterval = setInterval(() => {
+      setUptime(prev => prev === 99.99 ? 99.98 : 99.99);
+    }, 15000);
+
+    return () => {
+      clearInterval(vInterval);
+      clearInterval(tInterval);
+      clearInterval(kInterval);
+      clearInterval(uInterval);
+    };
+  }, []);
+
+  const stats = [
+    { icon: Globe, label: "Venues Worldwide", value: venues.toLocaleString(), color: "text-blue-400" },
+    { icon: Users, label: "Tickets Sold", value: tickets.toLocaleString(), color: "text-purple-400" },
+    { icon: Zap, label: "Instant KYC", value: `${kyc}ms`, color: "text-indigo-400" },
+    { icon: ShieldCheck, label: "Uptime", value: `${uptime}%`, color: "text-blue-300" }
+  ];
+
+  return (
+    <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      {stats.map((stat, i) => (
+        <motion.div 
+          key={i}
+          whileHover={{ y: -5 }}
+          className="flex flex-col items-center text-center p-8 rounded-3xl bg-white/[0.02] border border-white/[0.05] hover:border-blue-500/30 transition-colors backdrop-blur-sm"
+        >
+          <stat.icon className={`h-8 w-8 ${stat.color} mb-4`} />
+          <h4 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-2 tabular-nums">{stat.value}</h4>
+          <p className="text-xs text-white/50 uppercase tracking-widest font-semibold">{stat.label}</p>
+        </motion.div>
+      ))}
+    </motion.div>
+  );
+}
 
 export default function AboutPage() {
   const container = {
@@ -27,11 +87,26 @@ export default function AboutPage() {
       </div>
 
       <motion.div 
-        className="container relative z-10 px-4 md:px-6 mx-auto space-y-32"
+        className="container relative z-10 px-4 md:px-6 mx-auto space-y-24"
         variants={container}
         initial="hidden"
         animate="show"
       >
+        {/* App Banner */}
+        <motion.div variants={item} className="relative z-20 max-w-4xl mx-auto bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-indigo-600/20 border border-white/10 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-6 backdrop-blur-xl shadow-2xl">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-white/5 rounded-full shrink-0">
+              <Zap className="w-6 h-6 text-blue-400" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-white mb-1">Looking for a smoother flow?</h3>
+              <p className="text-white/70 text-sm font-light leading-relaxed">For the best experience, faster bookings, and exclusive features, please use the Entry Club mobile app.</p>
+            </div>
+          </div>
+          <button className="whitespace-nowrap px-8 py-3 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)] text-sm shrink-0">
+            Download App
+          </button>
+        </motion.div>
         {/* Hero Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div variants={item} className="space-y-8">
@@ -70,25 +145,8 @@ export default function AboutPage() {
           </motion.div>
         </div>
 
-        {/* Stats Section */}
-        <motion.div variants={item} className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            { icon: Globe, label: "Venues Worldwide", value: "500+", color: "text-blue-400" },
-            { icon: Users, label: "Tickets Sold", value: "10M+", color: "text-purple-400" },
-            { icon: Zap, label: "Instant KYC", value: "<100ms", color: "text-indigo-400" },
-            { icon: ShieldCheck, label: "Uptime", value: "99.9%", color: "text-blue-300" }
-          ].map((stat, i) => (
-            <motion.div 
-              key={i}
-              whileHover={{ y: -5 }}
-              className="flex flex-col items-center text-center p-8 rounded-3xl bg-white/[0.02] border border-white/[0.05] hover:border-blue-500/30 transition-colors backdrop-blur-sm"
-            >
-              <stat.icon className={`h-8 w-8 ${stat.color} mb-4`} />
-              <h4 className="text-4xl font-bold text-white tracking-tight mb-2">{stat.value}</h4>
-              <p className="text-xs text-white/50 uppercase tracking-widest font-semibold">{stat.label}</p>
-            </motion.div>
-          ))}
-        </motion.div>
+        {/* Live Stats Section */}
+        <LiveStats itemVariants={item} />
 
         {/* The Technology / Foundation Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">

@@ -49,7 +49,7 @@ export const initiateRazorpayPayment = async (
     }
 
     // 1. Create order on backend
-    const orderRes = await axiosInstance.post('/user/payments/create-order', {
+    const orderRes = await axiosInstance.post('/api/v1/payments/create-order', {
       amount: paymentOptions.amount,
       currency: 'INR',
       receipt: paymentOptions.receipt,
@@ -73,7 +73,7 @@ export const initiateRazorpayPayment = async (
         handler: async function (response: any) {
           try {
             // 3. Verify payment on backend
-            const verifyRes = await axiosInstance.post('/user/payments/verify-payment', {
+            const verifyRes = await axiosInstance.post('/api/v1/payments/verify-payment', {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,

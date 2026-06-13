@@ -147,7 +147,7 @@ export default function WriteReviewPage() {
           </div>
           <div>
             <h2 className="font-bold text-lg">{targetName}</h2>
-            <p className="text-sm text-muted-foreground">How was your elite experience? ✨</p>
+            <p className="text-sm text-muted-foreground">How was your elite experience?</p>
           </div>
         </CardContent>
       </Card>

@@ -142,8 +142,7 @@ export default function ProfilePage() {
           </Card>
 
           <Button 
-            variant="outline" 
-            className="w-full py-6 rounded-2xl bg-red-600 border-none hover:bg-red-700 text-white flex items-center justify-center gap-2 transition-all cursor-pointer"
+            className="w-full py-6 rounded-2xl bg-red-600/90 border border-red-500/30 hover:bg-red-500 text-white flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(220,38,38,0.2)] transition-all cursor-pointer"
             onClick={handleLogout}
           >
             <LogOut className="w-5 h-5" />

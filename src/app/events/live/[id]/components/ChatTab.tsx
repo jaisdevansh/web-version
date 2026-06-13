@@ -10,7 +10,7 @@ export default function ChatTab() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['chatPeers'],
     queryFn: async () => {
-      const res = await axiosInstance.get('/user/chat/peers');
+      const res = await axiosInstance.get('/api/v1/chat/peers');
       return res.data.data;
     },
   });

@@ -12,7 +12,7 @@ export default function RadarTab({ eventId }: { eventId: string }) {
     queryKey: ['radar', eventId],
     queryFn: async () => {
       // The radar usually accepts location params, but if bound to an event, the backend infers it
-      const res = await axiosInstance.get('/user/radar/nearby');
+      const res = await axiosInstance.get('/api/v1/radar/nearby');
       return res.data.data;
     },
   });

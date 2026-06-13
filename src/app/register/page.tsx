@@ -26,6 +26,7 @@ import api from '@/lib/axios';
 const formSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Invalid email address'),
+  phone: z.string().min(10, 'Phone must be at least 10 digits'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
@@ -54,6 +55,7 @@ export default function RegisterPage() {
     defaultValues: {
       name: '',
       email: '',
+      phone: '',
       password: '',
     },
   });
@@ -177,6 +179,20 @@ export default function RegisterPage() {
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white/70">Phone Number</FormLabel>
+                      <FormControl>
+                        <Input className="bg-white/5 border-white/10 text-white focus-visible:ring-purple-500 h-12 rounded-xl" placeholder="Your phone number" {...field} disabled={isLoading} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
                 <FormField
                   control={form.control}
                   name="password"

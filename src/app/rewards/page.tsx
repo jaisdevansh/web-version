@@ -51,13 +51,13 @@ export default function RewardsPage() {
 
           {/* Empty State Card */}
           <div className="bg-[#11111A]/50 border border-dashed border-white/[0.15] rounded-[2rem] p-12 text-center backdrop-blur-sm">
-            <p className="text-[#8888a0] text-lg font-medium">You haven't redeemed any<br/>coupons yet. 😔</p>
+            <p className="text-[#8888a0] text-lg font-medium">You haven't redeemed any<br/>coupons yet.</p>
           </div>
           </div>
 
           {/* Right Column: Redeem Points Section */}
           <div className="w-full lg:w-7/12 bg-[#0C0C16] border border-white/[0.05] rounded-[2rem] p-8 lg:p-10 shadow-2xl">
-            <h3 className="text-xs font-bold tracking-[0.2em] text-white/60 uppercase mb-8">Redeem Points 💎</h3>
+            <h3 className="text-xs font-bold tracking-[0.2em] text-white/60 uppercase mb-8">Redeem Points</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               

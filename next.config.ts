@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  compress: true, // Enable gzip compression
+  output: 'standalone', // Drastically reduces deployment size and startup time
   images: {
     remotePatterns: [
       {

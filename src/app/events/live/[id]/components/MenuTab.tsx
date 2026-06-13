@@ -69,7 +69,7 @@ export default function MenuTab({ eventId, hostId }: { eventId: string; hostId: 
         tipAmount: 0,
       };
 
-      const res = await axiosInstance.post('/user/payments/food/order', orderPayload);
+      const res = await axiosInstance.post('/api/v1/payments/food/order', orderPayload);
       if (res.data.success) {
         toast.success('Order placed successfully! It will be brought to your table.');
         setCart({});
