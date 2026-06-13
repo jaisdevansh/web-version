@@ -198,7 +198,7 @@ export default function EventsPage() {
                             {event.displayPrice !== null ? `₹${event.displayPrice}` : 'Free'}
                           </p>
                         </div>
-                        <Link href={`/events/${event._id}`}>
+                        <Link href={`/dashboard/events/${event._id}`}>
                           <Button className="bg-white/10 hover:bg-blue-600 text-white rounded-xl font-bold border border-white/5 hover:border-transparent transition-all shadow-none">
                             Book Now
                           </Button>

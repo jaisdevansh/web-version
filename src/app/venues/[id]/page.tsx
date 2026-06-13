@@ -191,7 +191,7 @@ export default function VenueDetailsPage() {
                 const price = event.tickets?.length > 0 ? event.tickets[0].price : 2000;
                 
                 return (
-                  <Link href={`/events/${event._id}`} key={event._id}>
+                  <Link href={`/dashboard/events/${event._id}`} key={event._id}>
                     <div className="bg-[#111] border border-white/10 rounded-2xl p-4 flex items-center gap-4 hover:border-primary/50 transition-colors">
                       <div className="bg-white/5 rounded-xl p-3 flex flex-col items-center justify-center min-w-[60px]">
                         <span className="text-xs font-bold text-primary uppercase">{dateObj.toLocaleString('default', { month: 'short' })}</span>
@@ -217,7 +217,7 @@ export default function VenueDetailsPage() {
 
       {events.length > 0 && (
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#050505] via-[#050505] to-transparent z-50">
-          <Link href={`/events/${events[0]._id}`}>
+          <Link href={`/dashboard/events/${events[0]._id}`}>
             <Button className="w-full max-w-md mx-auto flex h-14 text-lg font-bold bg-primary hover:bg-primary/90 rounded-2xl shadow-lg shadow-primary/20">
               Book Next Event
             </Button>

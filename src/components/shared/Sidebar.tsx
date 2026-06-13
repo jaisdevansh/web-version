@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 
 const sidebarItems = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Events', href: '/events', icon: Compass },
+  { name: 'Events', href: '/dashboard/events', icon: Compass },
   { name: 'My Tickets', href: '/dashboard/tickets', icon: Ticket },
   { name: 'Activity History', href: '/dashboard/history', icon: Clock },
   { name: 'Profile', href: '/profile', icon: User },
