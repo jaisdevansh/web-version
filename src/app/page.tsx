@@ -127,51 +127,8 @@ export default function WelcomeScreen() {
         <div className="relative z-20 bg-black py-32 px-6 overflow-hidden">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="max-w-6xl mx-auto relative z-10">
-                <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="text-center mb-20"
-                >
-                    <h2 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-white/90 to-white/60 mb-6">Premium Features</h2>
-                    <p className="text-white/50 text-xl font-light max-w-2xl mx-auto">Everything you need to manage your exclusive venue with military precision.</p>
-                </motion.div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {[
-                        { icon: Ticket, title: "Smart Ticketing", desc: "Sell GA tickets and manage VIP table minimums flawlessly.", color: "text-blue-400", bg: "group-hover:bg-blue-500/10" },
-                        { icon: Users, title: "Guest Management", desc: "Instant offline sync for guestlists and promoter tracking.", color: "text-purple-400", bg: "group-hover:bg-purple-500/10" },
-                        { icon: ShieldCheck, title: "Bank-Grade Security", desc: "Dynamic QR codes and end-to-end encryption eliminate fraud.", color: "text-indigo-400", bg: "group-hover:bg-indigo-500/10" }
-                    ].map((feature, i) => (
-                        <motion.div 
-                            key={i}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: i * 0.1, duration: 0.5 }}
-                            className="group relative p-10 rounded-[2rem] bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.15] hover:-translate-y-2 transition-all duration-500 overflow-hidden backdrop-blur-xl"
-                        >
-                            <div className={`absolute inset-0 opacity-0 transition-opacity duration-500 ${feature.bg}`} />
-                            <div className="relative z-10">
-                                <feature.icon className={`w-10 h-10 ${feature.color} mb-8 transform group-hover:scale-110 transition-transform duration-500`} />
-                                <h3 className="text-2xl font-bold text-white mb-4 tracking-tight">{feature.title}</h3>
-                                <p className="text-white/50 leading-relaxed font-light">{feature.desc}</p>
-                            </div>
-                        </motion.div>
-                    ))}
-                </div>
-                <motion.div 
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    className="text-center mt-16"
-                >
-                    <Link href="/features" className="group inline-flex items-center text-blue-400 hover:text-white font-semibold text-lg transition-colors">
-                        View All Features <ArrowRight className="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                </motion.div>
-
                 {/* Deep Dive Feature: Guest Management */}
-                <div className="mt-32 border-t border-white/5 pt-32">
+                <div>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                         <motion.div 
                             initial={{ opacity: 0, x: -50 }}
