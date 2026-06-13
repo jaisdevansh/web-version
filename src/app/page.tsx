@@ -249,7 +249,7 @@ export default function WelcomeScreen() {
 
         {/* Scrolling Sections */}
         {/* Features Preview */}
-        <div className="relative z-20 bg-black py-32 px-6 overflow-hidden">
+        <div className="relative z-20 bg-black pt-32 pb-12 px-6 overflow-hidden">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="max-w-6xl mx-auto relative z-10">
                 <RotatingFeatureSection />
@@ -257,7 +257,7 @@ export default function WelcomeScreen() {
         </div>
 
         {/* About Preview */}
-        <div className="relative z-20 bg-[#020202] py-32 px-6 border-y border-white/[0.02] overflow-hidden">
+        <div className="relative z-20 bg-[#020202] pt-12 pb-32 px-6 border-y border-white/[0.02] overflow-hidden">
             <div className="absolute top-[40%] right-[-10%] w-[30%] h-[50%] rounded-full bg-purple-600/10 blur-[150px] pointer-events-none" />
             <div className="max-w-7xl mx-auto relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
