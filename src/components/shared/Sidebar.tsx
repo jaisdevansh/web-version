@@ -57,11 +57,11 @@ import { Button } from '@/components/ui/button';
 export function MobileSidebar() {
   return (
     <Sheet>
-      <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" className="md:hidden">
-          <Menu className="h-5 w-5" />
-          <span className="sr-only">Toggle navigation menu</span>
-        </Button>
+      <SheetTrigger
+        render={<Button variant="ghost" size="icon" className="md:hidden" />}
+      >
+        <Menu className="h-5 w-5" />
+        <span className="sr-only">Toggle navigation menu</span>
       </SheetTrigger>
       <SheetContent side="left" className="w-64 p-0">
         <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
