@@ -104,15 +104,6 @@ export default function EventsPage() {
         <div>
           <h2 className="text-3xl font-bold tracking-tight mb-6">Explore Events</h2>
           
-          {/* Featured Slides */}
-          <div className="mb-10 flex space-x-4 overflow-x-auto pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            {[ '/slide2.png', '/slide3.png' ].map((src, idx) => (
-              <div key={idx} className="shrink-0 w-[85vw] md:w-[60vw] lg:w-[45vw] xl:w-[35vw] aspect-[2/1] snap-center rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-[#12161f]">
-                <img src={src} alt={`Featured Slide ${idx + 2}`} className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1540039155732-d674d6e3f0be?q=80&w=1000&auto=format&fit=crop' }} />
-              </div>
-            ))}
-          </div>
-
           {/* Events Grid */}
           {error ? (
             <div className="flex h-[30vh] flex-col items-center justify-center space-y-4 bg-[#12161f] rounded-3xl border border-white/5">
@@ -120,12 +111,12 @@ export default function EventsPage() {
               <Button onClick={() => window.location.reload()} variant="outline" className="border-white/10 text-white hover:bg-white/10">Try Again</Button>
             </div>
           ) : isLoading ? (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-[#12161f] rounded-3xl overflow-hidden border border-white/5 h-[340px] flex flex-col">
-                  <Skeleton className="h-48 w-full bg-white/5" />
-                  <div className="p-5 flex-1 space-y-3">
-                    <Skeleton className="h-6 w-3/4 bg-white/5" />
+                <div key={i} className="bg-[#12161f] rounded-3xl overflow-hidden border border-white/5 h-[420px] flex flex-col">
+                  <Skeleton className="h-60 w-full bg-white/5" />
+                  <div className="p-6 flex-1 space-y-4">
+                    <Skeleton className="h-7 w-3/4 bg-white/5" />
                     <Skeleton className="h-4 w-1/2 bg-white/5" />
                     <Skeleton className="h-4 w-full bg-white/5 mt-auto" />
                   </div>
@@ -137,7 +128,7 @@ export default function EventsPage() {
               <p className="text-white/40">No events found in {activeCity === 'All' ? 'any city' : activeCity}. Check back later!</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {events.map((event, index) => (
                 <motion.div
                   key={event._id}
@@ -146,7 +137,7 @@ export default function EventsPage() {
                   transition={{ delay: index * 0.05 }}
                 >
                   <Card className="flex h-full flex-col overflow-hidden transition-all bg-[#12161f] border-white/5 hover:border-blue-500/50 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] rounded-3xl group">
-                    <div className="relative h-48 w-full overflow-hidden bg-[#1a1f2e]">
+                    <div className="relative h-60 w-full overflow-hidden bg-[#1a1f2e]">
                       {event.coverImage ? (
                         <img
                           src={event.coverImage}
@@ -167,20 +158,20 @@ export default function EventsPage() {
                       </div>
                     </div>
                     
-                    <CardHeader className="p-5 pb-2">
-                      <CardTitle className="line-clamp-1 text-xl font-bold text-white group-hover:text-blue-400 transition-colors">{event.title}</CardTitle>
+                    <CardHeader className="p-6 pb-2">
+                      <CardTitle className="line-clamp-1 text-2xl font-bold text-white group-hover:text-blue-400 transition-colors">{event.title}</CardTitle>
                       {event.venueName && (
-                        <CardDescription className="flex items-center text-xs mt-1.5 text-white/50 font-medium">
-                          <MapPin className="mr-1.5 h-3.5 w-3.5 text-blue-500" />
+                        <CardDescription className="flex items-center text-sm mt-2 text-white/50 font-medium">
+                          <MapPin className="mr-1.5 h-4 w-4 text-blue-500" />
                           {event.venueName}
                         </CardDescription>
                       )}
                     </CardHeader>
                     
-                    <CardContent className="flex-1 p-5 pt-3">
-                      <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center text-white/70 font-medium bg-white/5 px-3 py-1.5 rounded-lg border border-white/5">
-                          <Calendar className="mr-2 h-4 w-4 text-blue-400" />
+                    <CardContent className="flex-1 p-6 pt-4">
+                      <div className="flex items-center justify-between text-base">
+                        <div className="flex items-center text-white/70 font-medium bg-white/5 px-4 py-2 rounded-xl border border-white/5">
+                          <Calendar className="mr-2 h-5 w-5 text-blue-400" />
                           {new Date(event.date).toLocaleDateString('en-GB', { month: 'short', day: 'numeric' })}
                           {' • '}
                           {event.startTime}
@@ -188,18 +179,18 @@ export default function EventsPage() {
                       </div>
                     </CardContent>
                     
-                    <CardFooter className="p-5 pt-0 mt-auto">
+                    <CardFooter className="p-6 pt-0 mt-auto">
                       <div className="flex items-center justify-between w-full">
                         <div>
                           {event.displayPrice !== null ? (
-                            <p className="text-white/40 text-xs font-medium mb-0.5">Starting from</p>
+                            <p className="text-white/40 text-sm font-medium mb-1">Starting from</p>
                           ) : null}
-                          <p className="text-lg font-bold text-white">
+                          <p className="text-2xl font-bold text-white">
                             {event.displayPrice !== null ? `₹${event.displayPrice}` : 'Free'}
                           </p>
                         </div>
                         <Link href={`/dashboard/events/${event._id}`}>
-                          <Button className="bg-white/10 hover:bg-blue-600 text-white rounded-xl font-bold border border-white/5 hover:border-transparent transition-all shadow-none">
+                          <Button className="bg-white/10 hover:bg-blue-600 px-6 py-6 text-base text-white rounded-xl font-bold border border-white/5 hover:border-transparent transition-all shadow-none">
                             Book Now
                           </Button>
                         </Link>
