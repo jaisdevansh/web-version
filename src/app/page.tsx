@@ -318,45 +318,71 @@ export default function WelcomeScreen() {
         {/* Contact Form Preview */}
         <div className="relative z-20 bg-black py-32 px-6 overflow-hidden">
             <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-[150px] pointer-events-none" />
-            <div className="max-w-4xl mx-auto relative z-10">
-                <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="text-center mb-16"
-                >
-                    <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Get in Touch</h2>
-                    <p className="text-white/50 text-xl font-light">Ready to elevate your venue? Our elite team is ready.</p>
-                </motion.div>
-                <motion.div 
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.2 }}
-                    className="bg-white/[0.02] border border-white/[0.08] rounded-[2.5rem] p-10 md:p-14 backdrop-blur-2xl shadow-2xl relative overflow-hidden group"
-                >
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                    <form className="relative z-10 space-y-8" onSubmit={(e) => { e.preventDefault(); }}>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold tracking-widest text-white/40 uppercase pl-2">Name</label>
-                                <input type="text" placeholder="John Doe" className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-blue-500 focus:bg-white/[0.05] transition-all" />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold tracking-widest text-white/40 uppercase pl-2">Email</label>
-                                <input type="email" placeholder="john@example.com" className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-blue-500 focus:bg-white/[0.05] transition-all" />
+            <div className="max-w-7xl mx-auto relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <motion.div 
+                        initial={{ opacity: 0, x: -50 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        className="space-y-8"
+                    >
+                        <div>
+                            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">Get in Touch</h2>
+                            <p className="text-white/50 text-xl font-light leading-relaxed">Ready to elevate your venue? Our elite team is ready to help you implement the world's most advanced nightlife platform.</p>
+                        </div>
+                        
+                        <div className="space-y-6 pt-8 border-t border-white/5">
+                            <h3 className="text-xl font-bold text-white">Download the App Now</h3>
+                            <p className="text-white/60 font-light">For the best experience, faster bookings, and exclusive features, get the Entry Club mobile app.</p>
+                            <div className="flex flex-wrap gap-4">
+                                <button className="flex items-center px-6 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors group">
+                                    <svg viewBox="0 0 384 512" className="w-6 h-6 mr-3 fill-current text-white group-hover:scale-110 transition-transform"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                                    <div className="text-left">
+                                        <div className="text-[10px] text-white/60 uppercase tracking-widest font-bold">Download on the</div>
+                                        <div className="text-sm font-semibold text-white">App Store</div>
+                                    </div>
+                                </button>
+                                <button className="flex items-center px-6 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors group">
+                                    <svg viewBox="0 0 512 512" className="w-6 h-6 mr-3 fill-current text-white group-hover:scale-110 transition-transform"><path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z"/></svg>
+                                    <div className="text-left">
+                                        <div className="text-[10px] text-white/60 uppercase tracking-widest font-bold">Get it on</div>
+                                        <div className="text-sm font-semibold text-white">Google Play</div>
+                                    </div>
+                                </button>
                             </div>
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold tracking-widest text-white/40 uppercase pl-2">Message</label>
-                            <textarea placeholder="Tell us about your venue..." rows={4} className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-blue-500 focus:bg-white/[0.05] transition-all resize-none"></textarea>
-                        </div>
-                        <button type="submit" className="w-full relative overflow-hidden bg-white text-black font-bold text-lg py-5 rounded-2xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_10px_40px_rgba(255,255,255,0.2)] group/btn mt-4">
-                            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
-                            <span className="relative z-10 group-hover/btn:text-white transition-colors duration-300">Send Transmission</span>
-                        </button>
-                    </form>
-                </motion.div>
+                    </motion.div>
+
+                    <motion.div 
+                        initial={{ opacity: 0, x: 50 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.2 }}
+                        className="bg-white/[0.02] border border-white/[0.08] rounded-[2.5rem] p-10 md:p-14 backdrop-blur-2xl shadow-2xl relative overflow-hidden group"
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                        <form className="relative z-10 space-y-8" onSubmit={(e) => { e.preventDefault(); }}>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold tracking-widest text-white/40 uppercase pl-2">Name</label>
+                                    <input type="text" placeholder="John Doe" className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-blue-500 focus:bg-white/[0.05] transition-all" />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold tracking-widest text-white/40 uppercase pl-2">Email</label>
+                                    <input type="email" placeholder="john@example.com" className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-blue-500 focus:bg-white/[0.05] transition-all" />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold tracking-widest text-white/40 uppercase pl-2">Message</label>
+                                <textarea placeholder="Tell us about your venue..." rows={4} className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-blue-500 focus:bg-white/[0.05] transition-all resize-none"></textarea>
+                            </div>
+                            <button type="submit" className="w-full relative overflow-hidden bg-white text-black font-bold text-lg py-5 rounded-2xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_10px_40px_rgba(255,255,255,0.2)] group/btn mt-4">
+                                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
+                                <span className="relative z-10 group-hover/btn:text-white transition-colors duration-300">Send Transmission</span>
+                            </button>
+                        </form>
+                    </motion.div>
+                </div>
             </div>
         </div>
         </main>
