@@ -154,7 +154,7 @@ export default function DashboardPage() {
               )}
             </div>
             {bookings.length > 0 && (
-              <Button variant="ghost" className="w-full mt-6" onClick={() => router.push('/dashboard/bookings')}>
+              <Button variant="ghost" className="w-full mt-6" onClick={() => router.push('/dashboard/tickets')}>
                 View All Bookings <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             )}
@@ -172,7 +172,7 @@ export default function DashboardPage() {
             <Button className="w-full justify-between border-border" variant="outline" onClick={() => router.push('/events')}>
               Discover Events <ArrowRight className="h-4 w-4" />
             </Button>
-            <Button className="w-full justify-between border-border" variant="outline" onClick={() => router.push('/dashboard/bookings')}>
+            <Button className="w-full justify-between border-border" variant="outline" onClick={() => router.push('/dashboard/tickets')}>
               My Tickets <ArrowRight className="h-4 w-4" />
             </Button>
             <Button className="w-full justify-between border-border" variant="outline" onClick={() => router.push('/dashboard/orders')}>
