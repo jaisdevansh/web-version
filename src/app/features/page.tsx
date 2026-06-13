@@ -83,7 +83,7 @@ export default function FeaturesPage() {
                   </div>
                   <div>
                     <p className="text-white font-medium">VIP Table Booked</p>
-                    <p className="text-white/50 text-sm">$2,500 Minimum</p>
+                    <p className="text-white/50 text-sm">₹2,500 Minimum</p>
                   </div>
                 </div>
               </div>
@@ -166,7 +166,7 @@ export default function FeaturesPage() {
                   <ShieldCheck className="w-8 h-8 text-indigo-400" />
                   <div>
                     <p className="text-white font-medium">Identity Verified</p>
-                    <p className="text-indigo-300 text-sm">Welcome back, Alex.</p>
+                    <p className="text-indigo-300 text-sm">Welcome back.</p>
                   </div>
                 </div>
               </div>

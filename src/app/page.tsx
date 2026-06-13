@@ -50,7 +50,7 @@ const ROTATING_FEATURES = [
         bgColor: "bg-purple-500/10 border-purple-500/20",
         img: "/slide2.png",
         uiTitle: "Identity Verified",
-        uiSubtitle: "Welcome back, Alex.",
+        uiSubtitle: "Welcome back.",
         uiIcon: ShieldCheck,
         uiColor: "text-indigo-400"
     },
