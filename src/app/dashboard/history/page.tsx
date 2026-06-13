@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
 import { ArrowRight, Loader2, ChevronLeft, Eye, Star, Sparkles, Users, Music, Flame } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function HistoryPage() {
@@ -53,8 +54,27 @@ export default function HistoryPage() {
         </div>
 
         {isLoading ? (
-          <div className="flex justify-center items-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-[#12161f] rounded-3xl p-6 border border-white/[0.03] shadow-lg flex flex-col h-[280px]">
+                <div className="flex justify-between items-center mb-6">
+                  <Skeleton className="h-6 w-16 rounded-md bg-white/5" />
+                  <Skeleton className="h-4 w-16 bg-white/5" />
+                </div>
+                <div className="flex items-center mb-8 flex-1">
+                  <Skeleton className="w-20 h-20 rounded-2xl bg-white/5 shrink-0" />
+                  <div className="ml-5 space-y-2 w-full">
+                    <Skeleton className="h-3 w-20 bg-white/5" />
+                    <Skeleton className="h-5 w-32 bg-white/5" />
+                    <Skeleton className="h-3 w-16 bg-white/5" />
+                  </div>
+                </div>
+                <div className="flex justify-between items-center pt-5 border-t border-white/5">
+                  <Skeleton className="h-5 w-24 bg-white/5" />
+                  <Skeleton className="h-4 w-20 bg-white/5" />
+                </div>
+              </div>
+            ))}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

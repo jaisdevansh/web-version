@@ -5,6 +5,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Ticket, Calendar, ArrowRight, Loader2, PlayCircle } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
@@ -88,7 +89,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {isLoadingBookings ? (
-              <Loader2 className="h-5 w-5 animate-spin" />
+              <Skeleton className="h-8 w-16 mb-2" />
             ) : (
               <>
                 <div className="text-2xl font-bold">{upcomingBookings.length}</div>
@@ -105,7 +106,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {isLoadingBookings ? (
-              <Loader2 className="h-5 w-5 animate-spin" />
+              <Skeleton className="h-8 w-16 mb-2" />
             ) : (
               <>
                 <div className="text-2xl font-bold">{bookings.length}</div>
@@ -127,7 +128,17 @@ export default function DashboardPage() {
           <CardContent>
             <div className="space-y-6">
               {isLoadingBookings ? (
-                <div className="flex justify-center p-4"><Loader2 className="animate-spin text-primary" /></div>
+                <div className="space-y-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex items-center space-x-4">
+                      <Skeleton className="h-16 w-16 rounded-md" />
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-[200px]" />
+                        <Skeleton className="h-4 w-[150px]" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               ) : upcomingBookings.length === 0 ? (
                 <p className="text-muted-foreground text-sm">No upcoming bookings. <Link href="/events" className="text-primary hover:underline">Discover events</Link></p>
               ) : (
