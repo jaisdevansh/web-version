@@ -1,0 +1,345 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, Loader2, Mail, Phone, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { toast } from 'sonner';
+import { motion, AnimatePresence } from 'framer-motion';
+
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { useAuthStore } from '@/store/useAuthStore';
+import api from '@/lib/axios';
+
+const formSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+});
+
+export default function LoginPage() {
+  const router = useRouter();
+  const { login } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const [loginMethod, setLoginMethod] = useState<'email' | 'phone'>('email');
+  
+  // Phone Auth State
+  const [phoneStep, setPhoneStep] = useState<'phone' | 'otp'>('phone');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [otp, setOtp] = useState('');
+
+  // Carousel State
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const images = [
+    'https://images.unsplash.com/photo-1566737236500-c8ac43014a67?q=80&w=1000&auto=format&fit=crop',
+    '/slide2.png',
+    '/slide3.png'
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  async function onEmailSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      setIsLoading(true);
+      const response = await api.post('/auth/login', values);
+      const { user, token } = response.data.data ? response.data.data : response.data;
+      
+      login(user, token || response.data.data?.accessToken);
+      toast.success('Logged in successfully');
+      router.push('/dashboard');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to login');
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function handleSendOtp() {
+    if (!phoneNumber || phoneNumber.length < 10) {
+      toast.error('Please enter a valid phone number');
+      return;
+    }
+    try {
+      setIsLoading(true);
+      await api.post('/auth/send-otp', { identifier: phoneNumber });
+      toast.success('OTP sent! (Use 123456 for local dev)');
+      setPhoneStep('otp');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to send OTP');
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function handleVerifyOtp() {
+    if (!otp || otp.length < 4) {
+      toast.error('Please enter a valid OTP');
+      return;
+    }
+    try {
+      setIsLoading(true);
+      const response = await api.post('/auth/verify-otp', { identifier: phoneNumber, otp });
+      const data = response.data.data || response.data;
+      
+      login({ id: data.id, role: data.role, name: data.name, email: data.email, profileImage: data.profileImage }, data.accessToken);
+      toast.success('Logged in successfully');
+      router.push('/dashboard');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Invalid OTP');
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const handleGoogleLogin = () => {
+    const redirectUri = encodeURIComponent(window.location.origin + '/auth/callback');
+    window.location.href = `/api1/auth/google?redirectUri=${redirectUri}`;
+  };
+
+  return (
+    <div className="container relative min-h-[calc(100vh-8rem)] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+      <Link
+        href="/"
+        className="absolute left-4 top-4 md:left-8 md:top-8 flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors z-20"
+      >
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Back
+      </Link>
+      
+      <div className="relative hidden h-full flex-col p-10 text-white lg:flex justify-end overflow-hidden">
+        <div className="absolute inset-0 bg-black" />
+        
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={currentImageIndex}
+            src={images[currentImageIndex]}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 0.6, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
+            className="absolute inset-0 w-full h-full object-cover z-0"
+            alt="Club Venue"
+          />
+        </AnimatePresence>
+        
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/10 z-10" />
+        <div className="absolute inset-0 bg-blue-900/10 mix-blend-overlay z-10" />
+        
+        <div className="relative z-20 flex items-center text-3xl font-bold tracking-widest text-white mb-auto drop-shadow-2xl mt-8">
+          ENTRY CLUB
+        </div>
+        
+        <div className="relative z-20 mb-10 p-8 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl">
+          <blockquote className="space-y-4">
+            <p className="text-xl leading-relaxed font-light text-white/90">
+              &quot;This platform has completely transformed how we manage our venue.
+              Table bookings, guest lists, and revenue tracking all in one premium ecosystem.&quot;
+            </p>
+            <footer className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 uppercase tracking-widest">
+              Sofia Davis, Club Owner
+            </footer>
+          </blockquote>
+          
+          <div className="flex gap-2 mt-6">
+            {images.map((_, idx) => (
+              <div 
+                key={idx} 
+                className={`h-1.5 rounded-full transition-all duration-500 ${idx === currentImageIndex ? 'w-8 bg-blue-500' : 'w-2 bg-white/20'}`} 
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+      
+      <div className="lg:p-8 flex items-center h-full bg-black/95">
+        <div className="mx-auto flex w-full flex-col justify-center space-y-8 sm:w-[400px]">
+          <div className="flex flex-col space-y-2 text-center">
+            <h1 className="text-3xl font-bold tracking-tight text-white">
+              Welcome back
+            </h1>
+            <p className="text-sm text-white/60">
+              Choose how you want to sign in to your account
+            </p>
+          </div>
+          
+          {/* Method Toggle */}
+          <div className="flex p-1 bg-white/5 rounded-full border border-white/10">
+            <button 
+              onClick={() => { setLoginMethod('email'); setPhoneStep('phone'); }}
+              className={`flex-1 flex items-center justify-center py-2.5 text-sm font-medium rounded-full transition-all duration-300 ${loginMethod === 'email' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'text-white/50 hover:text-white'}`}
+            >
+              <Mail className="w-4 h-4 mr-2" /> Email
+            </button>
+            <button 
+              onClick={() => setLoginMethod('phone')}
+              className={`flex-1 flex items-center justify-center py-2.5 text-sm font-medium rounded-full transition-all duration-300 ${loginMethod === 'phone' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'text-white/50 hover:text-white'}`}
+            >
+              <Phone className="w-4 h-4 mr-2" /> Phone
+            </button>
+          </div>
+
+          <AnimatePresence mode="wait">
+            <motion.div 
+              key={loginMethod + phoneStep}
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -10 }}
+              transition={{ duration: 0.2 }}
+              className="grid gap-6"
+            >
+              {loginMethod === 'email' ? (
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onEmailSubmit)} className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-white/70">Email Address</FormLabel>
+                          <FormControl>
+                            <Input className="bg-white/5 border-white/10 text-white focus-visible:ring-blue-500 h-12 rounded-xl" placeholder="name@example.com" {...field} disabled={isLoading} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-white/70">Password</FormLabel>
+                          <FormControl>
+                            <Input className="bg-white/5 border-white/10 text-white focus-visible:ring-blue-500 h-12 rounded-xl" type="password" placeholder="••••••••" {...field} disabled={isLoading} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button className="w-full h-12 rounded-xl bg-white text-black hover:bg-gray-200 font-bold" type="submit" disabled={isLoading}>
+                      {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Sign In with Email'}
+                    </Button>
+                  </form>
+                </Form>
+              ) : (
+                <div className="space-y-4">
+                  {phoneStep === 'phone' ? (
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-white/70">Phone Number</label>
+                        <div className="flex shadow-sm rounded-xl overflow-hidden border border-white/10 bg-white/5 focus-within:ring-2 focus-within:ring-blue-500">
+                          <span className="flex items-center px-4 border-r border-white/10 text-white/50 bg-black/20 font-medium">
+                            +91
+                          </span>
+                          <Input 
+                            className="border-0 bg-transparent text-white h-12 rounded-none focus-visible:ring-0 text-lg tracking-wide" 
+                            placeholder="9876543210" 
+                            type="tel"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
+                            disabled={isLoading} 
+                          />
+                        </div>
+                      </div>
+                      <Button onClick={handleSendOtp} className="w-full h-12 rounded-xl bg-blue-600 text-white hover:bg-blue-500 font-bold shadow-lg shadow-blue-500/25 transition-all" disabled={isLoading || phoneNumber.length !== 10}>
+                        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <><ArrowRight className="mr-2 h-4 w-4" /> Send OTP</>}
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="space-y-2 text-center mb-6">
+                        <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/20 mb-2 text-blue-400">
+                          <CheckCircle2 className="h-6 w-6" />
+                        </div>
+                        <p className="text-sm text-white/70">We sent a verification code to<br/><span className="text-white font-medium">+91 {phoneNumber}</span></p>
+                        <button onClick={() => setPhoneStep('phone')} className="text-xs text-blue-400 hover:text-blue-300">Change number</button>
+                      </div>
+                      <Input 
+                        className="bg-white/5 border-white/10 text-white focus-visible:ring-blue-500 h-14 rounded-xl text-center text-2xl tracking-[0.5em] font-mono" 
+                        placeholder="••••" 
+                        maxLength={6}
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value.replace(/[^0-9]/g, ''))}
+                        disabled={isLoading} 
+                      />
+                      <Button onClick={handleVerifyOtp} className="w-full h-12 rounded-xl bg-white text-black hover:bg-gray-200 font-bold" disabled={isLoading || otp.length < 4}>
+                        {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Verify & Sign In'}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+          
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-white/10" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-black px-4 text-white/40 tracking-widest">
+                Or continue with
+              </span>
+            </div>
+          </div>
+          
+          <Button variant="outline" type="button" className="w-full h-12 rounded-xl border-white/10 bg-white/5 hover:bg-white/10 text-white" disabled={isLoading} onClick={handleGoogleLogin}>
+            <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
+              <path
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                fill="#4285F4"
+              />
+              <path
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                fill="#34A853"
+              />
+              <path
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                fill="#FBBC05"
+              />
+              <path
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                fill="#EA4335"
+              />
+            </svg>
+            Google
+          </Button>
+          
+          <p className="px-8 text-center text-sm text-white/60">
+            Don&apos;t have an account?{' '}
+            <Link
+              href="/register"
+              className="text-white font-medium underline underline-offset-4 hover:text-blue-400 transition-colors"
+            >
+              Sign up
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
