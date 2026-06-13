@@ -27,6 +27,131 @@ const SLIDES = [
         image: '/slide3.png',
     }
 ];
+const ROTATING_FEATURES = [
+    {
+        title: "Flawless Booking",
+        desc: "Ditch the clunky platforms. Sell GA tickets, manage complex table minimums, and process VIP requests directly through your own beautifully branded portal.",
+        bullets: ['Dynamic Pricing Engine', 'Automated Table Approvals', 'Apple/Google Wallet Integration', 'Zero-delay payouts'],
+        icon: Ticket,
+        color: "text-blue-400",
+        bgColor: "bg-blue-500/10 border-blue-500/20",
+        img: "https://images.unsplash.com/photo-1540039155732-68473678c482?q=80&w=1200&auto=format&fit=crop",
+        uiTitle: "VIP Table Booked",
+        uiSubtitle: "Confirmed for tonight.",
+        uiIcon: Ticket,
+        uiColor: "text-blue-400"
+    },
+    {
+        title: "A Frictionless Front Door Experience",
+        desc: "Your door staff shouldn't be scrolling through clipboards. Our sub-100ms sync engine ensures that guestlists, promoter tracking, and ban-lists are instantly updated across all devices.",
+        bullets: ['Sub-100ms Offline Sync', 'Promoter Performance Tracking', 'Instant ID Verification', 'VIP Arrival Alerts'],
+        icon: Users,
+        color: "text-purple-400",
+        bgColor: "bg-purple-500/10 border-purple-500/20",
+        img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1200&auto=format&fit=crop",
+        uiTitle: "Identity Verified",
+        uiSubtitle: "Welcome back, Alex.",
+        uiIcon: ShieldCheck,
+        uiColor: "text-indigo-400"
+    },
+    {
+        title: "Bank-Grade Security",
+        desc: "We protect your venue's data and revenue with enterprise-grade infrastructure. End-to-end encryption and dynamic QR codes eliminate ticket fraud completely.",
+        bullets: ['Dynamic QR Codes', 'End-to-end Encryption', 'Role-based Access Control', 'Automated Fraud Detection'],
+        icon: ShieldCheck,
+        color: "text-indigo-400",
+        bgColor: "bg-indigo-500/10 border-indigo-500/20",
+        img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=1200&auto=format&fit=crop",
+        uiTitle: "Fraud Prevented",
+        uiSubtitle: "Invalid QR code detected.",
+        uiIcon: ShieldCheck,
+        uiColor: "text-red-400"
+    }
+];
+
+function RotatingFeatureSection() {
+    const [activeIndex, setActiveIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setActiveIndex((prev) => (prev + 1) % ROTATING_FEATURES.length);
+        }, 5000);
+        return () => clearInterval(interval);
+    }, []);
+
+    const feature = ROTATING_FEATURES[activeIndex];
+
+    return (
+        <div className="py-24 max-w-7xl mx-auto">
+            <AnimatePresence mode="wait">
+                <motion.div 
+                    key={activeIndex}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.5 }}
+                    className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
+                >
+                    <div className="space-y-8">
+                        <div className={`w-14 h-14 rounded-2xl ${feature.bgColor} border flex items-center justify-center`}>
+                            <feature.icon className={`w-7 h-7 ${feature.color}`} />
+                        </div>
+                        <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight leading-tight">
+                            {feature.title}
+                        </h2>
+                        <p className="text-lg text-white/60 font-light leading-relaxed">
+                            {feature.desc}
+                        </p>
+                        <ul className="space-y-4">
+                            {feature.bullets.map((item, i) => (
+                                <li key={i} className="flex items-center space-x-3 text-white/80">
+                                    <CheckCircle2 className={`w-5 h-5 ${feature.color}`} />
+                                    <span>{item}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    
+                    <div className="relative">
+                        <div className="aspect-[4/3] rounded-3xl bg-gradient-to-br from-white/[0.05] to-transparent border border-white/10 p-1 flex items-center justify-center overflow-hidden shadow-2xl relative group">
+                            <img 
+                                src={feature.img} 
+                                alt={feature.title} 
+                                className="w-full h-full object-cover rounded-2xl opacity-60 mix-blend-screen"
+                            />
+                            {/* Floating UI Element */}
+                            <motion.div 
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 0.3 }}
+                                className="absolute top-8 left-8 bg-black/80 backdrop-blur-xl border border-white/10 p-5 rounded-2xl shadow-2xl"
+                            >
+                                <div className="flex items-center space-x-4">
+                                    <feature.uiIcon className={`w-8 h-8 ${feature.uiColor}`} />
+                                    <div>
+                                        <p className="text-white font-medium">{feature.uiTitle}</p>
+                                        <p className="text-white/60 text-sm">{feature.uiSubtitle}</p>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </div>
+                    </div>
+                </motion.div>
+            </AnimatePresence>
+
+            <motion.div 
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                className="text-center mt-24"
+            >
+                <Link href="/features" className="group inline-flex items-center px-8 py-4 bg-white/[0.05] border border-white/10 hover:bg-white/[0.1] rounded-full text-white font-semibold text-lg transition-all hover:scale-105">
+                    View All Features <ArrowRight className="w-5 h-5 ml-3 transform group-hover:translate-x-1 transition-transform" />
+                </Link>
+            </motion.div>
+        </div>
+    );
+}
 
 export default function WelcomeScreen() {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -127,63 +252,7 @@ export default function WelcomeScreen() {
         <div className="relative z-20 bg-black py-32 px-6 overflow-hidden">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="max-w-6xl mx-auto relative z-10">
-                {/* Deep Dive Feature: Guest Management */}
-                <div>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                        <motion.div 
-                            initial={{ opacity: 0, x: -50 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true, margin: "-100px" }}
-                            transition={{ duration: 0.8 }}
-                            className="space-y-8"
-                        >
-                            <div className="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
-                                <Users className="w-7 h-7 text-purple-400" />
-                            </div>
-                            <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight leading-tight">
-                                A Frictionless Front Door Experience
-                            </h2>
-                            <p className="text-lg text-white/60 font-light leading-relaxed">
-                                Your door staff shouldn't be scrolling through clipboards. Our sub-100ms sync engine ensures that guestlists, promoter tracking, and ban-lists are instantly updated across all devices.
-                            </p>
-                            <ul className="space-y-4">
-                                {['Sub-100ms Offline Sync', 'Promoter Performance Tracking', 'Instant ID Verification', 'VIP Arrival Alerts'].map((item, i) => (
-                                    <li key={i} className="flex items-center space-x-3 text-white/80">
-                                        <CheckCircle2 className="w-5 h-5 text-purple-500" />
-                                        <span>{item}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </motion.div>
-                        
-                        <motion.div 
-                            initial={{ opacity: 0, x: 50 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true, margin: "-100px" }}
-                            transition={{ duration: 0.8 }}
-                            className="relative"
-                        >
-                            <div className="aspect-[4/3] rounded-3xl bg-gradient-to-br from-purple-900/40 to-indigo-900/20 border border-white/10 p-1 flex items-center justify-center overflow-hidden shadow-2xl relative group">
-                                <div className="absolute inset-0 bg-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                <img 
-                                    src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1200&auto=format&fit=crop" 
-                                    alt="Front Door Scanning" 
-                                    className="w-full h-full object-cover rounded-2xl opacity-60 mix-blend-screen"
-                                />
-                                {/* Floating UI Element */}
-                                <div className="absolute top-8 left-8 bg-black/80 backdrop-blur-xl border border-white/10 p-5 rounded-2xl shadow-2xl transform group-hover:scale-105 transition-transform duration-500">
-                                    <div className="flex items-center space-x-4">
-                                        <ShieldCheck className="w-8 h-8 text-indigo-400" />
-                                        <div>
-                                            <p className="text-white font-medium">Identity Verified</p>
-                                            <p className="text-indigo-300 text-sm">Welcome back, Alex.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </div>
-                </div>
+                <RotatingFeatureSection />
             </div>
         </div>
 
