@@ -2,15 +2,15 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, User, Settings, Bell, Clock, Ticket } from 'lucide-react';
+import { LayoutDashboard, User, Settings, Bell, Clock, Ticket, Compass } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const sidebarItems = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Events', href: '/events', icon: Compass },
   { name: 'My Tickets', href: '/dashboard/tickets', icon: Ticket },
   { name: 'Activity History', href: '/dashboard/history', icon: Clock },
   { name: 'Profile', href: '/profile', icon: User },
-
 ];
 
 export default function Sidebar() {
