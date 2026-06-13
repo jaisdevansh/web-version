@@ -71,7 +71,7 @@ export default function FeaturesPage() {
             <div className="aspect-[4/3] rounded-3xl bg-gradient-to-br from-blue-900/40 to-purple-900/20 border border-white/10 p-1 flex items-center justify-center overflow-hidden shadow-2xl relative group">
               <div className="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <img 
-                src="https://images.unsplash.com/photo-1540039155732-68473678c482?q=80&w=1200&auto=format&fit=crop" 
+                src="/flawless.png" 
                 alt="Smart Ticketing Interface" 
                 className="w-full h-full object-cover rounded-2xl opacity-60 mix-blend-screen"
               />
@@ -156,7 +156,7 @@ export default function FeaturesPage() {
             <div className="aspect-[4/3] rounded-3xl bg-gradient-to-br from-purple-900/40 to-indigo-900/20 border border-white/10 p-1 flex items-center justify-center overflow-hidden shadow-2xl relative group">
               <div className="absolute inset-0 bg-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <img 
-                src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1200&auto=format&fit=crop" 
+                src="/slide2.png" 
                 alt="Front Door Scanning" 
                 className="w-full h-full object-cover rounded-2xl opacity-60 mix-blend-screen"
               />
