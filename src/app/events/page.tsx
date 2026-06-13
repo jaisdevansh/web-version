@@ -7,8 +7,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Calendar, MapPin, Search, SlidersHorizontal, Bell, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { useAuthStore } from '@/store/useAuthStore';
 import { Skeleton } from '@/components/ui/skeleton';
+import { motion } from 'framer-motion';
 
 interface EventData {
   _id: string;
@@ -29,6 +30,7 @@ const fetchEvents = async (page: number = 1) => {
 const CITIES = ['All', 'Delhi', 'Mumbai', 'Bengaluru'];
 
 export default function EventsPage() {
+  const { user } = useAuthStore();
   const [page, setPage] = useState(1);
   const [activeCity, setActiveCity] = useState('All');
 
@@ -49,7 +51,7 @@ export default function EventsPage() {
             <p className="text-[#3b82f6] text-xs font-bold tracking-widest uppercase flex items-center mb-1">
               Location <ChevronDown className="w-3 h-3 ml-1" />
             </p>
-            <h1 className="text-2xl font-bold tracking-wide">Varanasi, IN</h1>
+            <h1 className="text-[28px] font-serif font-bold tracking-wide">Varanasi, IN</h1>
           </div>
           
           <div className="flex items-center space-x-4">
@@ -57,7 +59,11 @@ export default function EventsPage() {
               <Bell className="w-5 h-5 text-white/80" />
             </button>
             <div className="w-10 h-10 rounded-full overflow-hidden border border-white/10">
-              <img src="/avatar-placeholder.png" alt="Profile" className="w-full h-full object-cover bg-blue-500" onError={(e) => { (e.target as HTMLImageElement).src = 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix' }} />
+              <img 
+                src={user?.profileImage || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name || 'Felix'}`} 
+                alt="Profile" 
+                className="w-full h-full object-cover bg-blue-500" 
+              />
             </div>
           </div>
         </div>
