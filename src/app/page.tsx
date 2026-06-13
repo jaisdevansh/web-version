@@ -124,69 +124,126 @@ export default function WelcomeScreen() {
 
         {/* Scrolling Sections */}
         {/* Features Preview */}
-        <div className="relative z-20 bg-black py-24 px-6">
-            <div className="max-w-6xl mx-auto">
-                <div className="text-center mb-16">
-                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Premium Features</h2>
-                    <p className="text-white/50 text-lg">Everything you need to manage your exclusive venue.</p>
+        <div className="relative z-20 bg-black py-32 px-6 overflow-hidden">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="max-w-6xl mx-auto relative z-10">
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="text-center mb-20"
+                >
+                    <h2 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-white/90 to-white/60 mb-6">Premium Features</h2>
+                    <p className="text-white/50 text-xl font-light max-w-2xl mx-auto">Everything you need to manage your exclusive venue with military precision.</p>
+                </motion.div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {[
+                        { icon: Ticket, title: "Smart Ticketing", desc: "Sell GA tickets and manage VIP table minimums flawlessly.", color: "text-blue-400", bg: "group-hover:bg-blue-500/10" },
+                        { icon: Users, title: "Guest Management", desc: "Instant offline sync for guestlists and promoter tracking.", color: "text-purple-400", bg: "group-hover:bg-purple-500/10" },
+                        { icon: ShieldCheck, title: "Bank-Grade Security", desc: "Dynamic QR codes and end-to-end encryption eliminate fraud.", color: "text-indigo-400", bg: "group-hover:bg-indigo-500/10" }
+                    ].map((feature, i) => (
+                        <motion.div 
+                            key={i}
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.1, duration: 0.5 }}
+                            className="group relative p-10 rounded-[2rem] bg-white/[0.02] border border-white/[0.05] hover:border-white/[0.15] hover:-translate-y-2 transition-all duration-500 overflow-hidden backdrop-blur-xl"
+                        >
+                            <div className={`absolute inset-0 opacity-0 transition-opacity duration-500 ${feature.bg}`} />
+                            <div className="relative z-10">
+                                <feature.icon className={`w-10 h-10 ${feature.color} mb-8 transform group-hover:scale-110 transition-transform duration-500`} />
+                                <h3 className="text-2xl font-bold text-white mb-4 tracking-tight">{feature.title}</h3>
+                                <p className="text-white/50 leading-relaxed font-light">{feature.desc}</p>
+                            </div>
+                        </motion.div>
+                    ))}
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="p-8 rounded-3xl bg-white/[0.03] border border-white/[0.05] hover:bg-white/[0.08] transition-all">
-                        <Ticket className="w-8 h-8 text-blue-400 mb-6" />
-                        <h3 className="text-xl font-bold text-white mb-3">Smart Ticketing</h3>
-                        <p className="text-white/50 leading-relaxed">Sell GA tickets and manage VIP table minimums flawlessly.</p>
-                    </div>
-                    <div className="p-8 rounded-3xl bg-white/[0.03] border border-white/[0.05] hover:bg-white/[0.08] transition-all">
-                        <Users className="w-8 h-8 text-purple-400 mb-6" />
-                        <h3 className="text-xl font-bold text-white mb-3">Guest Management</h3>
-                        <p className="text-white/50 leading-relaxed">Instant offline sync for guestlists and promoter tracking.</p>
-                    </div>
-                    <div className="p-8 rounded-3xl bg-white/[0.03] border border-white/[0.05] hover:bg-white/[0.08] transition-all">
-                        <ShieldCheck className="w-8 h-8 text-indigo-400 mb-6" />
-                        <h3 className="text-xl font-bold text-white mb-3">Bank-Grade Security</h3>
-                        <p className="text-white/50 leading-relaxed">Dynamic QR codes and end-to-end encryption eliminate fraud.</p>
-                    </div>
-                </div>
-                <div className="text-center mt-12">
-                    <Link href="/features" className="text-blue-400 hover:text-blue-300 font-semibold inline-flex items-center">
-                        View All Features <ArrowRight className="w-4 h-4 ml-2" />
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    className="text-center mt-16"
+                >
+                    <Link href="/features" className="group inline-flex items-center text-blue-400 hover:text-white font-semibold text-lg transition-colors">
+                        View All Features <ArrowRight className="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" />
                     </Link>
-                </div>
+                </motion.div>
             </div>
         </div>
 
         {/* About Preview */}
-        <div className="relative z-20 bg-[#050505] py-24 px-6 border-y border-white/5">
-            <div className="max-w-4xl mx-auto text-center space-y-8">
-                <h2 className="text-3xl md:text-5xl font-bold text-white">The Entry Club Story</h2>
-                <p className="text-lg text-white/60 font-light leading-relaxed">
-                    Founded by industry veterans, Entry Club was built to solve the real-world operational challenges faced by premium venue owners, promoters, and event organizers every single night.
-                </p>
-                <Link href="/about" className="inline-block px-8 py-4 bg-white/10 hover:bg-white/20 text-white rounded-full font-semibold transition-all">
-                    Read Our Full Story
-                </Link>
+        <div className="relative z-20 bg-[#020202] py-32 px-6 border-y border-white/[0.02] overflow-hidden">
+            <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-purple-900/10 to-transparent blur-[100px] pointer-events-none" />
+            <div className="max-w-4xl mx-auto text-center relative z-10">
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.7 }}
+                    className="space-y-10"
+                >
+                    <div className="inline-flex items-center px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-300 text-sm font-medium mb-4 backdrop-blur-md">
+                        The Entry Club Story
+                    </div>
+                    <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tight leading-tight">
+                        Built for the <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400">Nightlife Elite</span>
+                    </h2>
+                    <p className="text-xl text-white/50 font-light leading-relaxed max-w-3xl mx-auto">
+                        Founded by industry veterans, Entry Club was built to solve the real-world operational challenges faced by premium venue owners, promoters, and event organizers every single night.
+                    </p>
+                    <Link href="/about" className="inline-block mt-8">
+                        <button className="relative px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-all transform hover:scale-105 shadow-[0_0_30px_rgba(255,255,255,0.15)] overflow-hidden group">
+                            <span className="relative z-10">Read Our Full Story</span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent -translate-x-full group-hover:animate-shimmer" />
+                        </button>
+                    </Link>
+                </motion.div>
             </div>
         </div>
 
         {/* Contact Form Preview */}
-        <div className="relative z-20 bg-black py-24 px-6">
-            <div className="max-w-3xl mx-auto">
-                <div className="text-center mb-12">
-                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Get in Touch</h2>
-                    <p className="text-white/50">Ready to elevate your venue? Drop us a line.</p>
-                </div>
-                <div className="bg-white/[0.02] border border-white/10 rounded-3xl p-8 backdrop-blur-xl">
-                    <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); alert('Message sent!'); }}>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <input type="text" placeholder="Name" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors" />
-                            <input type="email" placeholder="Email" className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors" />
+        <div className="relative z-20 bg-black py-32 px-6 overflow-hidden">
+            <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-[150px] pointer-events-none" />
+            <div className="max-w-4xl mx-auto relative z-10">
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="text-center mb-16"
+                >
+                    <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Get in Touch</h2>
+                    <p className="text-white/50 text-xl font-light">Ready to elevate your venue? Our elite team is ready.</p>
+                </motion.div>
+                <motion.div 
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2 }}
+                    className="bg-white/[0.02] border border-white/[0.08] rounded-[2.5rem] p-10 md:p-14 backdrop-blur-2xl shadow-2xl relative overflow-hidden group"
+                >
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    <form className="relative z-10 space-y-8" onSubmit={(e) => { e.preventDefault(); }}>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold tracking-widest text-white/40 uppercase pl-2">Name</label>
+                                <input type="text" placeholder="John Doe" className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-blue-500 focus:bg-white/[0.05] transition-all" />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold tracking-widest text-white/40 uppercase pl-2">Email</label>
+                                <input type="email" placeholder="john@example.com" className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-blue-500 focus:bg-white/[0.05] transition-all" />
+                            </div>
                         </div>
-                        <textarea placeholder="Your Message" rows={4} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors resize-none"></textarea>
-                        <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-colors">
-                            Send Message
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold tracking-widest text-white/40 uppercase pl-2">Message</label>
+                            <textarea placeholder="Tell us about your venue..." rows={4} className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-blue-500 focus:bg-white/[0.05] transition-all resize-none"></textarea>
+                        </div>
+                        <button type="submit" className="w-full relative overflow-hidden bg-white text-black font-bold text-lg py-5 rounded-2xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-[0_10px_40px_rgba(255,255,255,0.2)] group/btn mt-4">
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
+                            <span className="relative z-10 group-hover/btn:text-white transition-colors duration-300">Send Transmission</span>
                         </button>
                     </form>
-                </div>
+                </motion.div>
             </div>
         </div>
         </main>
