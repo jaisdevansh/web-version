@@ -173,7 +173,7 @@ export default function TicketsPage() {
                 </div>
 
                 <button 
-                  onClick={() => setReviewingEvent({ title: "aujlaaa", date: "Sat, 30 May", image: "/flawless.png" })}
+                  onClick={() => router.push('/dashboard/review?title=aujlaaa&image=%2Fflawless.png')}
                   className="w-full py-3.5 bg-[#2e1a47] hover:bg-[#3b2359] text-[#d8b4fe] rounded-xl font-semibold text-sm transition-colors border border-purple-500/20 mt-auto"
                 >
                   Write a Review
@@ -227,7 +227,7 @@ export default function TicketsPage() {
 
                 {activeTab === "Past" && (
                    <button 
-                     onClick={() => setReviewingEvent(booking.eventId)}
+                     onClick={() => router.push(`/dashboard/review?title=${encodeURIComponent(booking.eventId?.title || 'General Access')}&image=${encodeURIComponent(booking.eventId?.coverImage || '')}`)}
                      className="w-full mt-auto py-3.5 bg-[#2e1a47] hover:bg-[#3b2359] text-[#d8b4fe] rounded-xl font-semibold text-sm transition-colors border border-purple-500/20"
                    >
                      Write a Review
