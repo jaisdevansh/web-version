@@ -139,7 +139,7 @@ export default function RegisterPage() {
       </div>
       
       {/* Form Right Side */}
-      <div className="lg:p-8 flex items-center h-full bg-black/95">
+      <div className="p-4 py-24 lg:p-8 flex items-center justify-center min-h-[100dvh] lg:min-h-full bg-black/95">
         <div className="mx-auto flex w-full flex-col justify-center space-y-8 sm:w-[400px]">
           <div className="flex flex-col space-y-2 text-center">
             <h1 className="text-3xl font-bold tracking-tight text-white">
