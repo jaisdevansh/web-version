@@ -232,31 +232,60 @@ export default function WelcomeScreen() {
 
         {/* About Preview */}
         <div className="relative z-20 bg-[#020202] py-32 px-6 border-y border-white/[0.02] overflow-hidden">
-            <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-purple-900/10 to-transparent blur-[100px] pointer-events-none" />
-            <div className="max-w-4xl mx-auto text-center relative z-10">
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.7 }}
-                    className="space-y-10"
-                >
-                    <div className="inline-flex items-center px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-300 text-sm font-medium mb-4 backdrop-blur-md">
-                        The Entry Club Story
-                    </div>
-                    <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tight leading-tight">
-                        Built for the <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400">Nightlife Elite</span>
-                    </h2>
-                    <p className="text-xl text-white/50 font-light leading-relaxed max-w-3xl mx-auto">
-                        Founded by industry veterans, Entry Club was built to solve the real-world operational challenges faced by premium venue owners, promoters, and event organizers every single night.
-                    </p>
-                    <Link href="/about" className="inline-block mt-8">
-                        <button className="relative px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-all transform hover:scale-105 shadow-[0_0_30px_rgba(255,255,255,0.15)] overflow-hidden group">
-                            <span className="relative z-10">Read Our Full Story</span>
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent -translate-x-full group-hover:animate-shimmer" />
-                        </button>
-                    </Link>
-                </motion.div>
+            <div className="absolute top-[40%] right-[-10%] w-[30%] h-[50%] rounded-full bg-purple-600/10 blur-[150px] pointer-events-none" />
+            <div className="max-w-7xl mx-auto relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <motion.div 
+                        initial={{ opacity: 0, x: -50 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true, margin: "-100px" }}
+                        transition={{ duration: 0.8 }}
+                        className="space-y-8"
+                    >
+                        <div className="inline-flex items-center rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-sm font-medium text-blue-300 backdrop-blur-sm">
+                            The Entry Club Story
+                        </div>
+                        
+                        <h2 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl text-white drop-shadow-xl leading-tight">
+                            Revolutionizing <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">Exclusive Access</span>
+                        </h2>
+                        
+                        <p className="text-lg text-white/60 font-light leading-relaxed">
+                            Founded by industry veterans, Entry Club was built to solve the real-world operational challenges faced by premium venue owners, promoters, and event organizers every single night.
+                        </p>
+                        
+                        <p className="text-lg text-white/60 font-light leading-relaxed">
+                            We believe that technology should enhance the guest experience, not get in the way. That is why we have engineered a seamless, enterprise-grade ecosystem that connects your staff, your customers, and your data with zero friction.
+                        </p>
+
+                        <Link href="/about" className="inline-block mt-4">
+                            <button className="relative px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-all transform hover:scale-105 shadow-[0_0_30px_rgba(255,255,255,0.15)] overflow-hidden group">
+                                <span className="relative z-10">Read Our Full Story</span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent -translate-x-full group-hover:animate-shimmer" />
+                            </button>
+                        </Link>
+                    </motion.div>
+                    
+                    <motion.div 
+                        initial={{ opacity: 0, x: 50 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true, margin: "-100px" }}
+                        transition={{ duration: 0.8 }}
+                        className="relative h-[400px] lg:h-[600px] rounded-3xl overflow-hidden bg-black/50 border border-white/10 flex items-center justify-center shadow-2xl group"
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 z-10 opacity-50 group-hover:opacity-100 transition-opacity duration-700" />
+                        <img 
+                            src="/slide3.png" 
+                            alt="Premium Nightlife" 
+                            className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-1000 ease-out"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-20" />
+                        <div className="absolute bottom-0 left-0 right-0 p-10 z-30 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                            <h3 className="text-3xl font-bold text-white mb-2 tracking-wide drop-shadow-lg">Premium Experience</h3>
+                            <p className="text-white/70 font-light text-lg">Designed exclusively for the best venues in the world.</p>
+                        </div>
+                    </motion.div>
+                </div>
             </div>
         </div>
 
