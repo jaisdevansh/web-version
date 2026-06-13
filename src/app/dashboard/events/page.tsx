@@ -84,7 +84,7 @@ export default function EventsPage() {
         </div>
 
         {/* Filter Chips */}
-        <div className="flex space-x-3 overflow-x-auto pb-4 mb-8 hide-scrollbar">
+        <div className="flex space-x-3 overflow-x-auto pb-4 mb-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {CITIES.map((city) => (
             <button
               key={city}
@@ -105,7 +105,7 @@ export default function EventsPage() {
           <h2 className="text-3xl font-bold tracking-tight mb-6">Explore Events</h2>
           
           {/* Featured Slides */}
-          <div className="mb-10 flex space-x-4 overflow-x-auto pb-4 snap-x snap-mandatory hide-scrollbar">
+          <div className="mb-10 flex space-x-4 overflow-x-auto pb-4 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {[ '/slide2.png', '/slide3.png' ].map((src, idx) => (
               <div key={idx} className="shrink-0 w-[85vw] md:w-[60vw] lg:w-[45vw] xl:w-[35vw] aspect-[2/1] snap-center rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-[#12161f]">
                 <img src={src} alt={`Featured Slide ${idx + 2}`} className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1540039155732-d674d6e3f0be?q=80&w=1000&auto=format&fit=crop' }} />
@@ -212,17 +212,6 @@ export default function EventsPage() {
           )}
         </div>
       </div>
-      
-      {/* Global style to hide scrollbar */}
-      <style jsx global>{`
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-      `}</style>
     </div>
   );
 }
