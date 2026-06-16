@@ -3,14 +3,15 @@ import { toast } from 'sonner';
 
 // Create a custom axios instance
 const api = axios.create({
-  // Use Next.js proxy locally to bypass CORS, but use direct URL in production
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 
-    (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
-      ? '/api1' 
-      : 'https://party.stayin.in/api1'),
+  // Use direct connection to local backend to bypass proxy/WAF issues
+  // In production, it will use NEXT_PUBLIC_API_URL if set, or fallback to the direct AWS URL
+  baseURL: typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+    ? 'http://localhost:3001' 
+    : (process.env.NEXT_PUBLIC_API_URL || 'https://party.stayin.in/api1'),
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // Required for httpOnly cookies
   timeout: 10000, // 10 seconds timeout for better UX
 });
 

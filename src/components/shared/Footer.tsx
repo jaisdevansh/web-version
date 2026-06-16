@@ -41,8 +41,9 @@ export default function Footer() {
             <ul className="space-y-4 text-sm font-light text-white/60">
               <li><Link href="/about" className="hover:text-blue-400 transition-colors">The Story</Link></li>
               <li><Link href="/features" className="hover:text-blue-400 transition-colors">Features</Link></li>
-              <li><Link href="/pricing" className="hover:text-blue-400 transition-colors">Pricing</Link></li>
-              <li><Link href="/venues" className="hover:text-blue-400 transition-colors">Venues</Link></li>
+              <li><Link href="/contact" className="hover:text-blue-400 transition-colors text-blue-400 font-medium">Become a Host</Link></li>
+              <li><Link href="/coming-soon" className="hover:text-blue-400 transition-colors">Pricing</Link></li>
+              <li><Link href="/coming-soon" className="hover:text-blue-400 transition-colors">Venues</Link></li>
             </ul>
           </div>
 
@@ -55,7 +56,7 @@ export default function Footer() {
               <li><Link href="/privacy" className="hover:text-blue-400 transition-colors">Privacy Policy</Link></li>
               <li className="flex items-center space-x-2 pt-2">
                 <Mail className="w-4 h-4 text-blue-400" />
-                <a href="mailto:info.zenbourg@gmail.com" className="hover:text-white transition-colors">info.zenbourg@gmail.com</a>
+                <Link href="/contact" className="hover:text-white transition-colors">support@entryclub.com</Link>
               </li>
             </ul>
           </div>

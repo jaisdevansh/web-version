@@ -31,12 +31,12 @@ export default function EditProfilePage() {
   const router = useRouter();
 
   const { data: profile } = useQuery({
-    queryKey: ['user-profile', user?._id],
+    queryKey: ['user-profile', user?.id || user?._id],
     queryFn: async () => {
       const res = await axiosInstance.get('/user/profile');
       return res.data.data || res.data;
     },
-    enabled: !!user?._id,
+    enabled: !!(user?.id || user?._id),
   });
 
   const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<ProfileFormValues>({
@@ -344,7 +344,51 @@ export default function EditProfilePage() {
                         placeholder="e.g. Mumbai, India"
                         disabled={updateMutation.isPending}
                       />
-                      <button type="button" className="absolute right-3 p-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-500 rounded-lg transition-colors group cursor-pointer" disabled={updateMutation.isPending}>
+                      <button 
+                        type="button" 
+                        onClick={() => {
+                          if (navigator.geolocation) {
+                            const toastId = toast.loading('Fetching location...');
+                            navigator.geolocation.getCurrentPosition(
+                              async (position) => {
+                                try {
+                                  const { latitude, longitude } = position.coords;
+                                  // Reverse geocoding using free Nominatim API
+                                  const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+                                  const data = await res.json();
+                                  if (data && data.address) {
+                                    const city = data.address.city || data.address.town || data.address.village || data.address.county || '';
+                                    const country = data.address.country || '';
+                                    const locString = [city, country].filter(Boolean).join(', ');
+                                    if (locString) {
+                                      setValue('location', locString, { shouldValidate: true });
+                                      toast.success('Location updated', { id: toastId });
+                                    } else {
+                                      throw new Error('Location not detailed enough');
+                                    }
+                                  } else {
+                                    throw new Error('Address not found');
+                                  }
+                                } catch (error) {
+                                  toast.error('Failed to resolve location address', { id: toastId });
+                                }
+                              },
+                              (error) => {
+                                let msg = 'Location access denied';
+                                if (error.code === 2) msg = 'Location unavailable';
+                                else if (error.code === 3) msg = 'Location request timed out';
+                                toast.error(msg, { id: toastId });
+                              },
+                              { timeout: 10000, maximumAge: 0 }
+                            );
+                          } else {
+                            toast.error('Geolocation not supported by this browser');
+                          }
+                        }}
+                        className="absolute right-3 p-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-500 rounded-lg transition-colors group cursor-pointer" 
+                        disabled={updateMutation.isPending}
+                        title="Use my current location"
+                      >
                         <Crosshair className="w-4 h-4" />
                       </button>
                     </div>

@@ -1,10 +1,37 @@
 'use client';
 
-import { ChevronLeft, Gift, Share2, Search, RefreshCw } from 'lucide-react';
+import { ChevronLeft, Gift, Share2, Search, RefreshCw, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import axiosInstance from '@/lib/axios';
 
 export default function InviteAndEarnPage() {
   const router = useRouter();
+
+  const { data: referralData, isLoading } = useQuery({
+    queryKey: ['referral-data'],
+    queryFn: async () => {
+      const res = await axiosInstance.get('/user/referral');
+      return res.data;
+    }
+  });
+
+  const handleShare = async () => {
+    if (navigator.share && referralData?.referralCode) {
+      try {
+        await navigator.share({
+          title: 'Join Entry Club',
+          text: `Use my invite code ${referralData.referralCode} to get 50 bonus points on Entry Club!`,
+          url: `${window.location.origin}/register?ref=${referralData.referralCode}`,
+        });
+      } catch (err) {
+        console.error('Error sharing', err);
+      }
+    } else if (referralData?.referralCode) {
+      navigator.clipboard.writeText(referralData.referralCode);
+      alert('Referral code copied to clipboard!');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#05050A] text-white flex flex-col font-sans">
@@ -21,6 +48,9 @@ export default function InviteAndEarnPage() {
       </div>
 
       <div className="flex-1 max-w-7xl w-full mx-auto px-6 lg:px-10 py-10">
+        {isLoading ? (
+           <div className="flex justify-center items-center h-64"><Loader2 className="w-8 h-8 animate-spin text-blue-500" /></div>
+        ) : (
         <div className="flex flex-col lg:flex-row gap-10 items-start">
           
           {/* Left Column: Loyalty & Stats */}
@@ -36,18 +66,18 @@ export default function InviteAndEarnPage() {
             </div>
 
             <p className="text-[11px] font-bold tracking-widest text-white/40 uppercase mb-2 relative z-10">Your Loyalty Points</p>
-            <h2 className="text-6xl font-bold text-white mb-8 tracking-tighter relative z-10">0</h2>
+            <h2 className="text-6xl font-bold text-white mb-8 tracking-tighter relative z-10">{referralData?.user?.loyaltyPoints || 0}</h2>
 
             <div className="h-px w-full bg-white/[0.05] mb-6 relative z-10" />
 
             <div className="flex items-center justify-between relative z-10">
               <div className="flex-1">
-                <p className="text-2xl font-bold text-blue-500 mb-1">0</p>
+                <p className="text-2xl font-bold text-blue-500 mb-1">{referralData?.referralCount || 0}</p>
                 <p className="text-xs text-white/50 font-medium">Friends Invited</p>
               </div>
               <div className="w-px h-10 bg-white/[0.05]" />
               <div className="flex-1">
-                <p className="text-2xl font-bold text-blue-500 mb-1">₹0</p>
+                <p className="text-2xl font-bold text-blue-500 mb-1">₹{(referralData?.referralCount || 0) * 200}</p>
                 <p className="text-xs text-white/50 font-medium">Value Earned</p>
               </div>
             </div>
@@ -77,8 +107,8 @@ export default function InviteAndEarnPage() {
             <div className="space-y-4 mb-10">
               <label className="text-xs font-bold tracking-[0.2em] text-white/40 uppercase pl-1">Your Invite Code</label>
               <div className="flex items-center bg-[#11111A] border border-white/[0.08] rounded-2xl p-2 pl-6 shadow-inner">
-                <span className="flex-1 text-2xl font-bold tracking-[0.25em] text-white">RXYTBY8E49</span>
-                <button className="bg-[#3b82f6] hover:bg-[#2563eb] text-white px-8 py-4 rounded-xl font-bold flex items-center gap-2 transition-all hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] cursor-pointer">
+                <span className="flex-1 text-2xl font-bold tracking-[0.25em] text-white">{referralData?.referralCode || 'N/A'}</span>
+                <button onClick={handleShare} className="bg-[#3b82f6] hover:bg-[#2563eb] text-white px-8 py-4 rounded-xl font-bold flex items-center gap-2 transition-all hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] cursor-pointer">
                   <Share2 className="w-5 h-5" />
                   <span className="text-lg">Share Code</span>
                 </button>
@@ -113,6 +143,7 @@ export default function InviteAndEarnPage() {
           </div>
 
         </div>
+        )}
       </div>
     </div>
   );

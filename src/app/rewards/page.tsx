@@ -1,10 +1,20 @@
 'use client';
 
-import { ChevronLeft, Sparkles, Building2 } from 'lucide-react';
+import { ChevronLeft, Sparkles, Building2, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import axiosInstance from '@/lib/axios';
 
 export default function RewardsPage() {
   const router = useRouter();
+
+  const { data: profile, isLoading } = useQuery({
+    queryKey: ['user-profile'],
+    queryFn: async () => {
+      const res = await axiosInstance.get('/user/profile');
+      return res.data.data;
+    }
+  });
 
   return (
     <div className="min-h-screen bg-[#0A0A12] text-white flex justify-center font-sans relative overflow-hidden">
@@ -26,6 +36,9 @@ export default function RewardsPage() {
           <h1 className="text-xl font-bold tracking-[0.2em] text-white uppercase">Entry Club Rewards</h1>
         </div>
 
+        {isLoading ? (
+           <div className="flex justify-center items-center h-64"><Loader2 className="w-8 h-8 animate-spin text-blue-500" /></div>
+        ) : (
         <div className="flex flex-col lg:flex-row gap-10">
           
           {/* Left Column: Loyalty Balance & Empty State */}
@@ -41,8 +54,8 @@ export default function RewardsPage() {
               <p className="text-[11px] font-bold tracking-[0.15em] text-white/50 uppercase">Total Loyalty Balance</p>
             </div>
 
-            <h2 className="text-7xl font-bold text-white mb-4 tracking-tighter">0</h2>
-            <p className="text-sm font-bold text-white/40 tracking-wider mb-8">₹0 VALUE</p>
+            <h2 className="text-7xl font-bold text-white mb-4 tracking-tighter">{profile?.loyaltyPoints || 0}</h2>
+            <p className="text-sm font-bold text-white/40 tracking-wider mb-8">₹{profile?.loyaltyPoints || 0} VALUE</p>
 
             <div className="h-px w-full bg-white/[0.05] mb-6" />
 
@@ -98,6 +111,7 @@ export default function RewardsPage() {
           </div>
 
         </div>
+        )}
       </div>
     </div>
   );

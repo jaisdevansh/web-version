@@ -27,7 +27,7 @@ const fetchEvents = async (page: number = 1) => {
   return response.data;
 };
 
-const CITIES = ['All', 'Delhi', 'Mumbai', 'Bengaluru'];
+const CITIES = ['All', 'Delhi', 'Mumbai', 'Bengaluru', 'Pune', 'Hyderabad', 'Goa', 'Chandigarh', 'Chennai', 'Kolkata'];
 
 export default function EventsPage() {
   const { user } = useAuthStore();
@@ -37,9 +37,9 @@ export default function EventsPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['events', page],
     queryFn: () => fetchEvents(page),
-    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    staleTime: 1000 * 10, // Cache for 10 seconds only so new events show up fast
     gcTime: 1000 * 60 * 30, // Keep in memory for 30 minutes
-    refetchOnWindowFocus: false, // Don't refetch when switching tabs
+    refetchOnWindowFocus: true, // Refetch when switching tabs back to the app
   });
 
   const events: EventData[] = data?.data || [];

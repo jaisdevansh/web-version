@@ -17,6 +17,7 @@ interface AuthState {
   isAuthenticated: boolean;
   login: (user: User, token: string) => void;
   logout: () => void;
+  updateUser: (user: Partial<User>) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -25,8 +26,24 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       token: null,
       isAuthenticated: false,
-      login: (user, token) => set({ user, token, isAuthenticated: true }),
-      logout: () => set({ user: null, token: null, isAuthenticated: false }),
+      login: (user, token) => {
+        set({ user, token, isAuthenticated: true });
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('party_user_token', token);
+          if (user.role) localStorage.setItem('party_user_role', user.role);
+        }
+      },
+      logout: () => {
+        set({ user: null, token: null, isAuthenticated: false });
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('party_user_token');
+          localStorage.removeItem('party_user_role');
+          window.location.href = '/login';
+        }
+      },
+      updateUser: (updatedFields) => set((state) => ({ 
+        user: state.user ? { ...state.user, ...updatedFields } : null 
+      })),
     }),
     {
       name: 'party-auth-storage', // name of the item in the storage (must be unique)

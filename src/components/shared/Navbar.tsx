@@ -29,7 +29,7 @@ export default function Navbar() {
             </div>
           )}
           <Link href="/" className="flex items-center space-x-2 group">
-            <span className="font-bold text-base md:text-xl tracking-tight text-white drop-shadow-md">
+            <span className="font-bold text-base md:text-xl tracking-tight text-blue-500 drop-shadow-md">
               ENTRY CLUB
             </span>
           </Link>
@@ -75,11 +75,8 @@ export default function Navbar() {
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" className="text-white/70 hover:text-white hover:bg-white/5 rounded-full px-3 md:px-6 h-8 md:h-10 text-xs md:text-sm">Log in</Button>
-                </Link>
-                <Link href="/register">
-                  <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-500 hover:to-indigo-500 border-0 rounded-full px-4 md:px-8 h-8 md:h-10 text-xs md:text-sm shadow-lg shadow-blue-500/25 transition-all hover:shadow-blue-500/40 hover:-translate-y-0.5">
-                    Sign up
+                  <Button className="bg-blue-600 text-white hover:bg-blue-700 border-0 rounded-full px-4 md:px-8 h-8 md:h-10 text-xs md:text-sm font-bold shadow-lg shadow-blue-500/25 transition-all hover:-translate-y-0.5">
+                    Log In / Sign Up
                   </Button>
                 </Link>
               </>

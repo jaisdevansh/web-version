@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import api from '@/lib/axios';
 
-export default function AIConciergePage() {
+export default function AIChatPage() {
   const router = useRouter();
 
   const [messages, setMessages] = useState<{role: 'user'|'ai', text: string}[]>([]);
@@ -71,7 +71,7 @@ export default function AIConciergePage() {
                 Terms & Support
               </button>
               <button className="shrink-0 text-left px-5 py-3.5 rounded-xl bg-blue-600/10 text-blue-500 font-semibold border border-blue-500/20 shadow-[0_0_15px_rgba(37,99,235,0.1)] transition-all">
-                AI Concierge
+                AI Chat
               </button>
             </nav>
           </div>
@@ -159,7 +159,7 @@ export default function AIConciergePage() {
                   </button>
                 </div>
                 <p className="text-center text-[11px] text-white/30 mt-4 font-medium tracking-wide">
-                  AI Concierge may produce inaccurate information about people, places, or facts.
+                  AI Chat may produce inaccurate information about people, places, or facts.
                 </p>
               </div>
 

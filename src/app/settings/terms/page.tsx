@@ -130,7 +130,7 @@ export default function TermsSupportPage() {
                     </Link>
                   </div>
 
-                  {/* AI Concierge Banner */}
+                  {/* AI Chat Banner */}
                   <div className="bg-gradient-to-r from-blue-900/30 to-indigo-900/20 border border-blue-500/20 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative">
                     <div className="absolute -right-20 -top-20 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 relative z-10 w-full">
@@ -138,10 +138,10 @@ export default function TermsSupportPage() {
                         <MessageCircle className="w-8 h-8 text-blue-400 fill-blue-500/20" />
                       </div>
                       <div className="flex-1">
-                        <h4 className="text-xl font-bold text-white mb-2">Support AI Concierge</h4>
+                        <h4 className="text-xl font-bold text-white mb-2">Support AI Chat</h4>
                         <p className="text-sm text-white/60">Get instant help and priority resolution 24/7. Our AI is ready to assist you immediately.</p>
                       </div>
-                      <Link href="/settings/ai-concierge" className="w-full sm:w-auto px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl transition-all shadow-[0_0_15px_rgba(37,99,235,0.4)] hover:shadow-[0_0_25px_rgba(37,99,235,0.6)] text-center shrink-0">
+                      <Link href="/settings/ai-chat" className="w-full sm:w-auto px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl transition-all shadow-[0_0_15px_rgba(37,99,235,0.4)] hover:shadow-[0_0_25px_rgba(37,99,235,0.6)] text-center shrink-0">
                         Chat Now
                       </Link>
                     </div>

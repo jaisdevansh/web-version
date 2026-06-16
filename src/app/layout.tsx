@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/components/providers/QueryProvider";
+import ReCaptchaProvider from "@/components/providers/ReCaptchaProvider";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
 import { Toaster } from "@/components/ui/sonner";
@@ -24,17 +25,17 @@ export const metadata: Metadata = {
   },
   description: "Discover, book, and experience the most exclusive nightlife events, guest lists, and table reservations with Entry Club.",
   keywords: ["nightlife", "clubbing", "guest list", "table booking", "events", "party", "entry club"],
-  authors: [{ name: "Zenbourg Technologies" }],
-  creator: "Zenbourg",
+  authors: [{ name: "Entry Club" }],
+  creator: "Entry Club",
   publisher: "Entry Club",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://party.stayin.in'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://party.stayin.in'),
   alternates: {
-    canonical: '/',
+    canonical: process.env.NEXT_PUBLIC_SITE_URL || 'https://party.stayin.in',
   },
   openGraph: {
     title: "Entry Club | Premium Nightlife & Events",
@@ -78,14 +79,16 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
         <Preloader />
-        <QueryProvider>
-          <Navbar />
-          <main className="flex-1">
-            {children}
-          </main>
-          <Footer />
-          <Toaster />
-        </QueryProvider>
+        <ReCaptchaProvider>
+          <QueryProvider>
+            <Navbar />
+            <main className="flex-1">
+              {children}
+            </main>
+            <Footer />
+            <Toaster />
+          </QueryProvider>
+        </ReCaptchaProvider>
       </body>
     </html>
   );

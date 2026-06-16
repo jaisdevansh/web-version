@@ -2,12 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, User, Settings, Bell, Clock, Ticket, Compass } from 'lucide-react';
+import { LayoutDashboard, User, Settings, Bell, Clock, Ticket, Compass, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const sidebarItems = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Events', href: '/dashboard/events', icon: Compass },
+  { name: 'Discover', href: '/dashboard/discover', icon: Compass },
+  { name: 'Events', href: '/dashboard/events', icon: Calendar },
   { name: 'My Tickets', href: '/dashboard/tickets', icon: Ticket },
   { name: 'Activity History', href: '/dashboard/history', icon: Clock },
   { name: 'Profile', href: '/profile', icon: User },

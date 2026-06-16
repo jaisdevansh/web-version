@@ -5,26 +5,72 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import { ShieldCheck, Ticket, Users, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, Ticket, Users, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const SLIDES = [
+export const EVENTS = [
     {
         id: '1',
-        title: 'Curated Nightlife',
-        subtitle: "Discover the city's most exclusive venues, handpicked for the discerning few.",
-        image: 'https://images.unsplash.com/photo-1566737236500-c8ac43014a67?q=80&w=1000&auto=format&fit=crop',
+        title: 'IND vs AFG',
+        date: 'Sun, 14 Jan, 7:00 PM',
+        location: 'Holkar Stadium | Indore',
+        distance: '17.7 km away',
+        price: '₹1000 onwards',
+        image: 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop',
+        about: 'Catch the thrilling 2nd T20I match between India and Afghanistan live at Holkar Stadium. Experience the electric atmosphere and cheer for your favorite players.',
+        highlights: [
+            { title: 'What you\'ll experience', desc: 'Live cricket action, roaring crowd, and unforgettable moments.' },
+            { title: 'Special attractions', desc: 'Food stalls, merchandise, and fan zones available inside the stadium.' }
+        ],
+        tickets: [
+            { id: 't1', name: 'Early Bird | Silver', price: 1000, desc: ['Grants entry to Silver Zone', 'Seated section', 'First-come, first-served basis'] },
+            { id: 't2', name: 'Premium | Gold', price: 2500, desc: ['Grants entry to Gold Zone', 'Reserved seating', 'Includes complimentary beverage'] }
+        ]
     },
     {
         id: '2',
-        title: 'Exclusive Access',
-        subtitle: 'Experience the pinnacle of nightlife. Skip the lines and walk right into the most sought-after events.',
-        image: '/slide2.png',
+        title: 'Nizami Bandhu Live',
+        date: 'Sat, 27 Jun, 9:30 PM',
+        location: 'KOPA | Lajpat Nagar 3, New Delhi, Delhi/NCR',
+        distance: '5.2 km away',
+        price: '₹2000 onwards',
+        image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1000&auto=format&fit=crop',
+        images: [
+            'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1000&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1533174000220-4ee4a475583b?q=80&w=1000&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=1000&auto=format&fit=crop'
+        ],
+        about: 'Experience the soulful Sufi music of Nizami Bandhu live in concert. A dynamic blend of traditional qawwali and modern sounds.',
+        highlights: [
+            { title: 'What you\'ll experience', desc: 'Soulful Qawwali, captivating vocals, and an evening of spiritual music.' },
+            { title: 'Special attractions', desc: 'Intimate setting, premium acoustic experience, and fine dining options.' }
+        ],
+        tickets: [
+            { id: 't1', name: 'Phase 1 | General', price: 2000, desc: ['Standing area', 'Access to food and beverage counters'] },
+            { id: 't2', name: 'VIP Table', price: 10000, desc: ['Reserved VIP table for 4', 'Includes bottle service', 'Dedicated waitstaff'] }
+        ]
     },
     {
         id: '3',
-        title: 'VIP Treatment',
-        subtitle: 'Elevate your nights with premium table service and bespoke experiences crafted just for you.',
-        image: '/slide3.png',
+        title: 'Sunburn Arena ft. Martin Garrix',
+        date: 'Fri, 15 Dec, 5:00 PM',
+        location: 'Bhartiya City | Bengaluru',
+        distance: '12.4 km away',
+        price: '₹3500 onwards',
+        image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000&auto=format&fit=crop',
+        images: [
+            'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1545128485-c400e7702796?q=80&w=1000&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1520699697851-3dc68aa3a474?q=80&w=1000&auto=format&fit=crop'
+        ],
+        about: 'The world\'s #1 DJ Martin Garrix returns to India for a massive Sunburn Arena tour. Get ready for an electrifying night of EDM.',
+        highlights: [
+            { title: 'What you\'ll experience', desc: 'Massive stage production, mind-blowing visuals, and world-class EDM.' },
+            { title: 'Special attractions', desc: 'Multiple stages, art installations, and a massive food court.' }
+        ],
+        tickets: [
+            { id: 't1', name: 'GA Phase 1', price: 3500, desc: ['Access to GA standing area', 'Access to food and beverage counters'] },
+            { id: 't2', name: 'VIP Phase 1', price: 6500, desc: ['Access to VIP elevated viewing deck', 'Dedicated bars and washrooms'] }
+        ]
     }
 ];
 const ROTATING_FEATURES = [
@@ -155,94 +201,167 @@ function RotatingFeatureSection() {
 
 export default function WelcomeScreen() {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [innerImageIndex, setInnerImageIndex] = useState(0);
+
+    const event = EVENTS[currentIndex];
+    const eventImages = event.images || [event.image];
+
+    useEffect(() => {
+        setInnerImageIndex(0);
+    }, [currentIndex]);
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setCurrentIndex((prev) => (prev + 1) % SLIDES.length);
-        }, 4000);
+            setCurrentIndex((prev) => (prev + 1) % EVENTS.length);
+        }, 5000);
         return () => clearInterval(interval);
     }, []);
 
+    useEffect(() => {
+        if (eventImages.length <= 1) return;
+        const interval = setInterval(() => {
+            setInnerImageIndex((prev) => (prev + 1) % eventImages.length);
+        }, 2500);
+        return () => clearInterval(interval);
+    }, [currentIndex, eventImages.length]);
+
+    const nextSlide = () => {
+        setCurrentIndex((prev) => (prev + 1) % EVENTS.length);
+    };
+
+    const prevSlide = () => {
+        setCurrentIndex((prev) => (prev - 1 + EVENTS.length) % EVENTS.length);
+    };
+
     return (
-        <main className="w-full flex flex-col min-h-screen bg-black overflow-x-hidden">
-        <div className="relative flex min-h-screen w-full flex-col items-center justify-between overflow-hidden bg-black text-white selection:bg-blue-500/30">
-            {/* Background Image Carousel */}
-            <AnimatePresence mode="wait">
-                <motion.img
-                    key={currentIndex}
-                    src={SLIDES[currentIndex].image}
-                    initial={{ opacity: 0, scale: 1.05 }}
-                    animate={{ opacity: 1, scale: 1 }}
+        <div className="w-full flex flex-col overflow-x-hidden">
+        <div className="relative flex min-h-[calc(100dvh-4rem)] md:min-h-[calc(100dvh-5rem)] w-full flex-col items-center justify-center overflow-hidden bg-black text-white">
+            {/* Blurred Background Image Carousel */}
+            <AnimatePresence>
+                <motion.div
+                    key={`${currentIndex}-${innerImageIndex}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.8 }}
-                    className="absolute inset-0 h-full w-full object-cover"
-                />
+                    className="absolute inset-0 h-full w-full"
+                >
+                    <div 
+                        className="absolute inset-0 h-full w-full bg-cover bg-center" 
+                        style={{ backgroundImage: `url(${eventImages[innerImageIndex]})` }} 
+                    />
+                    <div className="absolute inset-0 bg-black/70 backdrop-blur-[100px]" />
+                </motion.div>
             </AnimatePresence>
 
-            {/* Gradient Overlay matching mobile styling */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/60 to-black/95" />
+            {/* Content Container */}
+            <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-12 lg:px-20 flex-1 flex items-center justify-center py-12">
+                <div className="flex flex-col lg:flex-row items-center w-full gap-10 lg:gap-24">
+                    
+                    {/* Left: Poster */}
+                    <div className="w-full lg:w-[45%] flex justify-center lg:justify-end">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={currentIndex}
+                                initial={{ opacity: 0, scale: 0.95, x: -20 }}
+                                animate={{ opacity: 1, scale: 1, x: 0 }}
+                                exit={{ opacity: 0, scale: 0.95, x: 20 }}
+                                transition={{ duration: 0.5 }}
+                                className="w-full max-w-[280px] sm:max-w-[320px] lg:max-w-[400px] max-h-[60vh] lg:max-h-[70vh] aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl relative bg-gray-100/50 flex items-center justify-center cursor-pointer group hover:scale-[1.02] transition-transform duration-300"
+                            >
+                                <Link href={`/events/${event.id}`} className="absolute inset-0 z-20">
+                                    <span className="sr-only">View event details</span>
+                                </Link>
+                                <AnimatePresence>
+                                    <motion.img
+                                        key={innerImageIndex}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.5 }}
+                                        src={eventImages[innerImageIndex]}
+                                        alt={event.title}
+                                        className="absolute inset-0 w-full h-full object-cover"
+                                    />
+                                </AnimatePresence>
 
-            {/* Logo Section */}
-            <div className="relative z-10 mt-20 flex flex-col items-center pointer-events-none">
-                <div className="flex h-[130px] w-[130px] items-center justify-center rounded-full bg-white/5 backdrop-blur-sm border border-white/20 shadow-[0_0_40px_rgba(255,255,255,0.1)]">
-                    <span className="text-4xl font-light tracking-[0.1em] text-white/90 translate-x-[0.05em]">EC</span>
-                </div>
-                <div className="mt-8 flex flex-col items-center">
-                    <h1 className="text-3xl font-light tracking-[0.55em] text-white translate-x-[0.275em]">ENTRY CLUB</h1>
-                    <div className="my-5 h-[1px] w-12 bg-white/30" />
-                    <p className="text-[10px] font-bold tracking-[0.7em] text-white/40 translate-x-[0.35em]">
-                        EXCLUSIVE ACCESS
-                    </p>
-                </div>
-            </div>
+                                {/* Image dots for multiple images */}
+                                {eventImages.length > 1 && (
+                                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10 bg-black/40 px-3 py-2 rounded-full backdrop-blur-md">
+                                        {eventImages.map((_, idx) => (
+                                            <div
+                                                key={idx}
+                                                className={`h-1.5 rounded-full transition-all duration-300 ${
+                                                    idx === innerImageIndex ? 'w-4 bg-white' : 'w-1.5 bg-white/40'
+                                                }`}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                            </motion.div>
+                        </AnimatePresence>
+                    </div>
 
-            {/* Bottom Action Section */}
-            <div className="relative z-10 w-full px-6 pb-12 text-left md:max-w-md md:mx-auto">
-                <div className="min-h-[120px] flex flex-col justify-end">
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                            key={currentIndex}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
-                            transition={{ duration: 0.5 }}
-                        >
-                            <h2 className="mb-3 text-[38px] leading-tight font-bold tracking-tight text-white drop-shadow-xl">
-                                {SLIDES[currentIndex].title}
-                            </h2>
-                            <p className="text-[16px] leading-relaxed text-white/85 drop-shadow-md font-medium">
-                                {SLIDES[currentIndex].subtitle}
-                            </p>
-                        </motion.div>
-                    </AnimatePresence>
+                    {/* Right: Details */}
+                    <div className="w-full lg:w-[55%] flex flex-col items-center lg:items-start text-center lg:text-left">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={currentIndex}
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                transition={{ duration: 0.5 }}
+                                className="space-y-6 text-gray-100"
+                            >
+                                <div className="font-semibold text-gray-300 tracking-wide">
+                                    {event.date}
+                                </div>
+                                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1]">
+                                    {event.title}
+                                </h1>
+                                <div className="text-lg lg:text-xl font-medium text-gray-300">
+                                    {event.location}
+                                </div>
+                                <div className="text-xl font-bold">
+                                    {event.price}
+                                </div>
+                                
+                                <div className="pt-6">
+                                    <Link href={`/events/${event.id}`}>
+                                        <Button className="h-14 px-10 text-[16px] font-bold tracking-wide bg-blue-600 hover:bg-blue-700 text-white rounded-2xl shadow-xl transition-all hover:scale-105 active:scale-95">
+                                            Book tickets
+                                        </Button>
+                                    </Link>
+                                </div>
+                            </motion.div>
+                        </AnimatePresence>
+                    </div>
+
                 </div>
 
-                {/* Highly Performant Indicator Dots (mimicking mobile interpolation) */}
-                <div className="mt-4 mb-10 flex items-center space-x-2">
-                    {SLIDES.map((_, idx) => (
-                        <div
+                {/* Left/Right Navigation Arrows */}
+                <button 
+                    onClick={prevSlide}
+                    className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition-all z-20 text-white hidden sm:flex shadow-sm"
+                >
+                    <ChevronLeft className="w-6 h-6" />
+                </button>
+                <button 
+                    onClick={nextSlide}
+                    className="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition-all z-20 text-white hidden sm:flex shadow-sm"
+                >
+                    <ChevronRight className="w-6 h-6" />
+                </button>
+                
+                {/* Dots indicator */}
+                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center space-x-3 z-20">
+                    {EVENTS.map((_, idx) => (
+                        <button
                             key={idx}
-                            className={`h-2 rounded-full transition-all duration-500 ease-out ${
-                                idx === currentIndex ? 'w-6 bg-blue-600 scale-100' : 'w-2 bg-blue-600/30 scale-80'
-                            }`}
+                            onClick={() => setCurrentIndex(idx)}
+                            className={`h-1.5 rounded-full transition-all duration-500 ${idx === currentIndex ? 'w-8 bg-white' : 'w-2 bg-white/20 hover:bg-white/40'}`}
                         />
                     ))}
-                </div>
-
-                {/* Button Container */}
-                <div className="flex flex-col space-y-5">
-                    <Link href="/register" className="w-full">
-                        <Button className="h-14 w-full text-[16px] font-bold tracking-wide bg-[#2563EB] hover:bg-[#1d4ed8] text-white rounded-xl shadow-[0_4px_14px_rgba(37,99,235,0.4)] transition-all">
-                            Get Started
-                        </Button>
-                    </Link>
-                    <div className="text-center">
-                        <Link href="/login" className="inline-block px-4 py-2 opacity-80 hover:opacity-100 transition-opacity">
-                            <span className="text-[14px] font-semibold text-white/60">
-                                Already have an account? <span className="text-[#2563EB] font-bold ml-1">Sign In</span>
-                            </span>
-                        </Link>
-                    </div>
                 </div>
             </div>
         </div>
@@ -327,8 +446,8 @@ export default function WelcomeScreen() {
                         className="space-y-8"
                     >
                         <div>
-                            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">Get in Touch</h2>
-                            <p className="text-white/50 text-xl font-light leading-relaxed">Ready to elevate your venue? Our elite team is ready to help you implement the world's most advanced nightlife platform.</p>
+                            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">Want to be the host?</h2>
+                            <p className="text-white/50 text-xl font-light leading-relaxed">Just fill this form and our team will connect with you within 24 hrs.</p>
                         </div>
                         
                         <div className="space-y-6 pt-8 border-t border-white/5">
@@ -336,14 +455,32 @@ export default function WelcomeScreen() {
                             <p className="text-white/60 font-light">For the best experience, faster bookings, and exclusive features, get the Entry Club mobile app.</p>
                             <div className="flex flex-wrap gap-4">
                                 <button className="flex items-center px-6 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors group">
-                                    <svg viewBox="0 0 384 512" className="w-6 h-6 mr-3 fill-current text-white group-hover:scale-110 transition-transform"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                                    <svg viewBox="0 0 384 512" className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform">
+                                        <defs>
+                                            <linearGradient id="apple-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                <stop offset="0%" stopColor="#FFFFFF" />
+                                                <stop offset="100%" stopColor="#B0B5B9" />
+                                            </linearGradient>
+                                        </defs>
+                                        <path fill="url(#apple-gradient)" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
+                                    </svg>
                                     <div className="text-left">
                                         <div className="text-[10px] text-white/60 uppercase tracking-widest font-bold">Download on the</div>
                                         <div className="text-sm font-semibold text-white">App Store</div>
                                     </div>
                                 </button>
                                 <button className="flex items-center px-6 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors group">
-                                    <svg viewBox="0 0 512 512" className="w-6 h-6 mr-3 fill-current text-white group-hover:scale-110 transition-transform"><path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z"/></svg>
+                                    <svg viewBox="0 0 512 512" className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform">
+                                        <defs>
+                                            <linearGradient id="google-play-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                <stop offset="0%" stopColor="#4285F4" />
+                                                <stop offset="30%" stopColor="#34A853" />
+                                                <stop offset="70%" stopColor="#FBBC05" />
+                                                <stop offset="100%" stopColor="#EA4335" />
+                                            </linearGradient>
+                                        </defs>
+                                        <path fill="url(#google-play-gradient)" d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z"/>
+                                    </svg>
                                     <div className="text-left">
                                         <div className="text-[10px] text-white/60 uppercase tracking-widest font-bold">Get it on</div>
                                         <div className="text-sm font-semibold text-white">Google Play</div>
@@ -385,6 +522,6 @@ export default function WelcomeScreen() {
                 </div>
             </div>
         </div>
-        </main>
+        </div>
     );
 }
