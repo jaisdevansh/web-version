@@ -51,89 +51,133 @@ export default function FeaturesPage() {
         </div>
       </section>
 
-      {/* Staggered Features Section */}
+      {/* Deep Dive Feature 1: Ticketing */}
       <section className="bg-black py-24 md:py-32 overflow-hidden border-t border-white/5">
         <div className="container mx-auto px-4 max-w-[1300px]">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-24 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="order-2 lg:order-1 relative group">
+              <div className="aspect-[4/3] rounded-3xl bg-[#111] border border-white/5 group-hover:border-blue-500/30 p-1 flex items-center justify-center overflow-hidden shadow-2xl relative transition-all duration-500">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <img 
+                  src="/flawless.png" 
+                  alt="Smart Ticketing Interface" 
+                  className="w-full h-full object-cover rounded-2xl opacity-60 mix-blend-screen transition-transform duration-700 group-hover:scale-105"
+                />
+                {/* Floating UI Element */}
+                <div className="absolute bottom-8 right-8 bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-2xl transform group-hover:-translate-y-2 transition-transform duration-500 z-10">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                      <CheckCircle2 className="w-6 h-6 text-blue-400" />
+                    </div>
+                    <div>
+                      <p className="text-white font-bold uppercase tracking-tight">VIP Table Booked</p>
+                      <p className="text-gray-400 text-sm font-light">₹2,500 Minimum</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="order-1 lg:order-2 space-y-8">
+              <div className="w-16 h-16 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+                <Ticket className="w-8 h-8 text-blue-500" />
+              </div>
+              <h2 className="text-4xl md:text-[56px] font-black uppercase text-white tracking-tighter leading-[0.9]">
+                Flawless Smart Ticketing <br/><span className="italic font-light text-blue-500">& VIP Bookings</span>
+              </h2>
+              <p className="text-lg text-gray-400 font-light leading-relaxed">
+                Ditch the clunky third-party platforms. Sell GA tickets, manage complex table minimums, and process VIP requests directly through your own beautifully branded portal. 
+              </p>
+              <ul className="space-y-4">
+                {['Dynamic Pricing Engine', 'Automated Table Approvals', 'Apple/Google Wallet Integration', 'Zero-delay payout schedules'].map((item, i) => (
+                  <li key={i} className="flex items-center space-x-3 text-gray-300 font-light">
+                    <CheckCircle2 className="w-5 h-5 text-blue-400" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Deep Dive Feature 2: Guest Management */}
+      <section className="bg-black py-24 md:py-32 overflow-hidden border-t border-white/5">
+        <div className="container mx-auto px-4 max-w-[1300px]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-8">
+              <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
+                <Users className="w-8 h-8 text-indigo-400" />
+              </div>
+              <h2 className="text-4xl md:text-[56px] font-black uppercase text-white tracking-tighter leading-[0.9]">
+                A Frictionless <span className="italic font-light text-indigo-400">Front Door</span> Experience
+              </h2>
+              <p className="text-lg text-gray-400 font-light leading-relaxed">
+                Your door staff shouldn't be scrolling through clipboards. Our sub-100ms sync engine ensures that guestlists, promoter tracking, and ban-lists are instantly updated across all devices.
+              </p>
+              <ul className="space-y-4">
+                {['Sub-100ms Offline Sync', 'Promoter Performance Tracking', 'Instant ID Verification', 'VIP Arrival Alerts'].map((item, i) => (
+                  <li key={i} className="flex items-center space-x-3 text-gray-300 font-light">
+                    <CheckCircle2 className="w-5 h-5 text-indigo-400" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
             
-            {/* Column 1 */}
-            <div className="space-y-24">
-              {/* Feature 01 */}
-              <div className="group">
-                <div className="aspect-[4/3] rounded-3xl bg-[#111] border border-white/5 mb-8 overflow-hidden shadow-2xl relative transition-all duration-500 group-hover:border-blue-500/30">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <img 
-                    src="/flawless.png" 
-                    alt="Sell Tickets" 
-                    className="w-full h-full object-cover opacity-60 mix-blend-screen transition-transform duration-700 group-hover:scale-105"
-                  />
+            <div className="relative group">
+              <div className="aspect-[4/3] rounded-3xl bg-[#111] border border-white/5 group-hover:border-indigo-500/30 p-1 flex items-center justify-center overflow-hidden shadow-2xl relative transition-all duration-500">
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <img 
+                  src="/slide2.png" 
+                  alt="Front Door Scanning" 
+                  className="w-full h-full object-cover rounded-2xl opacity-60 mix-blend-screen transition-transform duration-700 group-hover:scale-105"
+                />
+                 {/* Floating UI Element */}
+                 <div className="absolute top-8 left-8 bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 p-5 rounded-2xl shadow-2xl transform group-hover:scale-105 transition-transform duration-500 z-10">
+                  <div className="flex items-center space-x-4">
+                    <ShieldCheck className="w-8 h-8 text-indigo-400" />
+                    <div>
+                      <p className="text-white font-bold uppercase tracking-tight">Identity Verified</p>
+                      <p className="text-indigo-300 text-sm font-light">Welcome back.</p>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-[32px] font-black uppercase text-white tracking-tighter mb-4 flex items-baseline gap-4">
-                  <span className="text-gray-600 font-bold text-[32px]">01.</span> SELL TICKETS
-                </h3>
-                <p className="text-gray-400 font-light leading-relaxed text-[18px]">
-                  Increase conversions and give your customers a premium buying experience. Our optimised, intuitive ticketing and marketing features give you everything you need to maximise ticket sales.
-                </p>
-              </div>
-
-              {/* Feature 03 */}
-              <div className="group">
-                <div className="aspect-[4/3] rounded-3xl bg-[#111] border border-white/5 mb-8 overflow-hidden shadow-2xl relative transition-all duration-500 group-hover:border-indigo-500/30">
-                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <img 
-                    src="/slide3.png" 
-                    alt="Front Door" 
-                    className="w-full h-full object-cover opacity-60 mix-blend-screen transition-transform duration-700 group-hover:scale-105"
-                  />
-                </div>
-                <h3 className="text-[32px] font-black uppercase text-white tracking-tighter mb-4 flex items-baseline gap-4">
-                  <span className="text-gray-600 font-bold text-[32px]">03.</span> FRONT DOOR EXPERIENCE
-                </h3>
-                <p className="text-gray-400 font-light leading-relaxed text-[18px]">
-                  Your door staff shouldn't be scrolling through clipboards. Our sub-100ms sync engine ensures that guestlists, promoter tracking, and ban-lists are instantly updated across all devices.
-                </p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
 
-            {/* Column 2 (Staggered) */}
-            <div className="space-y-24 md:mt-32">
-              {/* Feature 02 */}
-              <div className="group">
-                <div className="aspect-[4/3] rounded-3xl bg-[#111] border border-white/5 mb-8 overflow-hidden shadow-2xl relative transition-all duration-500 group-hover:border-sky-500/30">
-                  <div className="absolute inset-0 bg-gradient-to-br from-sky-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <img 
-                    src="/slide2.png" 
-                    alt="Build a Following" 
-                    className="w-full h-full object-cover opacity-60 mix-blend-screen transition-transform duration-700 group-hover:scale-105"
-                  />
-                </div>
-                <h3 className="text-[32px] font-black uppercase text-white tracking-tighter mb-4 flex items-baseline gap-4">
-                  <span className="text-gray-600 font-bold text-[32px]">02.</span> BUILD A FOLLOWING
-                </h3>
-                <p className="text-gray-400 font-light leading-relaxed text-[18px]">
-                  Grow your audience with every ticket you sell. Every time a customer purchases a ticket to your event on Entry Club they become part of your following. Giving you a stronger foundation to launch your next event.
-                </p>
+      {/* Grid of Other Features */}
+      <section className="bg-black text-white py-24 pb-32 border-t border-white/10 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none" />
+        <div className="container mx-auto px-4 max-w-[1300px] relative z-10">
+          <div className="mb-16">
+            <h4 className="text-center font-bold text-[20px] mb-4 text-blue-500">Everything's covered</h4>
+            <h2 className="text-center text-4xl md:text-[64px] font-bold leading-[1.1] max-w-[960px] mx-auto text-white">
+              We didn't just build a ticketing app. We built an entire ecosystem to power your venue.
+            </h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { icon: BarChart3, title: 'Real-time Analytics', desc: 'Monitor revenue, bar spend, and attendance from your phone, in real time.', color: 'text-blue-400', hoverBorder: 'group-hover:border-blue-500/30', gradient: 'from-blue-500/5' },
+              { icon: Zap, title: 'Lightning Fast POS', desc: 'Integrated point-of-sale systems that keep the drinks flowing without the lag.', color: 'text-cyan-400', hoverBorder: 'group-hover:border-cyan-500/30', gradient: 'from-cyan-500/5' },
+              { icon: Smartphone, title: 'White-labeled App', desc: 'Give your most loyal guests a dedicated app with your own branding.', color: 'text-indigo-400', hoverBorder: 'group-hover:border-indigo-500/30', gradient: 'from-indigo-500/5' },
+              { icon: ShieldCheck, title: 'Bank-Grade Security', desc: 'End-to-end encryption and dynamic QR codes eliminate ticket fraud completely.', color: 'text-blue-300', hoverBorder: 'group-hover:border-blue-300/30', gradient: 'from-blue-300/5' },
+              { icon: Users, title: 'Staff Management', desc: 'Granular permissions ensure the right staff have access to the right tools.', color: 'text-sky-400', hoverBorder: 'group-hover:border-sky-500/30', gradient: 'from-sky-500/5' },
+              { icon: Star, title: 'CRM Integration', desc: 'Know your biggest spenders and build automated retention campaigns.', color: 'text-blue-500', hoverBorder: 'group-hover:border-blue-600/30', gradient: 'from-blue-600/5' },
+            ].map((feature, i) => (
+              <div 
+                key={i}
+                className={`p-10 rounded-2xl bg-[#111] border border-white/5 ${feature.hoverBorder} transition-colors duration-500 group relative overflow-hidden flex flex-col`}
+              >
+                <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                <feature.icon className={`w-10 h-10 ${feature.color} mb-6 relative z-10`} />
+                <h3 className="text-[24px] font-bold uppercase tracking-tight text-white mb-3 relative z-10">{feature.title}</h3>
+                <p className="text-[16px] text-gray-400 font-light leading-relaxed relative z-10">{feature.desc}</p>
               </div>
-
-              {/* Feature 04 */}
-              <div className="group">
-                <div className="aspect-[4/3] rounded-3xl bg-[#111] border border-white/5 mb-8 overflow-hidden shadow-2xl relative transition-all duration-500 group-hover:border-cyan-500/30">
-                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <img 
-                    src="/flawless.png" 
-                    alt="Real-time Analytics" 
-                    className="w-full h-full object-cover opacity-60 mix-blend-screen transition-transform duration-700 group-hover:scale-105"
-                  />
-                </div>
-                <h3 className="text-[32px] font-black uppercase text-white tracking-tighter mb-4 flex items-baseline gap-4">
-                  <span className="text-gray-600 font-bold text-[32px]">04.</span> REAL-TIME ANALYTICS
-                </h3>
-                <p className="text-gray-400 font-light leading-relaxed text-[18px]">
-                  Monitor revenue, bar spend, and attendance from your phone, in real time. Our dashboard gives you the insights you need to make informed decisions without waiting for the night to end.
-                </p>
-              </div>
-            </div>
-
+            ))}
           </div>
         </div>
       </section>
