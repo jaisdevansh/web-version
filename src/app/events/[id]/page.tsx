@@ -5,9 +5,10 @@ import { useParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Calendar, Clock, ChevronRight, Minus, Plus, Diamond, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 import { LoginModal } from '@/components/shared/LoginModal';
 import { useAuthStore } from '@/store/useAuthStore';
-import { EVENTS } from '@/app/page';
+import { EVENTS } from '@/lib/data';
 
 export default function EventDetailsPage() {
   const params = useParams();
@@ -79,26 +80,35 @@ export default function EventDetailsPage() {
         </div>
 
         <div className="w-full aspect-[21/9] md:aspect-[3/1] relative rounded-3xl overflow-hidden shadow-2xl bg-black group">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentImageIndex}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1.5, ease: "easeInOut" }}
-              className="absolute inset-0 z-0"
-            >
-              {/* Edge Blur Background */}
-              <div 
-                className="absolute inset-0 bg-cover bg-center opacity-40 blur-xl scale-110"
-                style={{ backgroundImage: `url(${eventImages[currentImageIndex]})` }}
-              />
-              {/* Main Poster */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                 <img src={eventImages[currentImageIndex]} alt={event.title} className="h-full w-full object-cover md:object-contain drop-shadow-2xl z-10" />
-              </div>
-            </motion.div>
-          </AnimatePresence>
+          <div className="absolute inset-0 z-0">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentImageIndex}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.5, ease: "easeInOut" }}
+                className="absolute inset-0 z-0"
+              >
+                {/* Edge Blur Background */}
+                <Image 
+                  src={eventImages[currentImageIndex] || ''}
+                  alt="Background Blur"
+                  fill
+                  priority
+                  className="object-cover opacity-40 blur-xl scale-110"
+                />
+                {/* Main Poster */}
+                <Image 
+                  src={eventImages[currentImageIndex] || ''} 
+                  alt={event.title} 
+                  fill
+                  priority
+                  className="object-cover md:object-contain drop-shadow-2xl z-10" 
+                />
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
           {/* Dots Indicator */}
           {eventImages.length > 1 && (

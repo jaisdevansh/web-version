@@ -97,108 +97,18 @@ export default function TicketsPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
-            {/* Dummy UI Card 1 (Upcoming) */}
+            {/* No bookings found message for Upcoming */}
             {activeTab === "Upcoming" && filteredBookings.length === 0 && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-[#12161f] rounded-3xl p-6 border border-white/[0.03] shadow-lg shadow-black/50"
-              >
-                <div className="flex justify-between items-center mb-6">
-                  <span className="bg-[#064e3b]/30 text-[#34d399] text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-md uppercase">Approved</span>
-                  <span className="text-white/30 text-xs font-mono">#6A12C5F9</span>
-                </div>
-                
-                <div className="flex items-center mb-8">
-                  <div className="w-20 h-20 rounded-2xl bg-[#8b5cf6] flex items-center justify-center shrink-0">
-                    <span className="text-white text-3xl font-semibold">US</span>
-                  </div>
-                  <div className="ml-5">
-                    <p className="text-[#3b82f6] text-xs font-bold tracking-wider uppercase mb-1.5">Exclusive Club</p>
-                    <h3 className="text-white text-xl font-medium leading-tight mb-2">General Access</h3>
-                    <p className="text-white/40 text-sm">Sun, 24 May</p>
-                  </div>
-                </div>
-                
-                <div className="flex justify-between items-center pt-5 border-t border-white/5">
-                  <p className="text-white/80 font-medium text-base">Price: <span className="font-bold">₹3</span></p>
-                  <button className="text-[#3b82f6] text-sm font-medium flex items-center hover:text-blue-400 transition-colors">
-                    View Details <ArrowRight className="w-4 h-4 ml-1.5" />
-                  </button>
-                </div>
-              </motion.div>
+              <div className="col-span-full py-20 text-center">
+                <p className="text-muted-foreground">No upcoming bookings found.</p>
+              </div>
             )}
 
-            {/* Dummy UI Card 2 (Upcoming Split) */}
-            {activeTab === "Upcoming" && filteredBookings.length === 0 && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="bg-[#12161f] rounded-3xl p-6 border border-white/[0.03] shadow-lg shadow-black/50"
-              >
-                <div className="flex justify-between items-center mb-6">
-                  <span className="bg-[#064e3b]/30 text-[#34d399] text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-md uppercase">Approved</span>
-                  <span className="text-white/30 text-xs font-mono">#6A12BF1D</span>
-                </div>
-                
-                <div className="flex items-center mb-8">
-                  <div className="w-20 h-20 rounded-2xl bg-[#8b5cf6] flex items-center justify-center shrink-0">
-                    <span className="text-white text-3xl font-semibold">US</span>
-                  </div>
-                  <div className="ml-5">
-                    <p className="text-[#3b82f6] text-xs font-bold tracking-wider uppercase mb-1.5">Exclusive Club</p>
-                    <h3 className="text-white text-xl font-medium leading-tight mb-2">General Access Zone (Split)</h3>
-                    <p className="text-white/40 text-sm">Sun, 24 May</p>
-                  </div>
-                </div>
-                
-                <div className="flex justify-between items-center pt-5 border-t border-white/5">
-                  <p className="text-white/80 font-medium text-base">Price: <span className="font-bold">₹7</span></p>
-                  <button className="text-[#3b82f6] text-sm font-medium flex items-center hover:text-blue-400 transition-colors">
-                    View Details <ArrowRight className="w-4 h-4 ml-1.5" />
-                  </button>
-                </div>
-              </motion.div>
-            )}
-
-            {/* Dummy UI Card for Past Event */}
+            {/* No bookings found message for Past */}
             {activeTab === "Past" && filteredBookings.length === 0 && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-[#12161f] rounded-3xl p-6 border border-white/[0.03] shadow-lg shadow-black/50 flex flex-col"
-              >
-                <div className="flex justify-between items-center mb-6">
-                  <span className="bg-[#064e3b]/30 text-[#34d399] text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-md uppercase">Approved</span>
-                  <span className="text-white/30 text-xs font-mono">#6A17DF22</span>
-                </div>
-                
-                <div className="flex items-center mb-8 flex-1">
-                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-pink-500 to-red-500 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
-                    <img src="/flawless.png" className="w-full h-full object-cover" alt="Event cover" />
-                  </div>
-                  <div className="ml-5">
-                    <p className="text-[#3b82f6] text-xs font-bold tracking-wider uppercase mb-1.5">Exclusive Club</p>
-                    <h3 className="text-white text-xl font-medium leading-tight mb-2">aujlaaa</h3>
-                    <p className="text-white/40 text-sm">Sat, 30 May</p>
-                  </div>
-                </div>
-                
-                <div className="flex justify-between items-center pt-5 border-t border-white/5 mb-6">
-                  <p className="text-white/80 font-medium text-base">Price: <span className="font-bold">₹25</span></p>
-                  <button className="text-[#3b82f6] text-sm font-medium flex items-center hover:text-blue-400 transition-colors">
-                    View Details <ArrowRight className="w-4 h-4 ml-1.5" />
-                  </button>
-                </div>
-
-                <button 
-                  onClick={() => router.push('/dashboard/review?title=aujlaaa&image=%2Fflawless.png')}
-                  className="w-full py-3.5 bg-[#2e1a47] hover:bg-[#3b2359] text-[#d8b4fe] rounded-xl font-semibold text-sm transition-colors border border-purple-500/20 mt-auto"
-                >
-                  Write a Review
-                </button>
-              </motion.div>
+              <div className="col-span-full py-20 text-center">
+                <p className="text-muted-foreground">No past bookings found.</p>
+              </div>
             )}
 
             {/* Real Data Rendering */}

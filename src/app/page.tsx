@@ -2,264 +2,113 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { ShieldCheck, Ticket, Users, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import axiosInstance from '@/lib/axios';
 
-export const EVENTS = [
-    {
-        id: '1',
-        title: 'IND vs AFG',
-        date: 'Sun, 14 Jan, 7:00 PM',
-        location: 'Holkar Stadium | Indore',
-        distance: '17.7 km away',
-        price: '₹1000 onwards',
-        image: 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop',
-        about: 'Catch the thrilling 2nd T20I match between India and Afghanistan live at Holkar Stadium. Experience the electric atmosphere and cheer for your favorite players.',
-        highlights: [
-            { title: 'What you\'ll experience', desc: 'Live cricket action, roaring crowd, and unforgettable moments.' },
-            { title: 'Special attractions', desc: 'Food stalls, merchandise, and fan zones available inside the stadium.' }
-        ],
-        tickets: [
-            { id: 't1', name: 'Early Bird | Silver', price: 1000, desc: ['Grants entry to Silver Zone', 'Seated section', 'First-come, first-served basis'] },
-            { id: 't2', name: 'Premium | Gold', price: 2500, desc: ['Grants entry to Gold Zone', 'Reserved seating', 'Includes complimentary beverage'] }
-        ]
-    },
-    {
-        id: '2',
-        title: 'Nizami Bandhu Live',
-        date: 'Sat, 27 Jun, 9:30 PM',
-        location: 'KOPA | Lajpat Nagar 3, New Delhi, Delhi/NCR',
-        distance: '5.2 km away',
-        price: '₹2000 onwards',
-        image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1000&auto=format&fit=crop',
-        images: [
-            'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1000&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1533174000220-4ee4a475583b?q=80&w=1000&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=1000&auto=format&fit=crop'
-        ],
-        about: 'Experience the soulful Sufi music of Nizami Bandhu live in concert. A dynamic blend of traditional qawwali and modern sounds.',
-        highlights: [
-            { title: 'What you\'ll experience', desc: 'Soulful Qawwali, captivating vocals, and an evening of spiritual music.' },
-            { title: 'Special attractions', desc: 'Intimate setting, premium acoustic experience, and fine dining options.' }
-        ],
-        tickets: [
-            { id: 't1', name: 'Phase 1 | General', price: 2000, desc: ['Standing area', 'Access to food and beverage counters'] },
-            { id: 't2', name: 'VIP Table', price: 10000, desc: ['Reserved VIP table for 4', 'Includes bottle service', 'Dedicated waitstaff'] }
-        ]
-    },
-    {
-        id: '3',
-        title: 'Sunburn Arena ft. Martin Garrix',
-        date: 'Fri, 15 Dec, 5:00 PM',
-        location: 'Bhartiya City | Bengaluru',
-        distance: '12.4 km away',
-        price: '₹3500 onwards',
-        image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000&auto=format&fit=crop',
-        images: [
-            'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1545128485-c400e7702796?q=80&w=1000&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1520699697851-3dc68aa3a474?q=80&w=1000&auto=format&fit=crop'
-        ],
-        about: 'The world\'s #1 DJ Martin Garrix returns to India for a massive Sunburn Arena tour. Get ready for an electrifying night of EDM.',
-        highlights: [
-            { title: 'What you\'ll experience', desc: 'Massive stage production, mind-blowing visuals, and world-class EDM.' },
-            { title: 'Special attractions', desc: 'Multiple stages, art installations, and a massive food court.' }
-        ],
-        tickets: [
-            { id: 't1', name: 'GA Phase 1', price: 3500, desc: ['Access to GA standing area', 'Access to food and beverage counters'] },
-            { id: 't2', name: 'VIP Phase 1', price: 6500, desc: ['Access to VIP elevated viewing deck', 'Dedicated bars and washrooms'] }
-        ]
-    }
-];
-const ROTATING_FEATURES = [
-    {
-        title: "Flawless Booking",
-        desc: "Ditch the clunky platforms. Sell GA tickets, manage complex table minimums, and process VIP requests directly through your own beautifully branded portal.",
-        bullets: ['Dynamic Pricing Engine', 'Automated Table Approvals', 'Zero-delay payouts'],
-        icon: Ticket,
-        color: "text-blue-400",
-        bgColor: "bg-blue-500/10 border-blue-500/20",
-        img: "/flawless.png",
-        uiTitle: "VIP Table Booked",
-        uiSubtitle: "Confirmed for tonight.",
-        uiIcon: Ticket,
-        uiColor: "text-blue-400"
-    },
-    {
-        title: "A Frictionless Front Door Experience",
-        desc: "Your door staff shouldn't be scrolling through clipboards. Our sub-100ms sync engine ensures that guestlists, promoter tracking, and ban-lists are instantly updated across all devices.",
-        bullets: ['Sub-100ms Offline Sync', 'Promoter Performance Tracking', 'Instant ID Verification', 'VIP Arrival Alerts'],
-        icon: Users,
-        color: "text-purple-400",
-        bgColor: "bg-purple-500/10 border-purple-500/20",
-        img: "/slide2.png",
-        uiTitle: "Identity Verified",
-        uiSubtitle: "Welcome back.",
-        uiIcon: ShieldCheck,
-        uiColor: "text-indigo-400"
-    },
-    {
-        title: "Bank-Grade Security",
-        desc: "We protect your venue's data and revenue with enterprise-grade infrastructure. End-to-end encryption and dynamic QR codes eliminate ticket fraud completely.",
-        bullets: ['Dynamic QR Codes', 'End-to-end Encryption', 'Role-based Access Control', 'Automated Fraud Detection'],
-        icon: ShieldCheck,
-        color: "text-indigo-400",
-        bgColor: "bg-indigo-500/10 border-indigo-500/20",
-        img: "/invalid-qr.png",
-        uiTitle: "Fraud Prevented",
-        uiSubtitle: "Invalid QR code detected.",
-        uiIcon: ShieldCheck,
-        uiColor: "text-red-400"
-    }
-];
-
-function RotatingFeatureSection() {
-    const [activeIndex, setActiveIndex] = useState(0);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setActiveIndex((prev) => (prev + 1) % ROTATING_FEATURES.length);
-        }, 5000);
-        return () => clearInterval(interval);
-    }, []);
-
-    const feature = ROTATING_FEATURES[activeIndex];
-
-    return (
-        <div className="py-24 max-w-7xl mx-auto">
-            <AnimatePresence mode="wait">
-                <motion.div 
-                    key={activeIndex}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.5 }}
-                    className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
-                >
-                    <div className="space-y-8">
-                        <div className={`w-14 h-14 rounded-2xl ${feature.bgColor} border flex items-center justify-center`}>
-                            <feature.icon className={`w-7 h-7 ${feature.color}`} />
-                        </div>
-                        <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight leading-tight">
-                            {feature.title}
-                        </h2>
-                        <p className="text-lg text-white/60 font-light leading-relaxed">
-                            {feature.desc}
-                        </p>
-                        <ul className="space-y-4">
-                            {feature.bullets.map((item, i) => (
-                                <li key={i} className="flex items-center space-x-3 text-white/80">
-                                    <CheckCircle2 className={`w-5 h-5 ${feature.color}`} />
-                                    <span>{item}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                    
-                    <div className="relative">
-                        <div className="aspect-[4/3] rounded-3xl bg-gradient-to-br from-white/[0.05] to-transparent border border-white/10 p-1 flex items-center justify-center overflow-hidden shadow-2xl relative group">
-                            <img 
-                                src={feature.img} 
-                                alt={feature.title} 
-                                className="w-full h-full object-cover rounded-2xl opacity-60 mix-blend-screen"
-                            />
-                            {/* Floating UI Element */}
-                            <motion.div 
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: 0.3 }}
-                                className="absolute top-8 left-8 bg-black/80 backdrop-blur-xl border border-white/10 p-5 rounded-2xl shadow-2xl"
-                            >
-                                <div className="flex items-center space-x-4">
-                                    <feature.uiIcon className={`w-8 h-8 ${feature.uiColor}`} />
-                                    <div>
-                                        <p className="text-white font-medium">{feature.uiTitle}</p>
-                                        <p className="text-white/60 text-sm">{feature.uiSubtitle}</p>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        </div>
-                    </div>
-                </motion.div>
-            </AnimatePresence>
-
-            <motion.div 
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                className="text-center mt-24"
-            >
-                <Link href="/features" className="group inline-flex items-center px-8 py-4 bg-white/[0.05] border border-white/10 hover:bg-white/[0.1] rounded-full text-white font-semibold text-lg transition-all hover:scale-105">
-                    View All Features <ArrowRight className="w-5 h-5 ml-3 transform group-hover:translate-x-1 transition-transform" />
-                </Link>
-            </motion.div>
-        </div>
-    );
-}
-
+import { EVENTS } from '@/lib/data';
 export default function WelcomeScreen() {
+    const { data: fetchedEvents } = useQuery({
+        queryKey: ['publicEvents'],
+        queryFn: async () => {
+            const res = await axiosInstance.get('/user/events?limit=20');
+            return res.data?.data || [];
+        },
+        staleTime: 60000,
+    });
+
+    const activeEvents = fetchedEvents && fetchedEvents.length > 0 ? fetchedEvents.map((ev: any) => ({
+        id: ev._id,
+        title: ev.title,
+        date: new Date(ev.date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) + ', ' + ev.startTime,
+        location: ev.venueName || 'Secret Location',
+        price: ev.displayPrice !== null ? `₹${ev.displayPrice} onwards` : 'Free',
+        image: ev.coverImage || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop',
+        images: [ev.coverImage || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop'],
+    })) : EVENTS;
+
+    const heroEvents = activeEvents.slice(0, 5);
+    const allGridEvents = activeEvents;
+
     const [currentIndex, setCurrentIndex] = useState(0);
     const [innerImageIndex, setInnerImageIndex] = useState(0);
 
-    const event = EVENTS[currentIndex];
-    const eventImages = event.images || [event.image];
+    const safeIndex = currentIndex < heroEvents.length ? currentIndex : 0;
+    const event = heroEvents[safeIndex];
+    const eventImages = event?.images || [event?.image];
+    const safeInnerImageIndex = innerImageIndex < eventImages.length ? innerImageIndex : 0;
 
     useEffect(() => {
         setInnerImageIndex(0);
     }, [currentIndex]);
 
     useEffect(() => {
+        if (!heroEvents.length) return;
         const interval = setInterval(() => {
-            setCurrentIndex((prev) => (prev + 1) % EVENTS.length);
+            setCurrentIndex((prev) => (prev + 1) % heroEvents.length);
         }, 5000);
         return () => clearInterval(interval);
-    }, []);
+    }, [heroEvents.length]);
 
     useEffect(() => {
-        if (eventImages.length <= 1) return;
+        if (!eventImages || eventImages.length <= 1) return;
         const interval = setInterval(() => {
             setInnerImageIndex((prev) => (prev + 1) % eventImages.length);
         }, 2500);
         return () => clearInterval(interval);
-    }, [currentIndex, eventImages.length]);
+    }, [currentIndex, eventImages]);
 
     const nextSlide = () => {
-        setCurrentIndex((prev) => (prev + 1) % EVENTS.length);
+        setCurrentIndex((prev) => (prev + 1) % heroEvents.length);
+        setInnerImageIndex(0);
     };
 
     const prevSlide = () => {
-        setCurrentIndex((prev) => (prev - 1 + EVENTS.length) % EVENTS.length);
+        setCurrentIndex((prev) => (prev - 1 + heroEvents.length) % heroEvents.length);
+        setInnerImageIndex(0);
     };
+
+    const FILTERS = ['Filters', 'Today', 'Tomorrow', 'This Weekend', 'Under 10 km', 'Live Gigs', 'Music'];
+    const [activeFilter, setActiveFilter] = useState('All');
+
+    if (!event) return null;
 
     return (
         <div className="w-full flex flex-col overflow-x-hidden">
-        <div className="relative flex min-h-[calc(100dvh-4rem)] md:min-h-[calc(100dvh-5rem)] w-full flex-col items-center justify-center overflow-hidden bg-black text-white">
-            {/* Blurred Background Image Carousel */}
-            <AnimatePresence>
-                <motion.div
-                    key={`${currentIndex}-${innerImageIndex}`}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.8 }}
-                    className="absolute inset-0 h-full w-full"
-                >
-                    <div 
-                        className="absolute inset-0 h-full w-full bg-cover bg-center" 
-                        style={{ backgroundImage: `url(${eventImages[innerImageIndex]})` }} 
-                    />
-                    <div className="absolute inset-0 bg-black/70 backdrop-blur-[100px]" />
-                </motion.div>
-            </AnimatePresence>
+            <div className="relative flex min-h-[calc(100dvh-4rem)] md:min-h-[calc(100dvh-5rem)] w-full flex-col items-center justify-center overflow-hidden bg-black text-white">
+                {/* Blurred Background Image Carousel */}
+                <div className="absolute inset-0 z-0">
+                    <AnimatePresence>
+                        <motion.div
+                            key={`${currentIndex}-${safeInnerImageIndex}`}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.8 }}
+                            className="absolute inset-0 h-full w-full"
+                        >
+                            <Image
+                                src={eventImages[safeInnerImageIndex]}
+                                alt="Background"
+                                fill
+                                priority
+                                className="object-cover"
+                            />
+                        </motion.div>
+                    </AnimatePresence>
+                    <div className="absolute inset-0 bg-black/70 backdrop-blur-[100px] z-10" />
+                </div>
 
             {/* Content Container */}
             <div className="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-12 lg:px-20 flex-1 flex items-center justify-center py-12">
                 <div className="flex flex-col lg:flex-row items-center w-full gap-10 lg:gap-24">
                     
                     {/* Left: Poster */}
-                    <div className="w-full lg:w-[45%] flex justify-center lg:justify-end">
+                    <div className="w-full lg:w-[60%] flex justify-center lg:justify-end">
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={currentIndex}
@@ -267,32 +116,38 @@ export default function WelcomeScreen() {
                                 animate={{ opacity: 1, scale: 1, x: 0 }}
                                 exit={{ opacity: 0, scale: 0.95, x: 20 }}
                                 transition={{ duration: 0.5 }}
-                                className="w-full max-w-[280px] sm:max-w-[320px] lg:max-w-[400px] max-h-[60vh] lg:max-h-[70vh] aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl relative bg-gray-100/50 flex items-center justify-center cursor-pointer group hover:scale-[1.02] transition-transform duration-300"
+                                className="w-full max-w-[400px] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[750px] aspect-[16/9] md:aspect-[3/2] lg:aspect-[16/9] rounded-3xl overflow-hidden shadow-2xl relative bg-[#111] flex items-center justify-center cursor-pointer group hover:scale-[1.02] transition-transform duration-300"
                             >
                                 <Link href={`/events/${event.id}`} className="absolute inset-0 z-20">
                                     <span className="sr-only">View event details</span>
                                 </Link>
                                 <AnimatePresence>
-                                    <motion.img
-                                        key={innerImageIndex}
+                                    <motion.div
+                                        key={safeInnerImageIndex}
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         exit={{ opacity: 0 }}
                                         transition={{ duration: 0.5 }}
-                                        src={eventImages[innerImageIndex]}
-                                        alt={event.title}
-                                        className="absolute inset-0 w-full h-full object-cover"
-                                    />
+                                        className="absolute inset-0 w-full h-full"
+                                    >
+                                        <Image
+                                            src={eventImages[safeInnerImageIndex]}
+                                            alt={event.title}
+                                            fill
+                                            priority
+                                            className="object-cover"
+                                        />
+                                    </motion.div>
                                 </AnimatePresence>
 
                                 {/* Image dots for multiple images */}
                                 {eventImages.length > 1 && (
                                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10 bg-black/40 px-3 py-2 rounded-full backdrop-blur-md">
-                                        {eventImages.map((_, idx) => (
+                                        {eventImages.map((_: any, idx: number) => (
                                             <div
                                                 key={idx}
                                                 className={`h-1.5 rounded-full transition-all duration-300 ${
-                                                    idx === innerImageIndex ? 'w-4 bg-white' : 'w-1.5 bg-white/40'
+                                                    idx === safeInnerImageIndex ? 'w-4 bg-white' : 'w-1.5 bg-white/40'
                                                 }`}
                                             />
                                         ))}
@@ -303,7 +158,7 @@ export default function WelcomeScreen() {
                     </div>
 
                     {/* Right: Details */}
-                    <div className="w-full lg:w-[55%] flex flex-col items-center lg:items-start text-center lg:text-left">
+                    <div className="w-full lg:w-[40%] flex flex-col items-center lg:items-start text-center lg:text-left">
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={currentIndex}
@@ -339,23 +194,8 @@ export default function WelcomeScreen() {
 
                 </div>
 
-                {/* Left/Right Navigation Arrows */}
-                <button 
-                    onClick={prevSlide}
-                    className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition-all z-20 text-white hidden sm:flex shadow-sm"
-                >
-                    <ChevronLeft className="w-6 h-6" />
-                </button>
-                <button 
-                    onClick={nextSlide}
-                    className="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition-all z-20 text-white hidden sm:flex shadow-sm"
-                >
-                    <ChevronRight className="w-6 h-6" />
-                </button>
-                
-                {/* Dots indicator */}
                 <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center space-x-3 z-20">
-                    {EVENTS.map((_, idx) => (
+                    {heroEvents.map((_: any, idx: number) => (
                         <button
                             key={idx}
                             onClick={() => setCurrentIndex(idx)}
@@ -364,78 +204,306 @@ export default function WelcomeScreen() {
                     ))}
                 </div>
             </div>
+
+            {/* Left/Right Navigation Arrows - Positioned relative to viewport to prevent image overlapping */}
+            <button 
+                onClick={prevSlide}
+                className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/30 backdrop-blur-md transition-all z-30 text-white hidden sm:flex shadow-sm"
+            >
+                <ChevronLeft className="w-6 h-6" />
+            </button>
+            <button 
+                onClick={nextSlide}
+                className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/30 backdrop-blur-md transition-all z-30 text-white hidden sm:flex shadow-sm"
+            >
+                <ChevronRight className="w-6 h-6" />
+            </button>
         </div>
 
-        {/* Scrolling Sections */}
-        {/* Features Preview */}
-        <div className="relative z-20 bg-black pt-32 pb-12 px-6 overflow-hidden">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
-            <div className="max-w-6xl mx-auto relative z-10">
-                <RotatingFeatureSection />
-            </div>
-        </div>
+        {/* All Events Section */}
+        <div className="relative z-20 bg-[#080b12] py-16 px-6 lg:px-12 xl:px-20">
+            <div className="max-w-[1400px] mx-auto">
+                <h2 className="text-3xl font-bold text-white mb-6">All events</h2>
+                
+                {/* Filters */}
+                <div className="flex items-center space-x-3 overflow-x-auto pb-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                    {FILTERS.map((filter, index) => (
+                        <button
+                            key={index}
+                            onClick={() => setActiveFilter(filter)}
+                            className={`whitespace-nowrap px-5 py-2 rounded-full text-sm font-medium transition-colors border flex items-center ${
+                                activeFilter === filter 
+                                ? 'bg-white text-black border-white' 
+                                : filter === 'Filters'
+                                    ? 'bg-transparent text-white/90 border-white/20 hover:border-white/50'
+                                    : 'bg-transparent text-white/70 border-white/10 hover:border-white/30 hover:text-white'
+                            }`}
+                        >
+                            {filter === 'Filters' && (
+                                <svg className="w-4 h-4 mr-2 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                                </svg>
+                            )}
+                            {filter}
+                            {filter === 'Filters' && (
+                                <svg className="w-3 h-3 ml-2 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            )}
+                        </button>
+                    ))}
+                </div>
 
-        {/* About Preview */}
-        <div className="relative z-20 bg-[#020202] pt-12 pb-32 px-6 border-y border-white/[0.02] overflow-hidden">
-            <div className="absolute top-[40%] right-[-10%] w-[30%] h-[50%] rounded-full bg-purple-600/10 blur-[150px] pointer-events-none" />
-            <div className="max-w-7xl mx-auto relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                    <motion.div 
-                        initial={{ opacity: 0, x: -50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 0.8 }}
-                        className="space-y-8"
-                    >
-                        <div className="inline-flex items-center rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-sm font-medium text-blue-300 backdrop-blur-sm">
-                            The Entry Club Story
-                        </div>
-                        
-                        <h2 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl text-white drop-shadow-xl leading-tight">
-                            Revolutionizing <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">Exclusive Access</span>
-                        </h2>
-                        
-                        <p className="text-lg text-white/60 font-light leading-relaxed">
-                            Founded by industry veterans, Entry Club was built to solve the real-world operational challenges faced by premium venue owners, promoters, and event organizers every single night.
-                        </p>
-                        
-                        <p className="text-lg text-white/60 font-light leading-relaxed">
-                            We believe that technology should enhance the guest experience, not get in the way. That is why we have engineered a seamless, enterprise-grade ecosystem that connects your staff, your customers, and your data with zero friction.
-                        </p>
-
-                        <Link href="/about" className="inline-block mt-4">
-                            <button className="relative px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-all transform hover:scale-105 shadow-[0_0_30px_rgba(255,255,255,0.15)] overflow-hidden group">
-                                <span className="relative z-10">Read Our Full Story</span>
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent -translate-x-full group-hover:animate-shimmer" />
-                            </button>
+                {/* Events Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 gap-y-10 mt-2">
+                    {allGridEvents.map((ev: any) => (
+                        <Link href={`/events/${ev.id}`} key={ev.id} className="group block cursor-pointer">
+                            <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-[#1a1f2e] mb-4 shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/5 group-hover:border-white/20 transition-all duration-300">
+                                <Image
+                                    src={ev.image} 
+                                    alt={ev.title} 
+                                    fill
+                                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                />
+                                {/* Optional gradient overlay at bottom for better contrast if needed */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            </div>
+                            <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors line-clamp-1">{ev.title}</h3>
+                            <p className="text-white/60 text-sm font-medium mt-1">{ev.date}</p>
                         </Link>
-                    </motion.div>
-                    
-                    <motion.div 
-                        initial={{ opacity: 0, x: 50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 0.8 }}
-                        className="relative h-[400px] lg:h-[600px] rounded-3xl overflow-hidden bg-black/50 border border-white/10 flex items-center justify-center shadow-2xl group"
-                    >
-                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 z-10 opacity-50 group-hover:opacity-100 transition-opacity duration-700" />
-                        <img 
-                            src="/slide3.png" 
-                            alt="Premium Nightlife" 
-                            className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-1000 ease-out"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-20" />
-                        <div className="absolute bottom-0 left-0 right-0 p-10 z-30 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                            <h3 className="text-3xl font-bold text-white mb-2 tracking-wide drop-shadow-lg">Premium Experience</h3>
-                            <p className="text-white/70 font-light text-lg">Designed exclusively for the best venues in the world.</p>
-                        </div>
-                    </motion.div>
+                    ))}
                 </div>
             </div>
         </div>
 
+        {/* Scrolling Sections */}
+
+
+        {/* How It Works Section - Premium */}
+        <div className="relative z-20 bg-black py-16 lg:py-20 px-6 overflow-hidden">
+            {/* Animated Background Gradients */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full pointer-events-none">
+                <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[120px] animate-pulse" />
+                <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '2s' }} />
+            </div>
+
+            <div className="max-w-7xl mx-auto text-center relative z-10">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="mb-12"
+                >
+                    <div className="inline-flex items-center rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-sm font-medium text-blue-300 backdrop-blur-sm mb-6">
+                        The Entry Club Experience
+                    </div>
+                    <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight drop-shadow-xl">
+                        Unlock The City's <br className="hidden md:block" />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500">Best Events</span>
+                    </h2>
+                </motion.div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 relative">
+                    {/* Connecting Line */}
+                    <div className="hidden md:block absolute top-1/2 left-[10%] right-[10%] h-[2px] bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-y-1/2 z-0" />
+                    
+                    {[
+                        { num: "1", title: "Curated Experiences", desc: "Explore hand-picked VIP events, exclusive raves, and premium club nights." },
+                        { num: "2", title: "Instant Access", desc: "Skip the lines. Secure your passes and VIP tables instantly from your phone." },
+                        { num: "3", title: "Own The Night", desc: "Flash your digital pass and walk right in. Unforgettable memories await." }
+                    ].map((step, i) => (
+                        <motion.div
+                            key={step.num}
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.2 }}
+                            className="relative z-10 group"
+                        >
+                            <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-10 backdrop-blur-xl hover:bg-white/[0.04] hover:border-blue-500/30 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(59,130,246,0.15)] flex flex-col items-center text-center h-full">
+                                <div className="w-24 h-24 rounded-full p-[2px] bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 mb-8 relative group-hover:scale-110 transition-transform duration-500 shadow-xl">
+                                    <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                    <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-3xl font-light text-white relative z-10">
+                                        {step.num}
+                                    </div>
+                                </div>
+                                <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-blue-400 transition-colors">{step.title}</h3>
+                                <p className="text-white/50 text-lg font-light leading-relaxed">{step.desc}</p>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
+
+
+            </div>
+        </div>
+
+        {/* Event Organiser CTA Section */}
+        <div className="relative z-20 w-full py-16 overflow-hidden bg-black border-y border-white/[0.02]">
+            <div className="absolute inset-0 z-0">
+                <Image 
+                    src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070&auto=format&fit=crop" 
+                    alt="Crowd cheering at a concert" 
+                    fill 
+                    className="object-cover opacity-35 object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-black/75 to-purple-950/30" />
+            </div>
+            
+            <div className="relative z-10 max-w-4xl mx-auto text-center px-6">
+                <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="space-y-4"
+                >
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight">
+                        Are You An <span className="text-[#e879f9]">Event</span> <span className="text-[#818cf8]">Organiser?</span>
+                    </h2>
+                    <p className="text-sm md:text-base text-white/50 font-light">
+                        Get Your Event Live in Less Than 3 Minutes
+                    </p>
+                    <div className="pt-2">
+                        <Link href="/dashboard">
+                            <button className="px-8 py-3 bg-white text-black font-semibold rounded-xl hover:bg-gray-100 transition-all transform hover:scale-105 active:scale-95 shadow-md">
+                                List Event
+                            </button>
+                        </Link>
+                    </div>
+                </motion.div>
+            </div>
+        </div>
+
+
+        {/* App Promo Section - Premium */}
+        <div className="relative z-20 bg-[#020202] py-16 lg:py-20 px-6 overflow-hidden border-t border-white/[0.02]">
+            <div className="absolute top-[20%] right-[-5%] w-[40%] h-[60%] rounded-full bg-blue-600/10 blur-[150px] pointer-events-none" />
+            
+            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+                <motion.div
+                    initial={{ opacity: 0, x: -50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    className="max-w-2xl"
+                >
+                    <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-10 leading-tight">
+                        The Entire City, <br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500">In Your Pocket.</span>
+                    </h2>
+
+                    <div className="space-y-8 mb-16">
+                        {[
+                            { title: "Real-Time Updates", desc: "Never miss out. Get instant notifications for secret parties, ticket drops, and exclusive events." },
+                            { title: "Join The Community", desc: "See where your friends are heading. Coordinate plans and share your night out." },
+                            { title: "Your Personal Concierge", desc: "Save your favorite venues, set reminders, and let us recommend the perfect spot for your vibe." }
+                        ].map((feature, i) => (
+                            <motion.div 
+                                key={i}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.15 }}
+                                className="flex items-start group"
+                            >
+                                <div className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center mt-1 mr-6 shrink-0 group-hover:border-blue-500/50 group-hover:bg-blue-500/10 transition-colors shadow-lg">
+                                    <svg className="w-5 h-5 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">{feature.title}</h3>
+                                    <p className="text-white/50 text-lg leading-relaxed font-light">{feature.desc}</p>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+
+                    <h3 className="text-2xl font-bold text-white mb-8">Ready To Party Smarter?</h3>
+
+                    <div className="flex flex-wrap gap-4">
+                        <button className="flex items-center px-8 py-4 bg-white/[0.02] border border-white/10 rounded-2xl hover:bg-white/[0.05] hover:border-white/30 transition-all transform hover:-translate-y-1 group backdrop-blur-md shadow-xl">
+                            <svg viewBox="0 0 512 512" className="w-8 h-8 mr-4 group-hover:scale-110 transition-transform">
+                                <defs>
+                                    <linearGradient id="google-play-gradient-promo" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stopColor="#4285F4" />
+                                        <stop offset="30%" stopColor="#34A853" />
+                                        <stop offset="70%" stopColor="#FBBC05" />
+                                        <stop offset="100%" stopColor="#EA4335" />
+                                    </linearGradient>
+                                </defs>
+                                <path fill="url(#google-play-gradient-promo)" d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z"/>
+                            </svg>
+                            <div className="text-left">
+                                <div className="text-[11px] text-white/60 uppercase tracking-widest font-bold">Get it on</div>
+                                <div className="text-lg font-semibold text-white">Google Play</div>
+                            </div>
+                        </button>
+                        <button className="flex items-center px-8 py-4 bg-white/[0.02] border border-white/10 rounded-2xl hover:bg-white/[0.05] hover:border-white/30 transition-all transform hover:-translate-y-1 group backdrop-blur-md shadow-xl">
+                            <svg viewBox="0 0 384 512" className="w-8 h-8 mr-4 group-hover:scale-110 transition-transform">
+                                <defs>
+                                    <linearGradient id="apple-gradient-promo" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" stopColor="#FFFFFF" />
+                                        <stop offset="100%" stopColor="#B0B5B9" />
+                                    </linearGradient>
+                                </defs>
+                                <path fill="url(#apple-gradient-promo)" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
+                            </svg>
+                            <div className="text-left">
+                                <div className="text-[11px] text-white/60 uppercase tracking-widest font-bold">Download on the</div>
+                                <div className="text-lg font-semibold text-white">App Store</div>
+                            </div>
+                        </button>
+                    </div>
+                </motion.div>
+
+                {/* Right Side Visual (Floating Glass Cards) */}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.9, x: 50 }}
+                    whileInView={{ opacity: 1, scale: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    className="relative h-[600px] hidden lg:flex items-center justify-center"
+                >
+                    <motion.div 
+                        animate={{ y: [-10, 10, -10] }}
+                        transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+                        className="absolute z-20 w-[300px] h-[400px] bg-black/60 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-6 shadow-2xl flex flex-col gap-4 transform -rotate-6 -translate-x-10"
+                    >
+                        <div className="w-full h-40 bg-gradient-to-br from-fuchsia-500/20 to-purple-600/20 rounded-2xl border border-white/5 flex items-center justify-center overflow-hidden relative">
+                            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1545128485-c400e7702796?q=80&w=600')] bg-cover opacity-50 blend-overlay" />
+                        </div>
+                        <div className="w-3/4 h-6 bg-white/10 rounded-full mt-2" />
+                        <div className="w-1/2 h-4 bg-white/5 rounded-full" />
+                        <div className="mt-auto w-full h-12 bg-fuchsia-500/20 rounded-xl border border-fuchsia-500/30 flex items-center justify-center text-fuchsia-300 font-bold text-sm">
+                            Get Ticket
+                        </div>
+                    </motion.div>
+
+                    <motion.div 
+                        animate={{ y: [10, -10, 10] }}
+                        transition={{ repeat: Infinity, duration: 7, ease: "easeInOut" }}
+                        className="absolute z-10 w-[300px] h-[400px] bg-black/40 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 shadow-2xl flex flex-col gap-4 transform rotate-12 translate-x-20 translate-y-20"
+                    >
+                        <div className="w-full h-40 bg-gradient-to-br from-blue-500/20 to-indigo-600/20 rounded-2xl border border-white/5 flex items-center justify-center overflow-hidden relative">
+                            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=600')] bg-cover opacity-50 blend-overlay" />
+                        </div>
+                        <div className="w-3/4 h-6 bg-white/10 rounded-full mt-2" />
+                        <div className="w-1/2 h-4 bg-white/5 rounded-full" />
+                        <div className="mt-auto w-full flex gap-2">
+                             <div className="w-10 h-10 rounded-full bg-white/20 border border-white/10 flex items-center justify-center text-xs">+3</div>
+                             <div className="w-10 h-10 rounded-full bg-blue-500/30 -ml-4 border border-white/10 backdrop-blur-md" />
+                             <div className="w-10 h-10 rounded-full bg-purple-500/30 -ml-4 border border-white/10 backdrop-blur-md" />
+                        </div>
+                    </motion.div>
+                </motion.div>
+            </div>
+        </div>
+
+
+
+
+
         {/* Contact Form Preview */}
-        <div className="relative z-20 bg-black py-32 px-6 overflow-hidden">
+        <div id="host-contact" className="relative z-20 bg-black py-32 px-6 overflow-hidden">
             <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-[150px] pointer-events-none" />
             <div className="max-w-7xl mx-auto relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -450,44 +518,6 @@ export default function WelcomeScreen() {
                             <p className="text-white/50 text-xl font-light leading-relaxed">Just fill this form and our team will connect with you within 24 hrs.</p>
                         </div>
                         
-                        <div className="space-y-6 pt-8 border-t border-white/5">
-                            <h3 className="text-xl font-bold text-white">Download the App Now</h3>
-                            <p className="text-white/60 font-light">For the best experience, faster bookings, and exclusive features, get the Entry Club mobile app.</p>
-                            <div className="flex flex-wrap gap-4">
-                                <button className="flex items-center px-6 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors group">
-                                    <svg viewBox="0 0 384 512" className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform">
-                                        <defs>
-                                            <linearGradient id="apple-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                                <stop offset="0%" stopColor="#FFFFFF" />
-                                                <stop offset="100%" stopColor="#B0B5B9" />
-                                            </linearGradient>
-                                        </defs>
-                                        <path fill="url(#apple-gradient)" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
-                                    </svg>
-                                    <div className="text-left">
-                                        <div className="text-[10px] text-white/60 uppercase tracking-widest font-bold">Download on the</div>
-                                        <div className="text-sm font-semibold text-white">App Store</div>
-                                    </div>
-                                </button>
-                                <button className="flex items-center px-6 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors group">
-                                    <svg viewBox="0 0 512 512" className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform">
-                                        <defs>
-                                            <linearGradient id="google-play-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                                <stop offset="0%" stopColor="#4285F4" />
-                                                <stop offset="30%" stopColor="#34A853" />
-                                                <stop offset="70%" stopColor="#FBBC05" />
-                                                <stop offset="100%" stopColor="#EA4335" />
-                                            </linearGradient>
-                                        </defs>
-                                        <path fill="url(#google-play-gradient)" d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z"/>
-                                    </svg>
-                                    <div className="text-left">
-                                        <div className="text-[10px] text-white/60 uppercase tracking-widest font-bold">Get it on</div>
-                                        <div className="text-sm font-semibold text-white">Google Play</div>
-                                    </div>
-                                </button>
-                            </div>
-                        </div>
                     </motion.div>
 
                     <motion.div 
