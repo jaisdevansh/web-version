@@ -182,7 +182,7 @@ export default function DashboardPage() {
                             
                             <div className="flex items-center mb-6">
                                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-red-500 flex items-center justify-center shrink-0 overflow-hidden">
-                                    <img src="/flawless.png" className="w-full h-full object-cover" />
+                                    <img src="/flawless.png" className="w-full h-full object-cover" alt="Event Cover" />
                                 </div>
                                 <div className="ml-4">
                                     <p className="text-[#3b82f6] text-xs font-semibold tracking-wider uppercase mb-1">Exclusive Club</p>
@@ -250,7 +250,7 @@ export default function DashboardPage() {
                             <div className="flex items-center mb-6">
                                 <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center shrink-0 overflow-hidden">
                                     {booking.eventId?.coverImage ? (
-                                        <img src={booking.eventId.coverImage} className="w-full h-full object-cover" />
+                                        <img src={booking.eventId.coverImage} className="w-full h-full object-cover" alt="Event Cover" />
                                     ) : (
                                         <span className="text-white text-2xl font-semibold">EC</span>
                                     )}
@@ -285,7 +285,7 @@ export default function DashboardPage() {
                             <div className="flex items-center mb-6">
                                 <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center shrink-0 overflow-hidden">
                                     {booking.eventId?.coverImage ? (
-                                        <img src={booking.eventId.coverImage} className="w-full h-full object-cover" />
+                                        <img src={booking.eventId.coverImage} className="w-full h-full object-cover" alt="Event Cover" />
                                     ) : (
                                         <span className="text-white text-2xl font-semibold">EC</span>
                                     )}
@@ -358,7 +358,7 @@ export default function DashboardPage() {
                     {/* Event Banner */}
                     <div className="bg-gradient-to-br from-[#2e1a47] to-[#1a102b] rounded-3xl p-5 mb-8 flex items-center">
                         <div className="w-20 h-20 rounded-2xl overflow-hidden shrink-0">
-                            <img src={reviewingEvent.image || "/flawless.png"} className="w-full h-full object-cover" />
+                            <img src={reviewingEvent.image || "/flawless.png"} className="w-full h-full object-cover" alt="Event Review" />
                         </div>
                         <div className="ml-5">
                             <h2 className="text-white font-bold text-xl mb-1">{reviewingEvent.title || 'aujlaaa'}</h2>

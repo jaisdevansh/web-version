@@ -27,7 +27,7 @@ export const EVENTS = [
         image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1000&auto=format&fit=crop',
         images: [
             'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1000&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1470229722913-7c090be5f524?q=80&w=1000&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=1000&auto=format&fit=crop',
             'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=1000&auto=format&fit=crop'
         ],
         about: 'Experience the soulful Sufi music of Nizami Bandhu live in concert. A dynamic blend of traditional qawwali and modern sounds.',

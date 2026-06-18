@@ -1,13 +1,19 @@
-'use client';
-
+import { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+
+export const metadata: Metadata = {
+  title: 'Business | Entry Club',
+  description: 'Grow your nightlife empire with our innovative ticketing and marketing engine purpose-built for event organizers.',
+};
 
 export default function BusinessPage() {
   return (
     <div className="bg-black text-white font-sans selection:bg-blue-500/30">
-      <style jsx>{`
+      <style dangerouslySetInnerHTML={{
+        __html: `
         @keyframes marquee {
           0% { transform: translateX(0%); }
           100% { transform: translateX(-50%); }
@@ -15,7 +21,7 @@ export default function BusinessPage() {
         .animate-marquee {
           animation: marquee 20s linear infinite;
         }
-      `}</style>
+      `}} />
       
       {/* 1. Hero Section */}
       <section className="bg-black pt-20 md:pt-32 pb-0 overflow-hidden">
@@ -31,21 +37,21 @@ export default function BusinessPage() {
         {/* Hero Image & CTA Container */}
         <div className="relative w-full max-w-[1536px] mx-auto h-[400px] md:h-[616px] bg-[#181817] mt-8 overflow-hidden rounded-t-3xl border border-white/5">
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-80 z-10" />
-          <img src="/slide3.png" alt="Crowd" className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-screen" />
+          <Image src="/slide3.png" alt="Crowd at a nightlife event" fill priority className="object-cover opacity-40 mix-blend-screen" sizes="(max-width: 1536px) 100vw, 1536px" />
 
           {/* Circular absolute CTA */}
-          <Link href="/contact" className="absolute top-8 right-8 z-20 group">
+          <Link href="/contact" className="absolute top-8 right-8 z-20 group" aria-label="Contact us to list your event">
             <div className="w-[100px] h-[100px] md:w-[141px] md:h-[141px] bg-transparent border-2 border-blue-500 rounded-full flex items-center justify-center transition-transform hover:scale-105 duration-300 relative">
               <div className="absolute inset-2 rounded-full bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center group-hover:rotate-45 transition-transform duration-300">
-                <ArrowUpRight className="text-white w-8 h-8" strokeWidth={3} />
+                <ArrowUpRight className="text-white w-8 h-8" strokeWidth={3} aria-hidden="true" />
               </div>
             </div>
           </Link>
         </div>
 
         {/* Marquee Banner */}
-        <div className="bg-black py-6 border-y border-white/10 flex whitespace-nowrap overflow-hidden relative">
+        <div className="bg-black py-6 border-y border-white/10 flex whitespace-nowrap overflow-hidden relative" aria-hidden="true">
           <div className="animate-marquee inline-block text-2xl md:text-3xl font-black uppercase tracking-widest">
             <span className="mx-8">30,000 EVENT ORGANISERS AND COUNTING</span>
             <span className="mx-8 text-blue-500">ENTRY CLUB</span>
@@ -69,12 +75,12 @@ export default function BusinessPage() {
               <div className="group">
                 <div className="w-full aspect-[491/496] bg-[#111] border border-white/5 group-hover:border-blue-500/30 transition-colors duration-500 mb-8 flex items-center justify-center relative overflow-hidden rounded-xl">
                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
-                   <img src="/flawless.png" alt="Ticketing" className="absolute inset-0 w-full h-full object-cover opacity-70 mix-blend-screen transition-transform duration-700 group-hover:scale-105" />
-                   <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+                   <Image src="/flawless.png" alt="Ticketing interface preview" fill className="object-cover opacity-70 mix-blend-screen transition-transform duration-700 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 50vw" />
+                   <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
                 </div>
                 <div className="flex items-baseline gap-4 mb-4">
-                  <span className="text-gray-500 font-black text-2xl tracking-tighter">01.</span>
-                  <h3 className="text-2xl font-black uppercase text-white">Sell Tickets</h3>
+                  <span className="text-gray-500 font-black text-2xl tracking-tighter" aria-hidden="true">01.</span>
+                  <h2 className="text-2xl font-black uppercase text-white">Sell Tickets</h2>
                 </div>
                 <p className="text-gray-400 text-[16px] leading-relaxed max-w-md">
                   Increase conversions and give your customers a premium buying experience. Our optimised, intuitive ticketing and marketing features give you everything you need to maximise ticket sales.
@@ -85,12 +91,12 @@ export default function BusinessPage() {
               <div className="group">
                 <div className="w-full aspect-[491/496] bg-[#111] border border-white/5 group-hover:border-blue-500/30 transition-colors duration-500 mb-8 flex items-center justify-center relative overflow-hidden rounded-xl">
                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
-                   <img src="/slide3.png" alt="Promotion" className="absolute inset-0 w-full h-full object-cover opacity-70 mix-blend-screen transition-transform duration-700 group-hover:scale-105" />
-                   <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+                   <Image src="/slide3.png" alt="Promotion tools and analytics" fill className="object-cover opacity-70 mix-blend-screen transition-transform duration-700 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 50vw" />
+                   <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
                 </div>
                 <div className="flex items-baseline gap-4 mb-4">
-                  <span className="text-gray-500 font-black text-2xl tracking-tighter">03.</span>
-                  <h3 className="text-2xl font-black uppercase text-white">Promote Directly To Them</h3>
+                  <span className="text-gray-500 font-black text-2xl tracking-tighter" aria-hidden="true">03.</span>
+                  <h2 className="text-2xl font-black uppercase text-white">Promote Directly To Them</h2>
                 </div>
                 <p className="text-gray-400 text-[16px] leading-relaxed max-w-md">
                   Get your customers coming back, again and again. Promote your events in just one click. Send Emails, WhatsApps, SMS, push notifications in our app to all your followers.
@@ -104,12 +110,12 @@ export default function BusinessPage() {
               <div className="group">
                 <div className="w-full aspect-[491/496] bg-[#111] border border-white/5 group-hover:border-cyan-500/30 transition-colors duration-500 mb-8 flex items-center justify-center relative overflow-hidden rounded-xl">
                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
-                   <img src="/slide2.png" alt="Audience" className="absolute inset-0 w-full h-full object-cover opacity-70 mix-blend-screen transition-transform duration-700 group-hover:scale-105" />
-                   <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+                   <Image src="/slide2.png" alt="Audience building tools" fill className="object-cover opacity-70 mix-blend-screen transition-transform duration-700 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 50vw" />
+                   <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
                 </div>
                 <div className="flex items-baseline gap-4 mb-4">
-                  <span className="text-gray-500 font-black text-2xl tracking-tighter">02.</span>
-                  <h3 className="text-2xl font-black uppercase text-white">Build a Following</h3>
+                  <span className="text-gray-500 font-black text-2xl tracking-tighter" aria-hidden="true">02.</span>
+                  <h2 className="text-2xl font-black uppercase text-white">Build a Following</h2>
                 </div>
                 <p className="text-gray-400 text-[16px] leading-relaxed max-w-md">
                   Grow your audience with every ticket you sell. Every time a customer purchases a ticket to your event on Entry Club they become part of your following. Giving you a stronger foundation to launch your next event.
@@ -120,12 +126,12 @@ export default function BusinessPage() {
               <div className="group">
                 <div className="w-full aspect-[491/496] bg-[#111] border border-white/5 group-hover:border-indigo-500/30 transition-colors duration-500 mb-8 flex items-center justify-center relative overflow-hidden rounded-xl">
                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
-                   <img src="/flawless.png" alt="Chat" className="absolute inset-0 w-full h-full object-cover opacity-70 mix-blend-screen transition-transform duration-700 group-hover:scale-105" />
-                   <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+                   <Image src="/flawless.png" alt="Chat and community features" fill className="object-cover opacity-70 mix-blend-screen transition-transform duration-700 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 50vw" />
+                   <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
                 </div>
                 <div className="flex items-baseline gap-4 mb-4">
-                  <span className="text-gray-500 font-black text-2xl tracking-tighter">04.</span>
-                  <h3 className="text-2xl font-black uppercase text-white">Get People Talking</h3>
+                  <span className="text-gray-500 font-black text-2xl tracking-tighter" aria-hidden="true">04.</span>
+                  <h2 className="text-2xl font-black uppercase text-white">Get People Talking</h2>
                 </div>
                 <p className="text-gray-400 text-[16px] leading-relaxed max-w-md">
                   See your customers promote your events for you. Our app's chat and share features keep the conversation about your events going, even after purchase. It's how each sale becomes an ad for your brand.
@@ -141,7 +147,7 @@ export default function BusinessPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none" />
         <div className="container mx-auto px-4 max-w-[1300px] relative z-10">
           <div className="mb-16">
-            <h4 className="text-center font-bold text-[20px] mb-4 text-blue-500">Everything's covered</h4>
+            <p className="text-center font-bold text-[20px] mb-4 text-blue-500">Everything's covered</p>
             <h2 className="text-center text-4xl md:text-[64px] font-bold leading-[1.1] max-w-[960px] mx-auto text-white">
               We push boundaries, but we build on solid foundations. All the basics are covered too.
             </h2>
@@ -151,9 +157,9 @@ export default function BusinessPage() {
             {/* Card 1 */}
             <div className="flex flex-col group">
               <div className="w-full h-[304px] bg-[#111] border border-white/5 group-hover:border-blue-500/30 transition-colors duration-500 mb-6 flex items-center justify-center rounded-xl relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <span className="font-bold text-white/30 tracking-widest group-hover:text-blue-400 transition-colors duration-500 relative z-10">TICKETING</span>
-                <img src="/flawless.png" alt="bg" className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-screen group-hover:opacity-40 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
+                <span className="font-bold text-white/30 tracking-widest group-hover:text-blue-400 transition-colors duration-500 relative z-20">TICKETING</span>
+                <Image src="/flawless.png" alt="" fill className="object-cover opacity-20 mix-blend-screen group-hover:opacity-40 transition-opacity duration-500" sizes="(max-width: 768px) 100vw, 33vw" />
               </div>
               <h3 className="text-[24px] font-bold mb-3 uppercase tracking-tight text-white">Sell Tickets</h3>
               <p className="text-[16px] text-gray-400 font-light leading-relaxed">
@@ -164,9 +170,9 @@ export default function BusinessPage() {
             {/* Card 2 */}
             <div className="flex flex-col group">
               <div className="w-full h-[304px] bg-[#111] border border-white/5 group-hover:border-cyan-500/30 transition-colors duration-500 mb-6 flex items-center justify-center rounded-xl relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <span className="font-bold text-white/30 tracking-widest group-hover:text-cyan-400 transition-colors duration-500 relative z-10">MARKETING</span>
-                <img src="/slide3.png" alt="bg" className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-screen group-hover:opacity-40 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
+                <span className="font-bold text-white/30 tracking-widest group-hover:text-cyan-400 transition-colors duration-500 relative z-20">MARKETING</span>
+                <Image src="/slide3.png" alt="" fill className="object-cover opacity-20 mix-blend-screen group-hover:opacity-40 transition-opacity duration-500" sizes="(max-width: 768px) 100vw, 33vw" />
               </div>
               <h3 className="text-[24px] font-bold mb-3 uppercase tracking-tight text-white">Market Your Events</h3>
               <p className="text-[16px] text-gray-400 font-light leading-relaxed">
@@ -177,9 +183,9 @@ export default function BusinessPage() {
             {/* Card 3 */}
             <div className="flex flex-col group">
               <div className="w-full h-[304px] bg-[#111] border border-white/5 group-hover:border-indigo-500/30 transition-colors duration-500 mb-6 flex items-center justify-center rounded-xl relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <span className="font-bold text-white/30 tracking-widest group-hover:text-indigo-400 transition-colors duration-500 relative z-10">OPERATIONS</span>
-                <img src="/slide2.png" alt="bg" className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-screen group-hover:opacity-40 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
+                <span className="font-bold text-white/30 tracking-widest group-hover:text-indigo-400 transition-colors duration-500 relative z-20">OPERATIONS</span>
+                <Image src="/slide2.png" alt="" fill className="object-cover opacity-20 mix-blend-screen group-hover:opacity-40 transition-opacity duration-500" sizes="(max-width: 768px) 100vw, 33vw" />
               </div>
               <h3 className="text-[24px] font-bold mb-3 uppercase tracking-tight text-white">Manage Operations</h3>
               <p className="text-[16px] text-gray-400 font-light leading-relaxed">
@@ -198,10 +204,10 @@ export default function BusinessPage() {
 
             {/* Phone Mockups (Absolute) */}
             <div className="hidden md:flex absolute -left-[32px] -bottom-[64px] w-[300px] h-[500px] bg-[#111] border-[12px] border-[#181817] rounded-[40px] items-center justify-center shadow-2xl overflow-hidden z-10">
-              <img src="/slide2.png" alt="App Preview" className="w-full h-full object-cover opacity-80" />
+              <Image src="/slide2.png" alt="App Preview showing audience growth" fill className="object-cover opacity-80" sizes="300px" />
             </div>
             <div className="hidden md:flex absolute -right-[48px] -top-[48px] w-[300px] h-[500px] bg-[#111] border-[12px] border-[#181817] rounded-[40px] items-center justify-center shadow-2xl overflow-hidden z-10">
-               <img src="/slide3.png" alt="App Preview" className="w-full h-full object-cover opacity-80" />
+               <Image src="/slide3.png" alt="App Preview showing promotional tools" fill className="object-cover opacity-80" sizes="300px" />
             </div>
 
             <h2 className="text-white text-5xl md:text-[112px] font-medium leading-[0.9] text-center mb-10 z-20">

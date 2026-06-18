@@ -3,12 +3,12 @@ module.exports = {
     {
       name: 'entry-club-web',
       script: 'node_modules/next/dist/bin/next',
-      args: 'start -p 3000',
-      instances: 'max', // Distributes traffic across all CPU cores
-      exec_mode: 'cluster', // Enables Node.js cluster module for 10000+ users
+      args: 'start -p 3001',
+      instances: 1, // Run a single instance in fork mode for Windows stability
+      exec_mode: 'fork', // Use fork mode instead of cluster for better compatibility
       env: {
         NODE_ENV: 'production',
-        PORT: 3000
+        PORT: 3001
       }
     }
   ]
