@@ -131,6 +131,11 @@ export default function ProfilePage() {
                 </div>
               </div>
               <h2 className="text-2xl font-bold text-white mb-1">{profile?.name || user?.name || 'Member'}</h2>
+              {(profile?.username || user?.username) && (
+                <p className="text-sm text-indigo-400 font-medium mb-1">
+                  @{profile?.username || user?.username}
+                </p>
+              )}
               <p className="text-sm text-white/50 mb-4 w-full truncate px-4">
                 {profile?.email || user?.email || profile?.phone || user?.phone || ''}
               </p>

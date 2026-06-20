@@ -23,6 +23,7 @@ export default function AuthCallbackPage() {
     const refreshToken = searchParams.get('refreshToken');
     const id = searchParams.get('userId');
     const name = searchParams.get('name');
+    const username = searchParams.get('username');
     const email = searchParams.get('email');
     const role = searchParams.get('role');
     const profileImage = searchParams.get('profileImage');
@@ -33,6 +34,7 @@ export default function AuthCallbackPage() {
       const user = {
         id,
         name: name || '',
+        username: username || undefined,
         email: email || '',
         role: role || 'user',
         profileImage: profileImage || undefined,
