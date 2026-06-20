@@ -82,32 +82,12 @@ export default function EditProfilePage() {
     }
   }, [profile, user, setValue]);
 
-  useEffect(() => {
-    if (watchUsername && watchUsername !== profile?.username) {
-      setUsernameStatus(prev => ({ ...prev, checking: true }));
-      const timer = setTimeout(async () => {
-        try {
-          const res = await axiosInstance.post('/user/check-username', { username: watchUsername });
-          setUsernameStatus({
-            available: res.data.available,
-            checking: false,
-            suggestions: res.data.suggestions || []
-          });
-        } catch {
-          setUsernameStatus(prev => ({ ...prev, checking: false }));
-        }
-      }, 500);
-      return () => clearTimeout(timer);
-    } else {
-      setUsernameStatus({ available: null, checking: false, suggestions: [] });
-    }
-  }, [watchUsername, profile?.username]);
+
 
   const updateMutation = useMutation({
     mutationFn: async (data: ProfileFormValues) => {
       const payload = {
         name: `${data.firstName} ${data.lastName || ''}`.trim(),
-        username: data.username,
         gender: data.gender,
         profileImage: data.profileImage,
         dob: data.dob,
@@ -190,7 +170,7 @@ export default function EditProfilePage() {
                 <button 
                   type="submit"
                   className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-xl font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] shrink-0 flex items-center justify-center gap-2"
-                  disabled={updateMutation.isPending || usernameStatus.available === false}
+                  disabled={updateMutation.isPending}
                 >
                   {updateMutation.isPending ? (
                     <>
@@ -256,47 +236,20 @@ export default function EditProfilePage() {
                   </div>
 
                   {/* Username */}
-                  <div className="space-y-2.5 md:col-span-2">
-                    <label className="text-xs font-bold tracking-widest text-white/40 uppercase">Username / Nickname</label>
-                    <div className="relative flex items-center group">
-                      <span className="absolute left-5 text-white/30 font-bold group-focus-within:text-blue-500 transition-colors">@</span>
+                  <div className="space-y-2.5 md:col-span-2 opacity-70">
+                    <label className="text-xs font-bold tracking-widest text-white/40 uppercase flex justify-between">
+                      <span>Username / Nickname</span>
+                      <span className="text-blue-400 font-normal normal-case">Cannot be changed</span>
+                    </label>
+                    <div className="relative flex items-center">
+                      <span className="absolute left-5 text-white/30 font-bold">@</span>
                       <input 
                         {...register('username')}
                         type="text" 
-                        className={`w-full bg-white/[0.03] border ${errors.username ? 'border-red-500/50' : 'border-white/[0.05]'} rounded-xl pl-12 pr-5 py-4 text-sm text-white focus:outline-none focus:ring-2 transition-all placeholder:text-white/20 hover:bg-white/[0.05] ${usernameStatus.available === false ? 'focus:ring-red-500/50 border-red-500/30 bg-red-500/5' : 'focus:ring-blue-500/50 focus:border-transparent'}`}
-                        placeholder="Choose a unique username"
-                        disabled={updateMutation.isPending}
+                        className="w-full bg-black/20 border border-white/[0.05] rounded-xl pl-12 pr-5 py-4 text-sm text-white/50 cursor-not-allowed focus:outline-none"
+                        disabled
                       />
                     </div>
-                    {errors.username && <p className="text-red-400 text-xs mt-1">{errors.username.message}</p>}
-                    {usernameStatus.checking && (
-                      <p className="text-xs text-blue-400 mt-2 animate-pulse">Checking availability...</p>
-                    )}
-                    {usernameStatus.available === true && (
-                      <p className="text-xs text-green-400 mt-2">Username is available!</p>
-                    )}
-                    {usernameStatus.available === false && (
-                      <div className="mt-2 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
-                        <p className="text-xs font-medium text-red-400 mb-3">This username is already taken.</p>
-                        {usernameStatus.suggestions.length > 0 && (
-                          <div>
-                            <span className="text-[11px] font-semibold text-white/50 uppercase tracking-wider mb-2 block">Suggestions</span>
-                            <div className="flex flex-wrap gap-2">
-                              {usernameStatus.suggestions.map(s => (
-                                <button 
-                                  key={s} 
-                                  type="button"
-                                  onClick={() => setValue('username', s, { shouldValidate: true })}
-                                  className="text-xs font-medium bg-white/5 px-3 py-1.5 rounded-lg border border-white/10 hover:bg-white/10 text-white transition-colors cursor-pointer"
-                                >
-                                  {s}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
                   </div>
 
                   {/* Gender */}
