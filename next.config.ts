@@ -48,6 +48,14 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api1/:path*',
+        destination: 'https://party.stayin.in/api1/:path*', // Proxy to Backend to avoid CORS
+      },
+    ];
+  },
   experimental: {
     optimizePackageImports: ['lucide-react', 'framer-motion', '@components/ui'],
   },

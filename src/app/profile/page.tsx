@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, User, Bell, Gift, Ticket, Star, HelpCircle, ChevronRight, LogOut, Shield } from 'lucide-react';
+import { Loader2, User, Bell, Gift, Ticket, Star, HelpCircle, ChevronRight, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -57,15 +57,6 @@ const MENU_ITEMS = [
     color: 'text-yellow-400',
     bg: 'bg-yellow-400/10',
     borderColor: 'border-yellow-400/20'
-  },
-  {
-    label: 'Account Security',
-    sublabel: 'Passwords & incognito mode',
-    icon: Shield,
-    route: '/settings/security',
-    color: 'text-red-400',
-    bg: 'bg-red-400/10',
-    borderColor: 'border-red-400/20'
   },
   {
     label: 'Terms & Support',

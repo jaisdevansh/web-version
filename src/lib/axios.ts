@@ -3,8 +3,10 @@ import { toast } from 'sonner';
 
 // Create a custom axios instance
 const api = axios.create({
-  // Always connect to the live AWS backend server even during local testing
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://stayin.in/api2',
+  // Use local proxy in development to avoid CORS, use live URL in production
+  baseURL: process.env.NODE_ENV === 'development' 
+    ? '/api1' 
+    : (process.env.NEXT_PUBLIC_API_URL || 'https://stayin.in/api2'),
   headers: {
     'Content-Type': 'application/json',
   },
