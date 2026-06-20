@@ -28,6 +28,10 @@ async function handler(req: NextRequest) {
     const response = await fetch(targetUrl, init);
     const resHeaders = new Headers(response.headers);
     
+    // Next.js fetch automatically decompresses the body, so we must remove these headers
+    resHeaders.delete('content-encoding');
+    resHeaders.delete('content-length');
+    
     // Inject CORS headers so localhost:3000 doesn't get blocked
     resHeaders.set('Access-Control-Allow-Origin', '*');
     resHeaders.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
