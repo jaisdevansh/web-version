@@ -11,6 +11,7 @@ const sidebarItems = [
   { name: 'My Bookings', href: '/dashboard/tickets', icon: Ticket },
   { name: 'History', href: '/dashboard/history', icon: Clock },
   { name: 'Reviews', href: '/dashboard/review', icon: Star },
+  { name: 'Support', href: '/dashboard/support', icon: Bell }, // using Bell or similar
   { name: 'Profile', href: '/profile', icon: User },
 ];
 

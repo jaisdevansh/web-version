@@ -46,7 +46,7 @@ export default function ContactPage() {
     setIsTyping(true);
 
     try {
-      const res = await api.post('/api/v1/support/support-chat', { message: userMsg });
+      const res = await api.post('/support/support-chat', { message: userMsg });
       if (res.data?.success) {
         setMessages(prev => [...prev, { role: 'ai', text: res.data.data.message }]);
       } else {

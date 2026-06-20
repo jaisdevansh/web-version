@@ -23,9 +23,13 @@ export default function Navbar() {
       <div className="container mx-auto flex h-16 md:h-20 items-center justify-between px-4 md:px-8">
         {/* Left: Logo */}
         <div className="flex items-center md:w-1/3 shrink-0">
-          {mounted && pathname?.startsWith('/dashboard') && (
+          {mounted && pathname?.startsWith('/dashboard') ? (
             <div className="mr-2 md:hidden">
               <MobileSidebar />
+            </div>
+          ) : mounted && (
+            <div className="mr-2 md:hidden">
+              <MobilePublicMenu />
             </div>
           )}
           <Link href="/" className="flex items-center space-x-2 group">
@@ -92,5 +96,57 @@ export default function Navbar() {
         </div>
       </div>
     </header>
+  );
+}
+
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetClose } from '@/components/ui/sheet';
+import { Menu } from 'lucide-react';
+
+function MobilePublicMenu() {
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  return (
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <SheetTrigger
+        render={
+          <Button variant="ghost" size="icon" className="md:hidden text-white hover:bg-white/10">
+            <Menu className="h-6 w-6" />
+            <span className="sr-only">Toggle navigation menu</span>
+          </Button>
+        }
+      />
+      <SheetContent side="left" className="w-[300px] p-0 bg-[#0A0A0A] border-r border-white/10">
+        <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+        <div className="flex flex-col h-full py-6">
+          <div className="px-6 mb-8">
+            <span className="font-bold text-xl tracking-tight text-blue-500 drop-shadow-md">
+              ENTRY CLUB
+            </span>
+          </div>
+          <nav className="flex flex-col gap-2 px-4">
+            {[
+              { href: '/features', label: 'Features' },
+              { href: '/about', label: 'About' },
+              { href: '/contact', label: 'Contact' },
+              { href: '/business', label: 'Business' },
+            ].map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className={`flex items-center px-4 py-3 rounded-xl transition-all duration-300 font-semibold uppercase tracking-widest text-sm ${
+                  pathname === link.href 
+                  ? 'bg-blue-600/10 text-blue-500' 
+                  : 'text-white/70 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }
