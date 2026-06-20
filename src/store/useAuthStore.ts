@@ -10,6 +10,9 @@ export interface User {
   phone?: string;
   role?: string;
   profileImage?: string;
+  gender?: string;
+  dob?: string;
+  location?: string;
 }
 
 interface AuthState {
