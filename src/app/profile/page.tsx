@@ -99,7 +99,7 @@ export default function ProfilePage() {
   }
 
   const defaultImage = 'https://via.placeholder.com/100';
-  let profileImageUrl = profile?.profileImage || user?.profileImage || defaultImage;
+  let profileImageUrl = user?.profileImage || profile?.profileImage || defaultImage;
   
   // Note: mobile handles base64 format differently, we mock it closely here
   if (profileImageUrl && !profileImageUrl.startsWith('http') && !profileImageUrl.startsWith('data:')) {

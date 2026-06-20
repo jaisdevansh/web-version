@@ -7,6 +7,9 @@ const api = axios.create({
   baseURL: process.env.NODE_ENV === 'development' ? '/api1' : (process.env.NEXT_PUBLIC_API_URL || 'https://stayin.in/api2'),
   headers: {
     'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0',
   },
   withCredentials: true, // Required for httpOnly cookies
   timeout: 10000, // 10 seconds timeout for better UX

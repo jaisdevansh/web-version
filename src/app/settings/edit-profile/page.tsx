@@ -74,11 +74,11 @@ export default function EditProfilePage() {
       setValue('firstName', fName);
       setValue('lastName', lName);
       setValue('username', profile?.username || user?.username || '');
-      setValue('gender', profile?.gender || 'Male');
-      setValue('dob', profile?.dob || '');
-      setValue('location', profile?.location || '');
+      setValue('gender', profile?.gender || user?.gender || 'Male');
+      setValue('dob', profile?.dob || user?.dob || '');
+      setValue('location', profile?.location || user?.location || '');
       setValue('phone', profile?.phone || user?.phone || '');
-      setValue('profileImage', profile?.profileImage || user?.profileImage || '');
+      setValue('profileImage', user?.profileImage || profile?.profileImage || '');
     }
   }, [profile, user, setValue]);
 

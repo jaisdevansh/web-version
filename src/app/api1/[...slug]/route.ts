@@ -18,6 +18,7 @@ async function handler(req: NextRequest) {
     method: req.method,
     headers,
     redirect: 'manual',
+    cache: 'no-store',
   };
 
   if (req.method !== 'GET' && req.method !== 'HEAD') {
