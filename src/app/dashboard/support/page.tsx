@@ -21,14 +21,17 @@ export default function SupportPage() {
 
     setIsSubmitting(true);
     
-    // Simulate API call for now (or replace with actual backend call if available)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      toast.success('Complaint submitted successfully. Our team will review it shortly.');
-      setSubject('');
-      setMessage('');
+      const response = await api.post('/api/v1/support/contact', { subject, message });
+      if (response.data?.success || response.status === 200 || response.status === 201) {
+        toast.success('Complaint submitted successfully. Our team will review it shortly.');
+        setSubject('');
+        setMessage('');
+      } else {
+        toast.error('Failed to submit. Please try again.');
+      }
     } catch (error) {
-      toast.error('Failed to submit. Please try again.');
+      toast.error('Failed to submit. Please check your connection and try again.');
     } finally {
       setIsSubmitting(false);
     }

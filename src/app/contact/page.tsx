@@ -46,7 +46,7 @@ export default function ContactPage() {
     setIsTyping(true);
 
     try {
-      const res = await api.post('/support/support-chat', { message: userMsg });
+      const res = await api.post('/api/v1/support/support-chat', { message: userMsg });
       if (res.data?.success) {
         setMessages(prev => [...prev, { role: 'ai', text: res.data.data.message }]);
       } else {
@@ -79,11 +79,15 @@ export default function ContactPage() {
   const onSubmit = async (data: ContactFormValues) => {
     setIsSubmitting(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      toast.success('Message sent successfully! We will get back to you soon.');
-      reset();
+      const response = await api.post('/api/v1/support/contact', data);
+      if (response.data?.success || response.status === 200 || response.status === 201) {
+        toast.success('Message sent successfully! We will get back to you soon.');
+        reset();
+      } else {
+        toast.error('Failed to send message. Please try again.');
+      }
     } catch (error) {
-      toast.error('Failed to send message. Please try again.');
+      toast.error('Failed to send message. Please check your connection and try again.');
     } finally {
       setIsSubmitting(false);
     }
