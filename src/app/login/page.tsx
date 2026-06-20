@@ -125,7 +125,7 @@ export default function LoginPage() {
 
   const handleGoogleLogin = () => {
     const redirectUri = encodeURIComponent(window.location.origin + '/auth/callback');
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3001' : 'https://party.stayin.in/api1');
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://party.stayin.in/api1';
     window.location.href = `${baseUrl}/auth/google?redirectUri=${redirectUri}`;
   };
 
@@ -133,7 +133,7 @@ export default function LoginPage() {
     <div className="container relative min-h-[calc(100vh-8rem)] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
       <Link
         href="/"
-        className="absolute left-4 top-4 md:left-8 md:top-8 flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors z-20"
+        className="absolute left-4 top-4 md:left-8 md:top-8 flex items-center text-nav text-muted-foreground hover:text-foreground transition-colors z-20"
       >
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back
@@ -164,11 +164,11 @@ export default function LoginPage() {
         
         <div className="relative z-20 mb-10 p-8 rounded-3xl bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl">
           <blockquote className="space-y-4">
-            <p className="text-xl leading-relaxed font-light text-white/90">
+            <p className="text-card-heading leading-relaxed font-light text-white/90">
               &quot;This platform has completely transformed how we manage our venue.
               Table bookings, guest lists, and revenue tracking all in one premium ecosystem.&quot;
             </p>
-            <footer className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 uppercase tracking-widest">
+            <footer className="text-small font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 uppercase tracking-widest">
               Sofia Davis, Club Owner
             </footer>
           </blockquote>
@@ -187,10 +187,10 @@ export default function LoginPage() {
       <div className="p-4 py-24 lg:p-8 flex items-center justify-center min-h-[100dvh] lg:min-h-full bg-black/95">
         <div className="mx-auto flex w-full flex-col justify-center space-y-8 sm:w-[400px]">
           <div className="flex flex-col space-y-2 text-center">
-            <h1 className="text-3xl font-bold tracking-tight text-white">
+            <h1 className="text-subheading tracking-tight text-white">
               {phoneStep === 'onboarding' ? 'Complete Profile' : 'Welcome back'}
             </h1>
-            <p className="text-sm text-white/60">
+            <p className="text-small text-white/60">
               {phoneStep === 'onboarding' 
                 ? 'Just one more step to get started' 
                 : 'Log in or register to continue'}
@@ -226,7 +226,7 @@ export default function LoginPage() {
                         />
                       </div>
                     </div>
-                    <Button onClick={handleSendOtp} className="w-full h-12 rounded-xl bg-blue-600 text-white hover:bg-blue-500 font-bold shadow-lg shadow-blue-500/25 transition-all" disabled={isLoading || phoneNumber.length !== 10}>
+                    <Button onClick={handleSendOtp} className="w-full h-12 rounded-xl bg-blue-600 text-white hover:bg-blue-500 text-button shadow-lg shadow-blue-500/25 transition-all" disabled={isLoading || phoneNumber.length !== 10}>
                       {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <><ArrowRight className="mr-2 h-4 w-4" /> Send OTP</>}
                     </Button>
                   </div>
@@ -247,7 +247,7 @@ export default function LoginPage() {
                       onChange={(e) => setOtp(e.target.value.replace(/[^0-9]/g, ''))}
                       disabled={isLoading} 
                     />
-                    <Button onClick={handleVerifyOtp} className="w-full h-12 rounded-xl bg-white text-black hover:bg-gray-200 font-bold" disabled={isLoading || otp.length < 4}>
+                    <Button onClick={handleVerifyOtp} className="w-full h-12 rounded-xl bg-white text-black hover:bg-gray-200 text-button" disabled={isLoading || otp.length < 4}>
                       {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Verify OTP'}
                     </Button>
                   </div>
@@ -269,7 +269,7 @@ export default function LoginPage() {
                         />
                       </div>
                     </div>
-                    <Button onClick={handleOnboarding} className="w-full h-12 rounded-xl bg-blue-600 text-white hover:bg-blue-500 font-bold shadow-lg shadow-blue-500/25 transition-all" disabled={isLoading || !fullName.trim()}>
+                    <Button onClick={handleOnboarding} className="w-full h-12 rounded-xl bg-blue-600 text-white hover:bg-blue-500 text-button shadow-lg shadow-blue-500/25 transition-all" disabled={isLoading || !fullName.trim()}>
                       {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Create Account'}
                     </Button>
                   </div>
@@ -291,7 +291,7 @@ export default function LoginPage() {
                 </div>
               </div>
               
-              <Button variant="outline" type="button" className="w-full h-12 rounded-xl border border-white/20 bg-white text-black hover:bg-gray-100 font-semibold shadow-lg transition-all" disabled={isLoading} onClick={handleGoogleLogin}>
+              <Button variant="outline" type="button" className="w-full h-12 rounded-xl border border-white/20 bg-white text-black hover:bg-gray-100 text-button shadow-lg transition-all" disabled={isLoading} onClick={handleGoogleLogin}>
                 <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                   <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>

@@ -89,6 +89,14 @@ export default function RateAppPage() {
 
           {/* Submit Button */}
           <button 
+            onClick={() => {
+              if (rating === 0) {
+                alert('Please select a rating first');
+                return;
+              }
+              alert('Thank you for your feedback!');
+              router.back();
+            }}
             className="w-full max-w-sm bg-[#563b9e] hover:bg-[#6849bc] text-white text-lg font-bold py-5 rounded-full transition-all shadow-[0_10px_30px_rgba(86,59,158,0.4)] hover:shadow-[0_10px_40px_rgba(86,59,158,0.6)] hover:-translate-y-1 mb-6 cursor-pointer"
           >
             Submit App Review

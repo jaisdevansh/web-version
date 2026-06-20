@@ -26,10 +26,10 @@ export default function BusinessPage() {
       {/* 1. Hero Section */}
       <section className="bg-black pt-20 md:pt-32 pb-0 overflow-hidden">
         <div className="container mx-auto px-4 max-w-[1536px]">
-          <h1 className="text-6xl md:text-[128px] leading-[0.9] font-black uppercase tracking-tighter mb-8 text-white max-w-7xl">
+          <h1 className="text-hero uppercase mb-8 text-white max-w-7xl">
             Grow <span className="italic font-light">Your</span> Nightlife Empire
           </h1>
-          <p className="text-lg md:text-[18px] text-white max-w-[800px] mb-12">
+          <p className="text-body text-gray-300 max-w-[800px] mb-12">
             More than just a ticket system, our innovative ticketing and marketing engine is purpose-built to accelerate your brand's growth and help take your events business to the next level.
           </p>
         </div>
@@ -52,7 +52,7 @@ export default function BusinessPage() {
 
         {/* Marquee Banner */}
         <div className="bg-black py-6 border-y border-white/10 flex whitespace-nowrap overflow-hidden relative" aria-hidden="true">
-          <div className="animate-marquee inline-block text-2xl md:text-3xl font-black uppercase tracking-widest">
+          <div className="animate-marquee inline-block text-subheading font-black uppercase">
             <span className="mx-8">30,000 EVENT ORGANISERS AND COUNTING</span>
             <span className="mx-8 text-blue-500">ENTRY CLUB</span>
             <span className="mx-8">30,000 EVENT ORGANISERS AND COUNTING</span>
@@ -79,10 +79,10 @@ export default function BusinessPage() {
                    <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
                 </div>
                 <div className="flex items-baseline gap-4 mb-4">
-                  <span className="text-gray-500 font-black text-2xl tracking-tighter" aria-hidden="true">01.</span>
-                  <h2 className="text-2xl font-black uppercase text-white">Sell Tickets</h2>
+                  <span className="text-gray-500 text-subheading font-bold" aria-hidden="true">01.</span>
+                  <h2 className="text-card-heading uppercase text-white">Sell Tickets</h2>
                 </div>
-                <p className="text-gray-400 text-[16px] leading-relaxed max-w-md">
+                <p className="text-body text-gray-400 max-w-md">
                   Increase conversions and give your customers a premium buying experience. Our optimised, intuitive ticketing and marketing features give you everything you need to maximise ticket sales.
                 </p>
               </div>
@@ -95,10 +95,10 @@ export default function BusinessPage() {
                    <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
                 </div>
                 <div className="flex items-baseline gap-4 mb-4">
-                  <span className="text-gray-500 font-black text-2xl tracking-tighter" aria-hidden="true">03.</span>
-                  <h2 className="text-2xl font-black uppercase text-white">Promote Directly To Them</h2>
+                  <span className="text-gray-500 text-subheading font-bold" aria-hidden="true">03.</span>
+                  <h2 className="text-card-heading uppercase text-white">Promote Directly To Them</h2>
                 </div>
-                <p className="text-gray-400 text-[16px] leading-relaxed max-w-md">
+                <p className="text-body text-gray-400 max-w-md">
                   Get your customers coming back, again and again. Promote your events in just one click. Send Emails, WhatsApps, SMS, push notifications in our app to all your followers.
                 </p>
               </div>
@@ -114,10 +114,10 @@ export default function BusinessPage() {
                    <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
                 </div>
                 <div className="flex items-baseline gap-4 mb-4">
-                  <span className="text-gray-500 font-black text-2xl tracking-tighter" aria-hidden="true">02.</span>
-                  <h2 className="text-2xl font-black uppercase text-white">Build a Following</h2>
+                  <span className="text-gray-500 text-subheading font-bold" aria-hidden="true">02.</span>
+                  <h2 className="text-card-heading uppercase text-white">Build a Following</h2>
                 </div>
-                <p className="text-gray-400 text-[16px] leading-relaxed max-w-md">
+                <p className="text-body text-gray-400 max-w-md">
                   Grow your audience with every ticket you sell. Every time a customer purchases a ticket to your event on Entry Club they become part of your following. Giving you a stronger foundation to launch your next event.
                 </p>
               </div>
@@ -130,10 +130,10 @@ export default function BusinessPage() {
                    <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
                 </div>
                 <div className="flex items-baseline gap-4 mb-4">
-                  <span className="text-gray-500 font-black text-2xl tracking-tighter" aria-hidden="true">04.</span>
-                  <h2 className="text-2xl font-black uppercase text-white">Get People Talking</h2>
+                  <span className="text-gray-500 text-subheading font-bold" aria-hidden="true">04.</span>
+                  <h2 className="text-card-heading uppercase text-white">Get People Talking</h2>
                 </div>
-                <p className="text-gray-400 text-[16px] leading-relaxed max-w-md">
+                <p className="text-body text-gray-400 max-w-md">
                   See your customers promote your events for you. Our app's chat and share features keep the conversation about your events going, even after purchase. It's how each sale becomes an ad for your brand.
                 </p>
               </div>
@@ -147,8 +147,8 @@ export default function BusinessPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none" />
         <div className="container mx-auto px-4 max-w-[1300px] relative z-10">
           <div className="mb-16">
-            <p className="text-center font-bold text-[20px] mb-4 text-blue-500">Everything's covered</p>
-            <h2 className="text-center text-4xl md:text-[64px] font-bold leading-[1.1] max-w-[960px] mx-auto text-white">
+            <p className="text-center font-bold text-card-heading mb-4 text-blue-500">Everything's covered</p>
+            <h2 className="text-center text-section text-white max-w-[960px] mx-auto">
               We push boundaries, but we build on solid foundations. All the basics are covered too.
             </h2>
           </div>
@@ -161,8 +161,8 @@ export default function BusinessPage() {
                 <span className="font-bold text-white/30 tracking-widest group-hover:text-blue-400 transition-colors duration-500 relative z-20">TICKETING</span>
                 <Image src="/flawless.png" alt="" fill className="object-cover opacity-20 mix-blend-screen group-hover:opacity-40 transition-opacity duration-500" sizes="(max-width: 768px) 100vw, 33vw" />
               </div>
-              <h3 className="text-[24px] font-bold mb-3 uppercase tracking-tight text-white">Sell Tickets</h3>
-              <p className="text-[16px] text-gray-400 font-light leading-relaxed">
+              <h3 className="text-card-heading mb-3 uppercase text-white">Sell Tickets</h3>
+              <p className="text-body text-gray-400 font-light">
                 Our ticketing experience is optimised for you and your customers. Our web pages are designed for speed and search, so your events are found quicker, and customers checkout faster.
               </p>
             </div>
@@ -174,8 +174,8 @@ export default function BusinessPage() {
                 <span className="font-bold text-white/30 tracking-widest group-hover:text-cyan-400 transition-colors duration-500 relative z-20">MARKETING</span>
                 <Image src="/slide3.png" alt="" fill className="object-cover opacity-20 mix-blend-screen group-hover:opacity-40 transition-opacity duration-500" sizes="(max-width: 768px) 100vw, 33vw" />
               </div>
-              <h3 className="text-[24px] font-bold mb-3 uppercase tracking-tight text-white">Market Your Events</h3>
-              <p className="text-[16px] text-gray-400 font-light leading-relaxed">
+              <h3 className="text-card-heading mb-3 uppercase text-white">Market Your Events</h3>
+              <p className="text-body text-gray-400 font-light">
                 Reach more customers with our unique promotional tools. Integrate with the most popular ad and analytics platforms so you can optimise all your marketing channels too.
               </p>
             </div>
@@ -187,8 +187,8 @@ export default function BusinessPage() {
                 <span className="font-bold text-white/30 tracking-widest group-hover:text-indigo-400 transition-colors duration-500 relative z-20">OPERATIONS</span>
                 <Image src="/slide2.png" alt="" fill className="object-cover opacity-20 mix-blend-screen group-hover:opacity-40 transition-opacity duration-500" sizes="(max-width: 768px) 100vw, 33vw" />
               </div>
-              <h3 className="text-[24px] font-bold mb-3 uppercase tracking-tight text-white">Manage Operations</h3>
-              <p className="text-[16px] text-gray-400 font-light leading-relaxed">
+              <h3 className="text-card-heading mb-3 uppercase text-white">Manage Operations</h3>
+              <p className="text-body text-gray-400 font-light">
                 Get customers through the door faster with Entry Club Scan, our robust and reliable ticket scanning solutions for your venue's door staff.
               </p>
             </div>
@@ -210,16 +210,16 @@ export default function BusinessPage() {
                <Image src="/slide3.png" alt="App Preview showing promotional tools" fill className="object-cover opacity-80" sizes="300px" />
             </div>
 
-            <h2 className="text-white text-5xl md:text-[112px] font-medium leading-[0.9] text-center mb-10 z-20">
+            <h2 className="text-hero text-white text-center mb-10 z-20">
               DESIGNED WITH <span className="italic font-light">CARE.</span>
             </h2>
             
-            <p className="text-gray-300 font-light text-[16px] text-center max-w-[512px] mb-12 z-20 leading-relaxed opacity-90">
+            <p className="text-body text-gray-300 font-light text-center max-w-[512px] mb-12 z-20 opacity-90">
               We care about your customers' experience with your brand as much as you do. That's why we craft and continually improve every aspect of our customer experience. So you can be confident your events and business are represented with the respect they deserve.
             </p>
 
             <Link href="/contact" className="z-20">
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-[13px] px-[32px] py-[28px] h-auto rounded-full uppercase tracking-wider transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] border-0">
+              <Button className="text-button bg-blue-600 hover:bg-blue-700 text-white px-[32px] py-[28px] h-auto rounded-full uppercase tracking-wider transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] border-0">
                 List Event
               </Button>
             </Link>

@@ -52,8 +52,12 @@ export default function ContactPage() {
       } else {
         setMessages(prev => [...prev, { role: 'ai', text: 'I encountered an error. Please try again.' }]);
       }
-    } catch (err) {
-      setMessages(prev => [...prev, { role: 'ai', text: 'Network error. Could not connect to AI server.' }]);
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        setMessages(prev => [...prev, { role: 'ai', text: 'Please log in to your Entry Club account to use the Elite AI Support Chat.' }]);
+      } else {
+        setMessages(prev => [...prev, { role: 'ai', text: 'Network error. Could not connect to AI server.' }]);
+      }
     } finally {
       setIsTyping(false);
     }

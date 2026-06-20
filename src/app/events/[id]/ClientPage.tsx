@@ -10,13 +10,68 @@ import dynamic from 'next/dynamic';
 
 const LoginModal = dynamic(() => import('@/components/shared/LoginModal').then(mod => mod.LoginModal), { ssr: false });
 import { useAuthStore } from '@/store/useAuthStore';
-import { EVENTS } from '@/lib/data';
+import { useQuery } from '@tanstack/react-query';
+import axiosInstance from '@/lib/axios';
 
 export default function EventDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const eventId = params.id as string;
-  const event = EVENTS.find(e => e.id === eventId);
+  
+  const { data: fetchedEvent, isLoading } = useQuery({
+    queryKey: ['eventFull', eventId],
+    queryFn: async () => {
+      const res = await axiosInstance.get(`/user/events/${eventId}/full`);
+      return res.data?.data || null;
+    },
+    staleTime: 60000,
+  });
+
+  const event = React.useMemo(() => {
+    if (!fetchedEvent) return null;
+    
+    // Combine tickets and floors into one array for the UI selection
+    const rawTickets = fetchedEvent.tickets || [];
+    const rawFloors = fetchedEvent.floors || [];
+    
+    const uiTickets = [
+      ...rawTickets.map((t: any) => ({
+        id: t._id || t.id || Math.random().toString(),
+        name: t.name || t.type || 'Ticket',
+        price: t.price || 0,
+        desc: t.description ? [t.description] : ['General Admission']
+      })),
+      ...rawFloors.map((f: any) => ({
+        id: f._id || f.id || Math.random().toString(),
+        name: f.name || f.type || 'Table',
+        price: f.price || 0,
+        desc: ['Reserved Table', `Capacity: ${f.capacity || 4}`]
+      }))
+    ];
+
+    let minPrice = 0;
+    if (uiTickets.length > 0) {
+        const prices = uiTickets.map(t => t.price).filter(p => p > 0);
+        minPrice = prices.length > 0 ? Math.min(...prices) : 0;
+    }
+
+    return {
+      id: fetchedEvent._id,
+      title: fetchedEvent.title,
+      date: new Date(fetchedEvent.date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }),
+      time: fetchedEvent.startTime,
+      location: fetchedEvent.locationData?.address || fetchedEvent.venueName || 'Secret Location',
+      distance: '',
+      price: minPrice > 0 ? `₹${minPrice}` : 'Free',
+      image: fetchedEvent.coverImage || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop',
+      images: fetchedEvent.images?.length > 0 ? fetchedEvent.images : [fetchedEvent.coverImage || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop'],
+      about: fetchedEvent.description || 'Join us for an amazing event.',
+      highlights: fetchedEvent.houseRules?.length > 0 
+        ? fetchedEvent.houseRules.map((rule: string) => ({ title: 'House Rule', desc: rule })) 
+        : [{ title: "What you'll experience", desc: 'An amazing night with great music and vibes.' }],
+      tickets: uiTickets
+    };
+  }, [fetchedEvent]);
   
   const { isAuthenticated } = useAuthStore();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -34,6 +89,13 @@ export default function EventDetailsPage() {
   }, [eventImages]);
 
   const ticketsRef = useRef<HTMLDivElement>(null);
+
+  if (isLoading) {
+    return <div className="min-h-screen flex flex-col items-center justify-center bg-[#050505] text-white">
+      <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+      <h1 className="text-xl font-medium text-white/60">Loading Event Details...</h1>
+    </div>;
+  }
 
   if (!event) {
     return <div className="min-h-screen flex flex-col items-center justify-center bg-[#050505] text-white">
@@ -115,7 +177,7 @@ export default function EventDetailsPage() {
           {/* Dots Indicator */}
           {eventImages.length > 1 && (
             <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-20">
-              {eventImages.map((_, idx) => (
+              {eventImages.map((_: string, idx: number) => (
                 <div 
                   key={idx} 
                   className={`h-1.5 rounded-full transition-all duration-500 ${idx === currentImageIndex ? 'w-8 bg-white' : 'w-2 bg-white/40'}`} 
@@ -145,7 +207,7 @@ export default function EventDetailsPage() {
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-white">Highlights</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {event.highlights.map((hi, i) => (
+              {event.highlights.map((hi: { title: string; desc: string }, i: number) => (
                 <div key={i} className="border border-white/10 rounded-2xl p-5 bg-[#111111] shadow-xl hover:bg-white/5 transition-all">
                   <div className="flex items-center space-x-2 mb-2">
                     {i === 0 ? <Diamond className="w-5 h-5 text-blue-400" /> : <Sparkles className="w-5 h-5 text-blue-400" />}
@@ -185,7 +247,7 @@ export default function EventDetailsPage() {
                   <Calendar className="w-5 h-5 text-white/60" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-white">Gates open at {event.date.split(',')[2]?.trim() || event.date}</h4>
+                  <h4 className="font-bold text-white">Gates open at {event.time || 'TBA'}</h4>
                   <p className="text-sm text-blue-400 hover:underline cursor-pointer">View full schedule & timeline</p>
                 </div>
                 <ChevronRight className="w-4 h-4 text-white/20 ml-auto mt-1" />
@@ -194,8 +256,8 @@ export default function EventDetailsPage() {
 
             <div className="flex items-center justify-between pt-4">
               <div className="text-2xl font-black text-white">
-                {event.price.split(' ')[0]} <span className="text-sm font-medium text-white/40 line-through tracking-normal ml-1"></span>
-                <span className="text-sm font-medium text-white/40 block -mt-1">onwards</span>
+                {event.price} <span className="text-sm font-medium text-white/40 line-through tracking-normal ml-1"></span>
+                <span className="text-sm font-medium text-white/40 block -mt-1">{event.price !== 'Free' ? 'onwards' : ''}</span>
               </div>
               <Button onClick={scrollToTickets} className="h-12 px-8 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg">
                 Book Tickets
@@ -223,7 +285,7 @@ export default function EventDetailsPage() {
                   </div>
 
                   <ul className="space-y-3 mt-4 text-sm text-white/50 font-light">
-                    {ticket.desc.map((item, idx) => (
+                    {ticket.desc.map((item: string, idx: number) => (
                       <li key={idx} className="flex items-start">
                         <span className="mr-3 mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500/50 shrink-0" />
                         <span className="leading-relaxed">{item}</span>

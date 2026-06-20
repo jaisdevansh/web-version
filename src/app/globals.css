@@ -7,9 +7,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", var(--font-inter), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-geist-sans);
+  --font-heading: -apple-system, BlinkMacSystemFont, "SF Pro Display", var(--font-inter), system-ui, sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -106,5 +106,32 @@
   }
   button, [role="button"], input[type="submit"], input[type="button"] {
     @apply cursor-pointer;
+  }
+}
+
+@layer utilities {
+  .text-hero {
+    @apply font-heading font-bold tracking-[-0.04em] leading-[0.95] text-[40px] md:text-[56px] lg:text-[72px] xl:text-[96px];
+  }
+  .text-section {
+    @apply font-heading font-semibold tracking-[-0.03em] leading-tight text-[48px] md:text-[64px];
+  }
+  .text-subheading {
+    @apply font-heading font-medium tracking-tight text-[24px] md:text-[32px];
+  }
+  .text-card-heading {
+    @apply font-heading font-semibold tracking-tight text-[20px] md:text-[28px];
+  }
+  .text-body {
+    @apply font-sans font-normal leading-[1.6] text-[16px] md:text-[18px];
+  }
+  .text-small {
+    @apply font-sans font-medium text-[12px] md:text-[14px];
+  }
+  .text-nav {
+    @apply font-sans font-medium tracking-tight text-[13px] md:text-[14px];
+  }
+  .text-button {
+    @apply font-sans font-medium text-[16px] md:text-[18px];
   }
 }

@@ -11,7 +11,7 @@ import { ShieldCheck, Ticket, Users, ArrowRight, CheckCircle2, ChevronLeft, Chev
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
 
-import { EVENTS } from '@/lib/data';
+// Mock data removed in favor of live API
 
 // --- Hero Carousel Component (Isolated to prevent full-page re-renders) ---
 const HeroCarousel = memo(({ heroEvents }: { heroEvents: any[] }) => {
@@ -152,7 +152,7 @@ const HeroCarousel = memo(({ heroEvents }: { heroEvents: any[] }) => {
                                     <div className="font-semibold text-gray-300 tracking-wide">
                                         {event.date}
                                     </div>
-                                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1]">
+                                    <h1 className="text-hero leading-[1.1] text-white">
                                         {event.title}
                                     </h1>
                                     <div className="text-lg lg:text-xl font-medium text-gray-300">
@@ -164,7 +164,7 @@ const HeroCarousel = memo(({ heroEvents }: { heroEvents: any[] }) => {
                                     
                                     <div className="pt-6">
                                         <Link href={`/events/${event.id}`}>
-                                            <Button className="h-14 px-10 text-[16px] font-bold tracking-wide bg-blue-600 hover:bg-blue-700 text-white rounded-2xl shadow-xl transition-all hover:scale-105 active:scale-95">
+                                            <Button className="h-14 px-10 text-button bg-blue-600 hover:bg-blue-700 text-white rounded-2xl shadow-xl transition-all hover:scale-105 active:scale-95">
                                                 Book tickets
                                             </Button>
                                         </Link>
@@ -267,15 +267,16 @@ export default function WelcomeScreen() {
     });
 
     const activeEvents = useMemo(() => {
-        return fetchedEvents && fetchedEvents.length > 0 ? fetchedEvents.map((ev: any) => ({
+        if (!fetchedEvents || fetchedEvents.length === 0) return [];
+        return fetchedEvents.map((ev: any) => ({
             id: ev._id,
             title: ev.title,
             date: new Date(ev.date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) + ', ' + ev.startTime,
             location: ev.venueName || 'Secret Location',
-            price: ev.displayPrice !== null ? `₹${ev.displayPrice} onwards` : 'Free',
+            price: ev.displayPrice !== null && ev.displayPrice !== undefined ? `₹${ev.displayPrice} onwards` : 'Free',
             image: ev.coverImage || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop',
-            images: [ev.coverImage || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop'],
-        })) : EVENTS;
+            images: ev.images?.length > 0 ? ev.images : [ev.coverImage || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop'],
+        }));
     }, [fetchedEvents]);
 
     const heroEvents = useMemo(() => activeEvents.slice(0, 5), [activeEvents]);
@@ -296,7 +297,7 @@ export default function WelcomeScreen() {
             {/* All Events Section */}
             <div className="relative z-20 bg-[#080b12] py-16 px-6 lg:px-12 xl:px-20">
                 <div className="max-w-[1400px] mx-auto">
-                    <h2 className="text-3xl font-bold text-white mb-6">All events</h2>
+                    <h2 className="text-section text-white mb-6">All events</h2>
                     
                     {/* Filters */}
                     <div className="flex items-center space-x-3 overflow-x-auto pb-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
@@ -328,25 +329,34 @@ export default function WelcomeScreen() {
                     </div>
 
                     {/* Events Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 gap-y-10 mt-2">
-                        {allGridEvents.map((ev: any) => (
-                            <Link href={`/events/${ev.id}`} key={ev.id} className="group block cursor-pointer">
-                                <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-[#1a1f2e] mb-4 shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/5 group-hover:border-white/20 transition-all duration-300">
-                                    <Image
-                                        src={ev.image} 
-                                        alt={ev.title} 
-                                        fill
-                                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
-                                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                                    />
-                                    {/* Optional gradient overlay at bottom for better contrast if needed */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                </div>
-                                <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors line-clamp-1">{ev.title}</h3>
-                                <p className="text-white/60 text-sm font-medium mt-1">{ev.date}</p>
-                            </Link>
-                        ))}
-                    </div>
+                    {allGridEvents.length > 0 ? (
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 gap-y-10 mt-2">
+                            {allGridEvents.map((ev: any) => (
+                                <Link href={`/events/${ev.id}`} key={ev.id} className="group block cursor-pointer">
+                                    <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-[#1a1f2e] mb-4 shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/5 group-hover:border-white/20 transition-all duration-300">
+                                        <Image
+                                            src={ev.image} 
+                                            alt={ev.title} 
+                                            fill
+                                            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
+                                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                    </div>
+                                    <h3 className="text-card-heading text-white group-hover:text-blue-400 transition-colors line-clamp-1">{ev.title}</h3>
+                                    <p className="text-white/60 text-small mt-1">{ev.date}</p>
+                                </Link>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="w-full py-20 flex flex-col items-center justify-center text-center">
+                            <div className="w-20 h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-6">
+                                <Ticket className="w-8 h-8 text-white/30" />
+                            </div>
+                            <h3 className="text-2xl font-bold text-white mb-2">No Live Events Currently</h3>
+                            <p className="text-white/60">Check back later for exciting upcoming events in your city!</p>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -368,7 +378,7 @@ export default function WelcomeScreen() {
                         <div className="inline-flex items-center rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-sm font-medium text-blue-300 backdrop-blur-sm mb-6">
                             The Entry Club Experience
                         </div>
-                        <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight drop-shadow-xl">
+                        <h2 className="text-hero text-white tracking-tight drop-shadow-xl">
                             Unlock The City's <br className="hidden md:block" />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500">Best Events</span>
                         </h2>
@@ -398,8 +408,8 @@ export default function WelcomeScreen() {
                                             {step.num}
                                         </div>
                                     </div>
-                                    <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-blue-400 transition-colors">{step.title}</h3>
-                                    <p className="text-white/70 text-lg font-light leading-relaxed">{step.desc}</p>
+                                    <h3 className="text-card-heading text-white mb-4 group-hover:text-blue-400 transition-colors">{step.title}</h3>
+                                    <p className="text-white/70 text-body leading-relaxed">{step.desc}</p>
                                 </div>
                             </motion.div>
                         ))}
@@ -427,10 +437,10 @@ export default function WelcomeScreen() {
                         viewport={{ once: true }}
                         className="space-y-4"
                     >
-                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight">
+                        <h2 className="text-section text-white tracking-tight">
                             Are You An <span className="text-[#e879f9]">Event</span> <span className="text-[#818cf8]">Organiser?</span>
                         </h2>
-                        <p className="text-sm md:text-base text-white/80 font-light">
+                        <p className="text-body text-white/80">
                             Get Your Event Live in Less Than 3 Minutes
                         </p>
                         <div className="pt-2">
@@ -455,7 +465,7 @@ export default function WelcomeScreen() {
                         viewport={{ once: true }}
                         className="max-w-2xl"
                     >
-                        <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-10 leading-tight">
+                        <h2 className="text-hero text-white mb-10 leading-tight">
                             The Entire City, <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500">In Your Pocket.</span>
                         </h2>
@@ -480,14 +490,14 @@ export default function WelcomeScreen() {
                                         </svg>
                                     </div>
                                     <div>
-                                        <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">{feature.title}</h3>
-                                        <p className="text-white/70 text-lg leading-relaxed font-light">{feature.desc}</p>
+                                        <h3 className="text-card-heading text-white mb-2 group-hover:text-blue-300 transition-colors">{feature.title}</h3>
+                                        <p className="text-white/70 text-body leading-relaxed">{feature.desc}</p>
                                     </div>
                                 </motion.div>
                             ))}
                         </div>
 
-                        <h3 className="text-2xl font-bold text-white mb-8">Ready To Party Smarter?</h3>
+                        <h3 className="text-subheading text-white mb-8">Ready To Party Smarter?</h3>
 
                         <div className="flex flex-wrap gap-4">
                             <button className="flex items-center px-8 py-4 bg-white/[0.02] border border-white/10 rounded-2xl hover:bg-white/[0.05] hover:border-white/30 transition-all transform hover:-translate-y-1 group backdrop-blur-md shadow-xl">
@@ -579,8 +589,8 @@ export default function WelcomeScreen() {
                             className="space-y-8"
                         >
                             <div>
-                                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">Want to be the host?</h2>
-                                <p className="text-white/70 text-xl font-light leading-relaxed">Just fill this form and our team will connect with you within 24 hrs.</p>
+                                <h2 className="text-section text-white mb-6 tracking-tight">Want to be the host?</h2>
+                                <p className="text-white/70 text-body leading-relaxed">Just fill this form and our team will connect with you within 24 hrs.</p>
                             </div>
                             
                         </motion.div>

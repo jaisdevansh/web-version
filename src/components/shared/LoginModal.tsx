@@ -117,7 +117,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
 
   const handleGoogleLogin = () => {
     const redirectUri = encodeURIComponent(window.location.origin + '/auth/callback');
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3001' : 'https://party.stayin.in/api1');
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://party.stayin.in/api1';
     window.location.href = `${baseUrl}/auth/google?redirectUri=${redirectUri}`;
   };
 
@@ -149,10 +149,10 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
                   <X className="w-5 h-5" />
                 </button>
                 <div className="w-12 h-1.5 bg-gray-200 rounded-full mb-6 md:hidden" />
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                <h2 className="text-subheading text-gray-900 mb-2">
                   {step === 'onboarding' ? 'Complete Profile' : 'Welcome'}
                 </h2>
-                <p className="text-gray-500 text-sm font-medium text-center">
+                <p className="text-gray-500 text-small text-center">
                   {step === 'onboarding' ? 'Just one more step to get started' : 'Log in or register to continue'}
                 </p>
               </div>
@@ -189,7 +189,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
                         <Button 
                           type="submit" 
                           disabled={mobile.length < 10 || isLoading}
-                          className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-xl disabled:opacity-50 transition-all"
+                          className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white text-button rounded-xl disabled:opacity-50 transition-all"
                         >
                           {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : 'Send OTP'}
                         </Button>
@@ -212,7 +212,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
                         <Button 
                           type="submit" 
                           disabled={otp.length < 4 || isLoading}
-                          className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-xl disabled:opacity-50 transition-all"
+                          className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white text-button rounded-xl disabled:opacity-50 transition-all"
                         >
                           {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : 'Verify OTP'}
                         </Button>
@@ -236,7 +236,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
                         <Button 
                           type="submit" 
                           disabled={!fullName.trim() || isLoading}
-                          className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-xl disabled:opacity-50 transition-all"
+                          className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white text-button rounded-xl disabled:opacity-50 transition-all"
                         >
                           {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : 'Create Account'}
                         </Button>
@@ -258,7 +258,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
                       </div>
                     </div>
                     
-                    <Button variant="outline" type="button" className="w-full h-14 mt-6 rounded-xl border border-gray-200 bg-white text-gray-800 hover:bg-gray-50 font-semibold shadow-sm transition-all" disabled={isLoading} onClick={handleGoogleLogin}>
+                    <Button variant="outline" type="button" className="w-full h-14 mt-6 rounded-xl border border-gray-200 bg-white text-gray-800 hover:bg-gray-50 text-button shadow-sm transition-all" disabled={isLoading} onClick={handleGoogleLogin}>
                       <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24">
                         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                         <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
