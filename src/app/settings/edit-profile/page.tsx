@@ -86,7 +86,7 @@ export default function EditProfilePage() {
 
   const updateMutation = useMutation({
     mutationFn: async (data: ProfileFormValues) => {
-      const payload = {
+      const payload: any = {
         name: `${data.firstName} ${data.lastName || ''}`.trim(),
         firstName: data.firstName,
         lastName: data.lastName || '',
@@ -97,8 +97,13 @@ export default function EditProfilePage() {
         image: data.profileImage,
         dob: data.dob,
         location: data.location,
-        phone: data.phone,
       };
+
+      // Only send phone if it has a value, to avoid "phone not allowed to be empty" backend error
+      if (data.phone && data.phone.trim() !== '') {
+        payload.phone = data.phone;
+      }
+
       const res = await axiosInstance.put('/user/profile', payload);
       return res.data;
     },
