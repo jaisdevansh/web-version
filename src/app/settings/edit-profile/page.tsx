@@ -113,9 +113,20 @@ export default function EditProfilePage() {
       router.push('/profile');
     },
     onError: (error: any) => {
-      const msg = error.response?.data?.message || error.message || 'Failed to update profile';
+      let msg = 'Failed to update profile';
+      if (error.response?.data) {
+        if (typeof error.response.data.message === 'string') {
+          msg = error.response.data.message;
+        } else if (error.response.data.error) {
+          msg = error.response.data.error;
+        } else {
+          msg = JSON.stringify(error.response.data);
+        }
+      } else if (error.message) {
+        msg = error.message;
+      }
       toast.error(msg);
-      console.error(error);
+      console.error('Profile update error response:', error.response?.data || error);
     }
   });
 
