@@ -88,13 +88,9 @@ export default function EditProfilePage() {
     mutationFn: async (data: ProfileFormValues) => {
       const payload: any = {
         name: `${data.firstName} ${data.lastName || ''}`.trim(),
-        firstName: data.firstName,
-        lastName: data.lastName || '',
         username: data.username,
         gender: data.gender,
         profileImage: data.profileImage,
-        profilePic: data.profileImage,
-        image: data.profileImage,
         dob: data.dob,
         location: data.location,
       };
