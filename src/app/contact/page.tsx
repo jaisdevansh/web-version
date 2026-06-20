@@ -155,7 +155,7 @@ export default function ContactPage() {
                  <p className="text-gray-400 text-[16px] leading-relaxed mb-10 max-w-sm font-light">
                    Experience the future of support. Get instant, intelligent answers tailored to your Entry Club experience.
                  </p>
-                 <button onClick={() => setIsChatModalOpen(true)} className="inline-flex items-center text-white bg-blue-600/10 hover:bg-blue-600 border border-blue-500/20 hover:border-blue-600 px-8 py-4 rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-300 w-max group/btn">
+                 <button onClick={() => setIsChatModalOpen(true)} className="relative z-10 cursor-pointer inline-flex items-center text-white bg-blue-600/10 hover:bg-blue-600 border border-blue-500/20 hover:border-blue-600 px-8 py-4 rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-300 w-max group/btn">
                    Start Chat <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
                  </button>
               </div>
@@ -170,7 +170,7 @@ export default function ContactPage() {
                  <p className="text-gray-400 text-[16px] leading-relaxed mb-10 max-w-sm font-light">
                    Prefer the classic way? Drop us an email and our human support team will respond within 24 hours.
                  </p>
-                 <a href="mailto:info.zenbourg@gmail.com" className="inline-flex items-center text-white bg-purple-600/10 hover:bg-purple-600 border border-purple-500/20 hover:border-purple-600 px-8 py-4 rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-300 w-max group/btn">
+                 <a href="mailto:info.zenbourg@gmail.com" className="relative z-10 cursor-pointer inline-flex items-center text-white bg-purple-600/10 hover:bg-purple-600 border border-purple-500/20 hover:border-purple-600 px-8 py-4 rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-300 w-max group/btn">
                    info.zenbourg@gmail.com <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
                  </a>
               </div>
