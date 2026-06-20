@@ -5,9 +5,10 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { Button } from '@/components/ui/button';
 import { Send, MessageSquare, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import api from '@/lib/axios';
 
 export default function SupportPage() {
-  const { user, profile } = useAuthStore();
+  const { user } = useAuthStore();
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,7 +23,7 @@ export default function SupportPage() {
     setIsSubmitting(true);
     
     try {
-      const response = await api.post('/api/v1/support/contact', { subject, message });
+      const response = await api.post('/support/contact', { subject, message });
       if (response.data?.success || response.status === 200 || response.status === 201) {
         toast.success('Complaint submitted successfully. Our team will review it shortly.');
         setSubject('');
@@ -47,7 +48,7 @@ export default function SupportPage() {
       <div className="bg-[#111] border border-white/10 rounded-2xl p-6 md:p-8">
         <div className="flex items-center gap-3 mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl text-blue-400">
           <AlertCircle className="w-5 h-5 shrink-0" />
-          <p className="text-sm">You are submitting this ticket as <span className="font-bold text-white">{profile?.name || user?.name}</span> ({profile?.email || user?.email})</p>
+          <p className="text-sm">You are submitting this ticket as <span className="font-bold text-white">{user?.name}</span> ({user?.email})</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
