@@ -88,9 +88,13 @@ export default function EditProfilePage() {
     mutationFn: async (data: ProfileFormValues) => {
       const payload = {
         name: `${data.firstName} ${data.lastName || ''}`.trim(),
+        firstName: data.firstName,
+        lastName: data.lastName || '',
         username: data.username,
         gender: data.gender,
         profileImage: data.profileImage,
+        profilePic: data.profileImage,
+        image: data.profileImage,
         dob: data.dob,
         location: data.location,
         phone: data.phone,
@@ -103,8 +107,10 @@ export default function EditProfilePage() {
       queryClient.invalidateQueries({ queryKey: ['user-profile', user?._id] });
       router.push('/profile');
     },
-    onError: () => {
-      toast.error('Failed to update profile');
+    onError: (error: any) => {
+      const msg = error.response?.data?.message || error.message || 'Failed to update profile';
+      toast.error(msg);
+      console.error(error);
     }
   });
 
