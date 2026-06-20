@@ -26,7 +26,7 @@ type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export default function EditProfilePage() {
   const [mounted, setMounted] = useState(false);
-  const { user } = useAuthStore();
+  const { user, updateUser } = useAuthStore();
   const queryClient = useQueryClient();
   const router = useRouter();
 
@@ -103,8 +103,14 @@ export default function EditProfilePage() {
       const res = await axiosInstance.put('/user/profile', payload);
       return res.data;
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       toast.success('Profile updated successfully!');
+      
+      updateUser({
+        name: `${variables.firstName} ${variables.lastName || ''}`.trim(),
+        profileImage: variables.profileImage,
+      });
+
       queryClient.invalidateQueries({ queryKey: ['user-profile', user?._id] });
       router.push('/profile');
     },
