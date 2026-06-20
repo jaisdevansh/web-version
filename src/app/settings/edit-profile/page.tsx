@@ -88,6 +88,7 @@ export default function EditProfilePage() {
     mutationFn: async (data: ProfileFormValues) => {
       const payload = {
         name: `${data.firstName} ${data.lastName || ''}`.trim(),
+        username: data.username,
         gender: data.gender,
         profileImage: data.profileImage,
         dob: data.dob,
@@ -247,7 +248,7 @@ export default function EditProfilePage() {
                         {...register('username')}
                         type="text" 
                         className="w-full bg-black/20 border border-white/[0.05] rounded-xl pl-12 pr-5 py-4 text-sm text-white/50 cursor-not-allowed focus:outline-none"
-                        disabled
+                        readOnly
                       />
                     </div>
                   </div>
