@@ -65,21 +65,22 @@ export default function EditProfilePage() {
   }, []);
 
   useEffect(() => {
-    if (profile) {
-      const nameParts = (profile.name || '').split(' ');
+    if (profile || user) {
+      const fullName = profile?.name || user?.name || '';
+      const nameParts = fullName.split(' ');
       const fName = nameParts[0] || '';
       const lName = nameParts.slice(1).join(' ') || '';
 
       setValue('firstName', fName);
       setValue('lastName', lName);
-      setValue('username', profile.username || '');
-      setValue('gender', profile.gender || 'Male');
-      setValue('dob', profile.dob || '');
-      setValue('location', profile.location || '');
-      setValue('phone', profile.phone || '');
-      setValue('profileImage', profile.profileImage || '');
+      setValue('username', profile?.username || user?.username || '');
+      setValue('gender', profile?.gender || 'Male');
+      setValue('dob', profile?.dob || '');
+      setValue('location', profile?.location || '');
+      setValue('phone', profile?.phone || user?.phone || '');
+      setValue('profileImage', profile?.profileImage || user?.profileImage || '');
     }
-  }, [profile, setValue]);
+  }, [profile, user, setValue]);
 
   useEffect(() => {
     if (watchUsername && watchUsername !== profile?.username) {
