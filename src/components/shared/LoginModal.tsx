@@ -18,15 +18,15 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
   const { login } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
   
-  const [step, setStep] = useState<'phone' | 'otp' | 'onboarding'>('phone');
-  const [mobile, setMobile] = useState('');
+  const [step, setStep] = useState<'email' | 'otp' | 'onboarding'>('email');
+  const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [fullName, setFullName] = useState('');
   const [tempAuthData, setTempAuthData] = useState<any>(null);
 
   const resetState = () => {
-    setStep('phone');
-    setMobile('');
+    setStep('email');
+    setEmail('');
     setOtp('');
     setFullName('');
     setTempAuthData(null);
@@ -39,10 +39,10 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
 
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!mobile || mobile.length < 10) return;
+    if (!email || !email.includes('@')) return;
     
     // Frontend-only bypass for dev testing
-    if (mobile === '8795162029') {
+    if (email.toLowerCase() === 'dev@entryclub.test') {
       toast.success('Developer Bypass Activated! (Use OTP: 123456)');
       setStep('otp');
       return;
@@ -50,8 +50,8 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
     
     try {
       setIsLoading(true);
-      await api.post('/auth/send-otp', { identifier: mobile });
-      toast.success('OTP sent! (Use 123456 for local dev)');
+      await api.post('/auth/send-otp', { identifier: email });
+      toast.success('OTP sent to your email!');
       setStep('otp');
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Failed to send OTP');
@@ -65,7 +65,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
     if (!otp || otp.length < 4) return;
     
     // Frontend-only bypass for dev testing
-    if (mobile === '8795162029' && otp === '123456') {
+    if (email.toLowerCase() === 'dev@entryclub.test' && otp === '123456') {
       login({ id: "dev-user-id", role: "user", name: "Devansh (Test)", email: "devansh@entryclub.test", profileImage: "" }, "dummy_frontend_token");
       toast.success('Logged in successfully via Bypass');
       if (onSuccess) onSuccess();
@@ -75,7 +75,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
 
     try {
       setIsLoading(true);
-      const response = await api.post('/auth/verify-otp', { identifier: mobile, otp });
+      const response = await api.post('/auth/verify-otp', { identifier: email, otp });
       const data = response.data.data || response.data;
       
       if (data.onboardingCompleted) {
@@ -183,20 +183,15 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
                     exit={{ opacity: 0, x: -10 }}
                     transition={{ duration: 0.2 }}
                   >
-                    {step === 'phone' ? (
+                    {step === 'email' ? (
                       <form onSubmit={handleSendOtp} className="space-y-6">
                         <div className="flex space-x-3">
-                          <div className="flex items-center space-x-2 border border-gray-300 rounded-xl px-4 py-3 bg-white cursor-pointer hover:border-gray-400 transition-colors shrink-0">
-                            <img src="https://flagcdn.com/w40/in.png" alt="India Flag" className="w-6 h-4 rounded-[2px] object-cover" />
-                            <span className="font-semibold text-gray-800">+91</span>
-                            <ChevronDown className="w-4 h-4 text-gray-500" />
-                          </div>
                           <div className="flex-1 relative">
                             <input
-                              type="tel"
-                              value={mobile}
-                              onChange={(e) => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                              placeholder="Mobile number"
+                              type="email"
+                              value={email}
+                              onChange={(e) => setEmail(e.target.value)}
+                              placeholder="Email address"
                               className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all text-lg font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal"
                               autoFocus
                             />
@@ -204,7 +199,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
                         </div>
                         <Button 
                           type="submit" 
-                          disabled={mobile.length < 10 || isLoading}
+                          disabled={!email || !email.includes('@') || isLoading}
                           className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white text-button rounded-xl disabled:opacity-50 transition-all"
                         >
                           {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : 'Send OTP'}
@@ -213,8 +208,8 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
                     ) : step === 'otp' ? (
                       <form onSubmit={handleVerifyOtp} className="space-y-6">
                         <div className="space-y-2 text-center">
-                          <p className="text-sm text-gray-600">Enter code sent to <span className="font-bold text-black">+91 {mobile}</span></p>
-                          <button type="button" onClick={() => setStep('phone')} className="text-xs text-blue-600 font-semibold hover:underline">Change number</button>
+                          <p className="text-sm text-gray-600">Enter code sent to <span className="font-bold text-black">{email}</span></p>
+                          <button type="button" onClick={() => setStep('email')} className="text-xs text-blue-600 font-semibold hover:underline">Change email</button>
                         </div>
                         <input
                           type="text"
