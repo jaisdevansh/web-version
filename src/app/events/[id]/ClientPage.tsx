@@ -10,8 +10,92 @@ import dynamic from 'next/dynamic';
 
 const LoginModal = dynamic(() => import('@/components/shared/LoginModal').then(mod => mod.LoginModal), { ssr: false });
 import { useAuthStore } from '@/store/useAuthStore';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
+import { toast } from 'sonner';
+
+const DEMO_EVENTS: Record<string, any> = {
+    'demo-1': {
+        _id: "demo-1",
+        title: "Neon Nights: Cyberpunk Rave",
+        date: new Date(new Date().setDate(new Date().getDate() + 2)),
+        startTime: "22:00",
+        venueName: "Mumbai Secret Warehouse, Andheri",
+        displayPrice: 1500,
+        coverImage: "https://images.unsplash.com/photo-1574169208507-84376144848b?q=80&w=2958&auto=format&fit=crop",
+        images: ["https://images.unsplash.com/photo-1545128485-c400e7702796?q=80&w=2000&auto=format&fit=crop", "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=2000&auto=format&fit=crop"],
+        description: "Experience the ultimate cyberpunk rave with cutting-edge visual mapping and underground techno.",
+        tickets: [
+            { id: "t1", name: "Early Bird", price: 999, description: "Entry before 11 PM" },
+            { id: "t2", name: "VIP Pass", price: 2500, description: "Skip the line + 2 free drinks" }
+        ],
+        houseRules: ["21+ Only", "No flash photography", "Rave attire encouraged"]
+    },
+    'demo-2': {
+        _id: "demo-2",
+        title: "Sundance Open Air Festival",
+        date: new Date(new Date().setDate(new Date().getDate() + 5)),
+        startTime: "16:00",
+        venueName: "Delhi Golf Club Grounds",
+        displayPrice: 999,
+        coverImage: "https://images.unsplash.com/photo-1533174000273-e1f4ceb66150?q=80&w=2940&auto=format&fit=crop",
+        images: [],
+        description: "A massive open-air festival featuring top electronic acts, food trucks, and art installations.",
+        tickets: [
+            { id: "t1", name: "General Access", price: 999, description: "Full day access" },
+            { id: "t2", name: "Backstage Pass", price: 4999, description: "Access to artist area and premium bar" }
+        ],
+        houseRules: ["No outside food/drinks", "Re-entry allowed with wristband"]
+    },
+    'demo-3': {
+        _id: "demo-3",
+        title: "Velvet Lounge: Jazz & Wine",
+        date: new Date(new Date().setDate(new Date().getDate() + 1)),
+        startTime: "19:00",
+        venueName: "The Ritz-Carlton, Bengaluru",
+        displayPrice: 2500,
+        coverImage: "https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=2832&auto=format&fit=crop",
+        images: [],
+        description: "An elegant evening of smooth jazz, premium wine tasting, and gourmet hors d'oeuvres.",
+        tickets: [
+            { id: "t1", name: "Standard Pairing", price: 2500, description: "Includes 3 wine glasses" },
+            { id: "t2", name: "Premium Pairing", price: 5000, description: "Includes 5 vintage wine glasses + cheese platter" }
+        ],
+        houseRules: ["Smart casual attire required", "18+ Only"]
+    },
+    'demo-4': {
+        _id: "demo-4",
+        title: "Tech-House Boiler Room",
+        date: new Date(new Date().setDate(new Date().getDate() + 14)),
+        startTime: "23:00",
+        venueName: "Koregaon Park Industrial Area, Pune",
+        displayPrice: 500,
+        coverImage: "https://images.unsplash.com/photo-1470229722913-7c090be5c5a4?q=80&w=2832&auto=format&fit=crop",
+        images: [],
+        description: "Intimate boiler room style gig featuring upcoming tech-house producers. 360-degree stage.",
+        tickets: [
+            { id: "t1", name: "Entry Ticket", price: 500, description: "Valid for one person" }
+        ],
+        houseRules: ["Camera lenses will be taped", "Respect the dancefloor"]
+    },
+    'demo-5': {
+        _id: "demo-5",
+        title: "Rooftop Sundowner: Tropical Vibes",
+        date: new Date(new Date().setDate(new Date().getDate() + 7)),
+        startTime: "17:00",
+        venueName: "Banjara Hills Rooftop, Hyderabad",
+        displayPrice: 1200,
+        coverImage: "https://images.unsplash.com/photo-1485872299829-c673f5194813?q=80&w=2960&auto=format&fit=crop",
+        images: [],
+        description: "Catch the sunset with tropical house music, exotic cocktails, and a stunning view of the city skyline.",
+        tickets: [
+            { id: "t1", name: "Phase 1", price: 1200, description: "Early bird access" },
+            { id: "t2", name: "Phase 2", price: 1500, description: "Regular access" },
+            { id: "t3", name: "VIP Cabana", price: 10000, description: "Reserved seating for 6 + 1 Bottle" }
+        ],
+        houseRules: ["Beachwear/Casual chic", "Right of admission reserved"]
+    }
+};
 
 export default function EventDetailsPage() {
   const params = useParams();
@@ -21,6 +105,9 @@ export default function EventDetailsPage() {
   const { data: fetchedEvent, isLoading } = useQuery({
     queryKey: ['eventFull', eventId],
     queryFn: async () => {
+      if (eventId?.startsWith('demo-')) {
+          return DEMO_EVENTS[eventId] || null;
+      }
       const res = await axiosInstance.get(`/user/events/${eventId}/full`);
       return res.data?.data || null;
     },
@@ -90,6 +177,26 @@ export default function EventDetailsPage() {
 
   const ticketsRef = useRef<HTMLDivElement>(null);
 
+  const bookEventMutation = useMutation({
+    mutationFn: async (payload: any) => {
+      // If it's a demo event, simulate a successful backend booking response
+      if (payload.eventId?.toString().startsWith('demo-')) {
+        return new Promise(resolve => setTimeout(() => resolve({ success: true }), 1000));
+      }
+      // For REAL events, connect to the actual backend API
+      const res = await axiosInstance.post('/user/events/book', payload);
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success('Successfully booked tickets!');
+      router.push('/dashboard/tickets');
+    },
+    onError: (err: any) => {
+      console.error(err);
+      toast.error(err.response?.data?.message || 'Failed to book event.');
+    }
+  });
+
   if (isLoading) {
     return <div className="min-h-screen flex flex-col items-center justify-center bg-[#050505] text-white">
       <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
@@ -117,17 +224,27 @@ export default function EventDetailsPage() {
   };
 
   const totalTickets = Object.values(ticketQuantities).reduce((a, b) => a + b, 0);
-  const totalPrice = event.tickets.reduce((sum, ticket) => sum + (ticket.price * (ticketQuantities[ticket.id] || 0)), 0);
+  const totalPrice = event?.tickets?.reduce((sum: number, ticket: any) => sum + (ticket.price * (ticketQuantities[ticket.id] || 0)), 0) || 0;
 
   const handleAddToCart = () => {
     if (totalTickets === 0) return;
     
     if (!isAuthenticated) {
       setIsLoginModalOpen(true);
-    } else {
-      // Proceed to checkout
-      alert(`Added ${totalTickets} tickets to booking! Total: ₹${totalPrice}`);
+      return;
     }
+
+    const selectedTicketNames = event?.tickets
+      ?.filter((t: any) => (ticketQuantities[t.id] || 0) > 0)
+      .map((t: any) => `${t.name} x${ticketQuantities[t.id]}`)
+      .join(', ') || 'General Admission';
+
+    bookEventMutation.mutate({
+      eventId: event?.id,
+      ticketType: selectedTicketNames,
+      totalAmount: totalPrice,
+      guestCount: totalTickets
+    });
   };
 
   return (
@@ -335,8 +452,12 @@ export default function EventDetailsPage() {
                 <div className="text-2xl font-black text-white">₹{totalPrice}</div>
                 <div className="text-sm font-light text-white/50">{totalTickets} ticket{totalTickets > 1 ? 's' : ''}</div>
               </div>
-              <Button onClick={handleAddToCart} className="h-14 px-8 md:px-12 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg rounded-xl shadow-lg transition-all hover:-translate-y-0.5">
-                ADD TO BOOKING
+              <Button 
+                onClick={handleAddToCart} 
+                disabled={bookEventMutation.isPending}
+                className="h-14 px-8 md:px-12 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg rounded-xl shadow-lg transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0"
+              >
+                {bookEventMutation.isPending ? 'BOOKING...' : 'ADD TO BOOKING'}
               </Button>
             </div>
           </motion.div>

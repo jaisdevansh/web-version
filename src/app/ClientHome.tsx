@@ -7,9 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import { ShieldCheck, Ticket, Users, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ShieldCheck, Ticket, Users, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
+import { useLocationStore } from '@/store/useLocationStore';
 
 // Mock data removed in favor of live API
 
@@ -257,35 +258,192 @@ function PageSkeleton() {
 
 // --- Main Page Component ---
 export default function WelcomeScreen() {
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
     const { data: fetchedEvents, isLoading } = useQuery({
         queryKey: ['publicEvents'],
         queryFn: async () => {
             const res = await axiosInstance.get('/user/events?limit=20');
             return res.data?.data || [];
         },
-        staleTime: 60000,
+        enabled: typeof window !== 'undefined',
     });
 
     const activeEvents = useMemo(() => {
-        if (!fetchedEvents || fetchedEvents.length === 0) return [];
-        return fetchedEvents.map((ev: any) => ({
+        const eventsList = (fetchedEvents && fetchedEvents.length > 0) ? fetchedEvents : [
+            {
+                _id: "demo-1",
+                title: "Neon Nights: Cyberpunk Rave",
+                date: new Date(new Date().setDate(new Date().getDate() + 2)),
+                startTime: "22:00",
+                venueName: "Mumbai Secret Warehouse, Andheri",
+                displayPrice: 1500,
+                coverImage: "https://images.unsplash.com/photo-1574169208507-84376144848b?q=80&w=2958&auto=format&fit=crop",
+                images: ["https://images.unsplash.com/photo-1545128485-c400e7702796?q=80&w=2000&auto=format&fit=crop", "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=2000&auto=format&fit=crop"],
+                city: "Mumbai"
+            },
+            {
+                _id: "demo-2",
+                title: "Sundance Open Air Festival",
+                date: new Date(new Date().setDate(new Date().getDate() + 5)),
+                startTime: "16:00",
+                venueName: "Delhi Golf Club Grounds",
+                displayPrice: 999,
+                coverImage: "https://images.unsplash.com/photo-1533174000273-e1f4ceb66150?q=80&w=2940&auto=format&fit=crop",
+                images: [],
+                city: "Delhi"
+            },
+            {
+                _id: "demo-3",
+                title: "Velvet Lounge: Jazz & Wine",
+                date: new Date(new Date().setDate(new Date().getDate() + 1)),
+                startTime: "19:00",
+                venueName: "The Ritz-Carlton",
+                displayPrice: 2500,
+                coverImage: "https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=2832&auto=format&fit=crop",
+                images: [],
+                city: "Bengaluru"
+            },
+            {
+                _id: "demo-4",
+                title: "Tech-House Boiler Room",
+                date: new Date(new Date().setDate(new Date().getDate() + 14)),
+                startTime: "23:00",
+                venueName: "Koregaon Park Industrial Area",
+                displayPrice: 500,
+                coverImage: "https://images.unsplash.com/photo-1470229722913-7c090be5c5a4?q=80&w=2832&auto=format&fit=crop",
+                images: [],
+                city: "Pune"
+            },
+            {
+                _id: "demo-5",
+                title: "Rooftop Sundowner: Tropical Vibes",
+                date: new Date(new Date().setDate(new Date().getDate() + 7)),
+                startTime: "17:00",
+                venueName: "Banjara Hills Rooftop",
+                displayPrice: 1200,
+                coverImage: "https://images.unsplash.com/photo-1485872299829-c673f5194813?q=80&w=2960&auto=format&fit=crop",
+                images: [],
+                city: "Hyderabad"
+            }
+        ];
+
+        return eventsList.map((ev: any) => ({
             id: ev._id,
             title: ev.title,
             date: new Date(ev.date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) + ', ' + ev.startTime,
+            rawDate: ev.date, // Preserve raw date for filtering
             location: ev.venueName || 'Secret Location',
             price: ev.displayPrice !== null && ev.displayPrice !== undefined ? `₹${ev.displayPrice} onwards` : 'Free',
             image: ev.coverImage || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop',
             images: ev.images?.length > 0 ? ev.images : [ev.coverImage || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop'],
+            city: ev.city // Pass down city for filtering
         }));
     }, [fetchedEvents]);
 
     const heroEvents = useMemo(() => activeEvents.slice(0, 5), [activeEvents]);
-    const allGridEvents = activeEvents;
-
-    const FILTERS = ['Filters', 'Today', 'Tomorrow', 'This Weekend', 'Under 10 km', 'Live Gigs', 'Music'];
+    const FILTERS = ['All', 'Today', 'Tomorrow', 'This Weekend', 'Under 10 km', 'Live Gigs', 'Music'];
     const [activeFilter, setActiveFilter] = useState('All');
+    
+    // Use the global location store
+    const { city: selectedCity, setCity: setSelectedCity, lat: userLat, lng: userLng, setLocation } = useLocationStore();
+    const [isLocating, setIsLocating] = useState(false);
 
-    if (isLoading) {
+    const requestLocation = () => {
+        setIsLocating(true);
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const { latitude, longitude } = position.coords;
+                try {
+                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+                    const data = await res.json();
+                    let detectedCity = 'Unknown Location';
+                    if (data && data.address) {
+                        detectedCity = data.address.city || data.address.town || data.address.state_district || 'Unknown Location';
+                    }
+                    setLocation(latitude, longitude, detectedCity);
+                } catch (err) {
+                    console.error(err);
+                    setLocation(latitude, longitude, 'Location Found');
+                }
+                setIsLocating(false);
+            }, (error) => {
+                console.error("Error getting location:", error);
+                alert("Please enable location access to use distance filters.");
+                setIsLocating(false);
+            });
+        } else {
+            alert("Geolocation is not supported by your browser.");
+            setIsLocating(false);
+        }
+    };
+
+    const allGridEvents = useMemo(() => {
+        if (!activeEvents || activeEvents.length === 0) return [];
+        let filtered = [...activeEvents];
+
+        // City filter
+        if (selectedCity !== 'All Cities') {
+            filtered = filtered.filter((ev: any) => 
+                ev.location.toLowerCase().includes(selectedCity.toLowerCase()) || 
+                ev.city?.toLowerCase() === selectedCity.toLowerCase() ||
+                (fetchedEvents?.find((f: any) => f._id === ev.id)?.city?.toLowerCase() === selectedCity.toLowerCase())
+            );
+        }
+
+        // Active Filter
+        if (activeFilter === 'All') return filtered;
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        if (activeFilter === 'Today') {
+            filtered = filtered.filter((ev: any) => {
+                const rawEvent = fetchedEvents?.find((f: any) => f._id === ev.id) || { date: ev.rawDate }; 
+                if (!rawEvent || !rawEvent.date) return false;
+                const eventDate = new Date(rawEvent.date);
+                eventDate.setHours(0,0,0,0);
+                return eventDate.getTime() === today.getTime();
+            });
+        } else if (activeFilter === 'Tomorrow') {
+            filtered = filtered.filter((ev: any) => {
+                const rawEvent = fetchedEvents?.find((f: any) => f._id === ev.id) || { date: ev.rawDate };
+                if (!rawEvent || !rawEvent.date) return false;
+                const eventDate = new Date(rawEvent.date);
+                eventDate.setHours(0,0,0,0);
+                return eventDate.getTime() === tomorrow.getTime();
+            });
+        } else if (activeFilter === 'This Weekend') {
+            filtered = filtered.filter((ev: any) => {
+                const rawEvent = fetchedEvents?.find((f: any) => f._id === ev.id) || { date: ev.rawDate };
+                if (!rawEvent || !rawEvent.date) return false;
+                const eventDate = new Date(rawEvent.date);
+                const day = eventDate.getDay();
+                return day === 0 || day === 6; // Sunday or Saturday
+            });
+        } else if (activeFilter === 'Under 10 km') {
+            if (!userLat || !userLng) {
+                // Return empty if no location
+            }
+        } else if (activeFilter === 'Live Gigs' || activeFilter === 'Music') {
+            filtered = filtered.filter((ev: any) => {
+                const rawEvent = fetchedEvents?.find((f: any) => f._id === ev.id);
+                const searchStr = `${ev.title} ${rawEvent?.category || ''} ${rawEvent?.description || ''}`.toLowerCase();
+                return searchStr.includes('live') || searchStr.includes('gig') || searchStr.includes('music');
+            });
+        }
+
+        return filtered;
+    }, [activeEvents, selectedCity, activeFilter, fetchedEvents, userLat, userLng]);
+
+    if (!isMounted || isLoading) {
         return <PageSkeleton />;
     }
 
@@ -297,33 +455,58 @@ export default function WelcomeScreen() {
             {/* All Events Section */}
             <div className="relative z-20 bg-[#080b12] py-16 px-6 lg:px-12 xl:px-20">
                 <div className="max-w-[1400px] mx-auto">
-                    <h2 className="text-section text-white mb-6">All events</h2>
-                    
-                    {/* Filters */}
-                    <div className="flex items-center space-x-3 overflow-x-auto pb-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-                        {FILTERS.map((filter, index) => (
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                        <h2 className="text-section text-white mb-0">All events</h2>
+                        
+                        <div className="flex items-center gap-3">
+                            {/* Filter Dropdown */}
+                            <div className="relative flex items-center">
+                                <svg className="w-3.5 h-3.5 text-white/70 absolute left-3.5 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                                </svg>
+                                <select 
+                                    value={activeFilter} 
+                                    onChange={(e) => setActiveFilter(e.target.value)}
+                                    className="bg-white/5 border border-white/10 rounded-full pl-9 pr-8 py-1.5 text-white text-sm font-medium focus:outline-none focus:border-blue-500 cursor-pointer hover:bg-white/10 hover:border-white/30 hover:shadow-[0_0_15px_rgba(255,255,255,0.1)] transition-all duration-300 appearance-none"
+                                >
+                                    {FILTERS.map((filter) => (
+                                        <option key={filter} value={filter} className="bg-[#080b12] text-white">
+                                            Filter ({filter})
+                                        </option>
+                                    ))}
+                                </select>
+                                <svg className="w-3.5 h-3.5 text-white/70 absolute right-3 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+
+                            <button 
+                                onClick={requestLocation}
+                                disabled={isLocating}
+                                className="flex items-center gap-2 bg-blue-600/20 text-blue-400 border border-blue-500/30 hover:bg-blue-600/30 rounded-full px-4 py-2 text-sm transition-colors whitespace-nowrap"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                                {isLocating ? "Locating..." : userLat ? "Location Access On" : "Location Access"}
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* City Chips */}
+                    <div className="flex items-center space-x-3 overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                        {['All Cities', 'Mumbai', 'Delhi', 'Bengaluru', 'Pune', 'Hyderabad', 'Kolkata', 'Chennai'].map((cityOption) => (
                             <button
-                                key={index}
-                                onClick={() => setActiveFilter(filter)}
-                                className={`whitespace-nowrap px-5 py-2 rounded-full text-sm font-medium transition-colors border flex items-center ${
-                                    activeFilter === filter 
-                                    ? 'bg-white text-black border-white' 
-                                    : filter === 'Filters'
-                                        ? 'bg-transparent text-white/90 border-white/20 hover:border-white/50'
-                                        : 'bg-transparent text-white/70 border-white/10 hover:border-white/30 hover:text-white'
+                                key={cityOption}
+                                onClick={() => setSelectedCity(cityOption)}
+                                className={`whitespace-nowrap px-6 py-2.5 rounded-full text-sm font-semibold transition-all border flex items-center ${
+                                    selectedCity === cityOption 
+                                    ? 'bg-blue-600 text-white border-blue-500 shadow-[0_0_15px_rgba(37,99,235,0.4)]' 
+                                    : 'bg-white/5 text-white/80 border-white/10 hover:border-white/40 hover:text-white hover:bg-white/10'
                                 }`}
                             >
-                                {filter === 'Filters' && (
-                                    <svg className="w-4 h-4 mr-2 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                                    </svg>
+                                {cityOption === 'All Cities' && (
+                                    <MapPin className="w-4 h-4 mr-2 opacity-80" />
                                 )}
-                                {filter}
-                                {filter === 'Filters' && (
-                                    <svg className="w-3 h-3 ml-2 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <polyline points="6 9 12 15 18 9"></polyline>
-                                    </svg>
-                                )}
+                                {cityOption}
                             </button>
                         ))}
                     </div>

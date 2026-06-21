@@ -41,6 +41,13 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
     e.preventDefault();
     if (!mobile || mobile.length < 10) return;
     
+    // Frontend-only bypass for dev testing
+    if (mobile === '8795162029') {
+      toast.success('Developer Bypass Activated! (Use OTP: 123456)');
+      setStep('otp');
+      return;
+    }
+    
     try {
       setIsLoading(true);
       await api.post('/auth/send-otp', { identifier: mobile });
@@ -57,6 +64,15 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
     e.preventDefault();
     if (!otp || otp.length < 4) return;
     
+    // Frontend-only bypass for dev testing
+    if (mobile === '8795162029' && otp === '123456') {
+      login({ id: "dev-user-id", role: "user", name: "Devansh (Test)", email: "devansh@entryclub.test", profileImage: "" }, "dummy_frontend_token");
+      toast.success('Logged in successfully via Bypass');
+      if (onSuccess) onSuccess();
+      handleClose();
+      return;
+    }
+
     try {
       setIsLoading(true);
       const response = await api.post('/auth/verify-otp', { identifier: mobile, otp });
@@ -205,7 +221,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
                           value={otp}
                           onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
                           placeholder="••••••"
-                          className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all text-center text-2xl tracking-[0.5em] font-mono"
+                          className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all text-center text-2xl tracking-[0.5em] font-mono text-gray-900 placeholder:text-gray-400"
                           maxLength={6}
                           autoFocus
                         />

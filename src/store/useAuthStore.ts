@@ -8,11 +8,27 @@ export interface User {
   username?: string;
   email?: string;
   phone?: string;
-  role?: string;
+  role?: 'user' | 'host' | 'admin' | 'superadmin' | 'staff' | 'waiter' | 'security' | string;
   profileImage?: string;
-  gender?: string;
+  gender?: 'Male' | 'Female' | 'Other' | '' | string;
   dob?: string;
   location?: string;
+  
+  // Synced from backend schema
+  googleId?: string | null;
+  appleId?: string | null;
+  tokenVersion?: number;
+  hostId?: string | null;
+  preferredZone?: string;
+  onboardingCompleted?: boolean;
+  emailVerified?: boolean;
+  isActive?: boolean;
+  referralCode?: string;
+  referredBy?: string | null;
+  referralsCount?: number;
+  loyaltyPoints?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface AuthState {

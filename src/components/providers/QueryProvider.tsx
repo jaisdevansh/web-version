@@ -10,7 +10,13 @@ export default function QueryProvider({ children }: { children: React.ReactNode 
         staleTime: 5 * 60 * 1000, // 5 minutes
         gcTime: 30 * 60 * 1000, // 30 minutes
         refetchOnWindowFocus: false, // Prevents refetching when switching tabs back and forth
-        retry: 1, // Only retry failed requests once to prevent hanging
+        refetchOnReconnect: false, // Prevents refetching on network reconnect
+        retry: (failureCount, error: any) => {
+          // Never retry on auth errors
+          if (error?.response?.status === 401 || error?.response?.status === 403) return false;
+          // Retry other errors only once
+          return failureCount < 1;
+        },
       },
     },
   }));

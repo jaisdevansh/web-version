@@ -42,14 +42,20 @@ api.interceptors.response.use(
       const errorMessage = data?.message || data?.error || 'An unexpected error occurred';
 
       if (status === 401) {
-        // Handle Unauthorized
-        toast.error('Session expired. Please log in again.');
+        // Handle Unauthorized gracefully
+        const hadToken = !!localStorage.getItem('party_user_token');
         localStorage.removeItem('party_user_token');
         localStorage.removeItem('party_user_role');
-        // We can redirect here or let useAuthStore handle it if it listens to storage events
-        // Redirecting directly is usually the safest for SPA UX
+        
+        // Only show toast and redirect if they actually had a session that expired,
+        // and avoid redirecting if they are already on the public home page.
+        if (hadToken) {
+          toast.error('Session expired. Please log in again.');
+        }
+        
         setTimeout(() => {
-          if (window.location.pathname !== '/login') {
+          const publicPaths = ['/', '/login'];
+          if (!publicPaths.includes(window.location.pathname) && hadToken) {
             window.location.href = '/login';
           }
         }, 1500);

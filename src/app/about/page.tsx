@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 
 function LiveStats({ itemVariants }: { itemVariants: any }) {
   const [venues, setVenues] = useState(542);
-  const [tickets, setTickets] = useState(10482930);
+  const [tickets, setTickets] = useState(1000);
   const [kyc, setKyc] = useState(64);
   const [uptime, setUptime] = useState(99.99);
 

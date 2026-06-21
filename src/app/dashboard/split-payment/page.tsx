@@ -8,6 +8,9 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Search, Users, ChevronLeft, Receipt, ShieldCheck, XCircle, PlusCircle, CheckCircle2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { useMutation } from '@tanstack/react-query';
+import axiosInstance from '@/lib/axios';
+import { toast } from 'sonner';
 
 const MOCK_FRIENDS = [
   { id: 'm1', name: 'Ananya Sharma', phone: '9876543210', avatar: 'https://i.pravatar.cc/150?u=a' },
@@ -32,7 +35,6 @@ export default function SplitPaymentPage() {
   
   const [selectedFriends, setSelectedFriends] = useState<any[]>([]);
   const [search, setSearch] = useState('');
-  const [processing, setProcessing] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const activeSplits = guests > 0 ? guests : 1;
@@ -48,13 +50,28 @@ export default function SplitPaymentPage() {
     }
   };
 
-  const handleRequestSplit = () => {
-    setProcessing(true);
-    setTimeout(() => {
-      setProcessing(false);
-      // Simulate success and redirect to booking success / dashboard
+  const splitMutation = useMutation({
+    mutationFn: async (payload: any) => {
+      const res = await axiosInstance.post('/user/split-requests', payload);
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success('Split request sent successfully!');
       router.push('/dashboard/bookings?tab=upcoming');
-    }, 1500);
+    },
+    onError: (err: any) => {
+      console.error(err);
+      toast.error(err.response?.data?.message || 'Failed to send split request');
+    }
+  });
+
+  const handleRequestSplit = () => {
+    splitMutation.mutate({
+      eventId,
+      totalAmount: total,
+      shareAmount,
+      friends: selectedFriends.map(f => ({ name: f.name, phone: f.phone }))
+    });
   };
 
   const filteredFriends = MOCK_FRIENDS.filter(f => 
@@ -221,11 +238,11 @@ export default function SplitPaymentPage() {
             <span className="text-xl font-black text-white">₹{total.toLocaleString()}</span>
           </div>
           <Button 
-            className="w-full h-14 rounded-2xl text-base font-bold bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 shadow-lg shadow-primary/20 border-none"
+            className="w-full h-14 rounded-2xl text-base font-bold bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 shadow-lg shadow-primary/20 border-none disabled:opacity-50"
             onClick={handleRequestSplit}
-            disabled={processing}
+            disabled={splitMutation.isPending}
           >
-            {processing ? 'Requesting...' : 'Request Split & Pay'}
+            {splitMutation.isPending ? 'Requesting...' : 'Request Split & Pay'}
           </Button>
         </div>
       </div>
