@@ -5,6 +5,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { TestimonialsMarquee } from '@/components/home/TestimonialsMarquee';
+import { CityExplorer } from '@/components/home/CityExplorer';
+import { FAQSection } from '@/components/home/FAQSection';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { ShieldCheck, Ticket, Users, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
@@ -80,8 +83,8 @@ const HeroCarousel = memo(({ heroEvents }: { heroEvents: any[] }) => {
                             />
                         </motion.div>
                     </AnimatePresence>
-                    {/* Performance Fix: Replaced backdrop-blur-[100px] with a more performant blur + higher opacity bg */}
-                    <div className="absolute inset-0 bg-black/80 backdrop-blur-3xl z-10" />
+                    {/* Performance Fix: Removed backdrop-blur-3xl which crushes GPU when covering the whole screen */}
+                    <div className="absolute inset-0 bg-black/85 z-10" />
                 </div>
 
                 {/* Content Container */}
@@ -449,6 +452,7 @@ export default function WelcomeScreen() {
 
     return (
         <div className="w-full flex flex-col overflow-x-hidden">
+
             {/* Render Optimized Hero Carousel */}
             {heroEvents.length > 0 && <HeroCarousel heroEvents={heroEvents} />}
 
@@ -547,8 +551,8 @@ export default function WelcomeScreen() {
             <div className="relative z-20 bg-black py-16 lg:py-20 px-6 overflow-hidden">
                 {/* Animated Background Gradients */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full pointer-events-none">
-                    <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[120px] animate-pulse" />
-                    <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[150px] animate-pulse" style={{ animationDelay: '2s' }} />
+                    <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[120px] transform-gpu" />
+                    <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[150px] transform-gpu" />
                 </div>
 
                 <div className="max-w-7xl mx-auto text-center relative z-10">
@@ -567,35 +571,122 @@ export default function WelcomeScreen() {
                         </h2>
                     </motion.div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 relative">
-                        {/* Connecting Line */}
-                        <div className="hidden md:block absolute top-1/2 left-[10%] right-[10%] h-[2px] bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-y-1/2 z-0" />
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 lg:gap-8 mb-12 relative items-center justify-center pt-10 perspective-[800px]">
                         
-                        {[
-                            { num: "1", title: "Curated Experiences", desc: "Explore hand-picked VIP events, exclusive raves, and premium club nights." },
-                            { num: "2", title: "Instant Access", desc: "Skip the lines. Secure your passes and VIP tables instantly from your phone." },
-                            { num: "3", title: "Own The Night", desc: "Flash your digital pass and walk right in. Unforgettable memories await." }
-                        ].map((step, i) => (
-                            <motion.div
-                                key={step.num}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: i * 0.2 }}
-                                className="relative z-10 group"
-                            >
-                                <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-10 backdrop-blur-xl hover:bg-white/[0.04] hover:border-blue-500/30 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(59,130,246,0.15)] flex flex-col items-center text-center h-full">
-                                    <div className="w-24 h-24 rounded-full p-[2px] bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 mb-8 relative group-hover:scale-110 transition-transform duration-500 shadow-xl">
-                                        <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                        <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-3xl font-light text-white relative z-10">
-                                            {step.num}
-                                        </div>
+                        {/* Stamp CSS defined inline for the cutouts */}
+                        <style dangerouslySetInnerHTML={{__html: `
+                          .stamp-cutout {
+                            -webkit-mask: 
+                              linear-gradient(#000 0 0), 
+                              radial-gradient(circle at 0 18px, #000 12px, transparent 12.5px), 
+                              radial-gradient(circle at 100% 18px, #000 12px, transparent 12.5px), 
+                              radial-gradient(circle at 18px 0, #000 12px, transparent 12.5px), 
+                              radial-gradient(circle at 18px 100%, #000 12px, transparent 12.5px);
+                            -webkit-mask-size: 100% 100%, 12px 36px, 12px 36px, 36px 12px, 36px 12px;
+                            -webkit-mask-position: 0 0, 0 0, 100% 0, 0 0, 0 100%;
+                            -webkit-mask-repeat: no-repeat, repeat-y, repeat-y, repeat-x, repeat-x;
+                            -webkit-mask-composite: destination-out;
+                            
+                            mask: 
+                              linear-gradient(#000 0 0), 
+                              radial-gradient(circle at 0 18px, #000 12px, transparent 12.5px), 
+                              radial-gradient(circle at 100% 18px, #000 12px, transparent 12.5px), 
+                              radial-gradient(circle at 18px 0, #000 12px, transparent 12.5px), 
+                              radial-gradient(circle at 18px 100%, #000 12px, transparent 12.5px);
+                            mask-size: 100% 100%, 12px 36px, 12px 36px, 36px 12px, 36px 12px;
+                            mask-position: 0 0, 0 0, 100% 0, 0 0, 0 100%;
+                            mask-repeat: no-repeat, repeat-y, repeat-y, repeat-x, repeat-x;
+                            mask-composite: subtract;
+                          }
+                        `}} />
+
+                        {/* Card 1: Rating & Reviews */}
+                        <motion.div
+                            initial={{ opacity: 0, rotateY: 45, rotateX: 30, y: 100, scale: 0.8 }}
+                            whileInView={{ opacity: 1, rotateY: 0, rotateX: 0, y: 0, scale: 1 }}
+                            viewport={{ once: false, amount: 0.2 }}
+                            transition={{ type: "spring", bounce: 0.4, duration: 1.2 }}
+                            className="relative z-10 w-full max-w-[320px] mx-auto transform-style-3d will-change-transform"
+                        >
+                            <div className="stamp-cutout bg-blue-600 p-8 md:p-6 lg:p-8 rounded-xl min-h-[400px] flex flex-col justify-end relative shadow-2xl overflow-hidden hover:-translate-y-4 transition-transform duration-500">
+                                {/* Decorative elements */}
+                                <div className="absolute top-8 left-6 right-6 h-[180px] bg-white/20 rounded-xl mb-6 relative">
+                                  {/* Mock Review 1 */}
+                                  <div className="absolute top-2 left-2 bg-white rounded-lg p-2 shadow-lg w-[85%] z-10">
+                                    <div className="flex gap-1 mb-1 text-yellow-400 text-xs">
+                                      <span>★</span><span>★</span><span>★</span><span>★</span><span className="text-gray-300">★</span>
                                     </div>
-                                    <h3 className="text-card-heading text-white mb-4 group-hover:text-blue-400 transition-colors">{step.title}</h3>
-                                    <p className="text-white/70 text-body leading-relaxed">{step.desc}</p>
+                                    <div className="text-[9px] text-gray-800 font-medium">The event felt amazing with strangers!</div>
+                                  </div>
+                                  {/* Mock Review 2 */}
+                                  <div className="absolute top-16 right-2 bg-[#fff8e1] rounded-lg p-2 shadow-lg w-[85%] z-20">
+                                    <div className="flex gap-1 mb-1 text-yellow-500 text-xs">
+                                      <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                                    </div>
+                                    <div className="text-[9px] text-gray-800 font-medium">Amazing arrangements and the crowd was just fab!</div>
+                                  </div>
                                 </div>
-                            </motion.div>
-                        ))}
+                                
+                                <h3 className="text-3xl font-black text-white mb-3 leading-tight tracking-tight drop-shadow-md">Rating & <br/>Reviews</h3>
+                                <p className="text-white/90 text-sm font-medium leading-relaxed drop-shadow-sm">Before you join anything, you can check for verified profiles, user ratings and what others have said.</p>
+                            </div>
+                        </motion.div>
+
+                        {/* Card 2: Join & Create Events */}
+                        <motion.div
+                            initial={{ opacity: 0, rotateY: 45, rotateX: 30, y: 100, scale: 0.8 }}
+                            whileInView={{ opacity: 1, rotateY: 0, rotateX: 0, y: 0, scale: 1 }}
+                            viewport={{ once: false, amount: 0.2 }}
+                            transition={{ type: "spring", bounce: 0.4, duration: 1.2, delay: 0.1 }}
+                            className="relative z-20 w-full max-w-[340px] mx-auto md:-translate-y-8 transform-style-3d will-change-transform"
+                        >
+                            <div className="stamp-cutout bg-blue-500 p-8 md:p-6 lg:p-8 rounded-xl min-h-[440px] flex flex-col justify-end relative shadow-[0_20px_50px_rgba(59,130,246,0.3)] overflow-hidden hover:-translate-y-4 hover:scale-105 transition-transform duration-500">
+                                {/* Decorative elements */}
+                                <div className="absolute top-6 left-6 right-6 h-[200px] bg-white rounded-xl mb-6 relative overflow-hidden shadow-inner">
+                                  {/* Map background placeholder */}
+                                  <div className="absolute inset-0 bg-[#e5e5f7] opacity-60" style={{ backgroundImage: "radial-gradient(#444cf7 1px, transparent 1px)", backgroundSize: "10px 10px" }} />
+                                  
+                                  {/* Mock Event Card */}
+                                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] bg-black text-white rounded-lg p-3 shadow-2xl border border-white/20">
+                                    <div className="h-20 bg-gray-800 rounded-md mb-2 overflow-hidden relative">
+                                      <div className="absolute inset-0 bg-blue-500/20" />
+                                      <div className="absolute bottom-1 right-1 bg-blue-600 text-[8px] px-1 rounded">SPORTS</div>
+                                    </div>
+                                    <h4 className="font-bold text-xs uppercase text-[#a855f7]">Running Club</h4>
+                                    <div className="text-[8px] text-gray-400 mt-1">22 Malviya Nagar, Jaipur</div>
+                                  </div>
+                                </div>
+                                
+                                <h3 className="text-3xl font-black text-white mb-3 leading-tight tracking-tight drop-shadow-md">Join & Create <br/>Events</h3>
+                                <p className="text-white/90 text-sm font-medium leading-relaxed drop-shadow-sm">See something you like? Just join! Didn't find the right plan? Create one yourself and vibe with like-minded people.</p>
+                            </div>
+                        </motion.div>
+
+                        {/* Card 3: Build Community */}
+                        <motion.div
+                            initial={{ opacity: 0, rotateY: 45, rotateX: 30, y: 100, scale: 0.8 }}
+                            whileInView={{ opacity: 1, rotateY: 0, rotateX: 0, y: 0, scale: 1 }}
+                            viewport={{ once: false, amount: 0.2 }}
+                            transition={{ type: "spring", bounce: 0.4, duration: 1.2, delay: 0.2 }}
+                            className="relative z-10 w-full max-w-[320px] mx-auto transform-style-3d will-change-transform"
+                        >
+                            <div className="stamp-cutout bg-blue-600 p-8 md:p-6 lg:p-8 rounded-xl min-h-[400px] flex flex-col justify-end relative shadow-2xl overflow-hidden hover:-translate-y-4 transition-transform duration-500">
+                                {/* Decorative elements */}
+                                <div className="absolute top-8 left-6 right-6 h-[180px] bg-white/20 rounded-xl mb-6 relative flex items-center justify-center overflow-hidden">
+                                  {/* Photo placeholder */}
+                                  <div className="absolute inset-2 bg-black rounded-lg overflow-hidden border-2 border-white transform -rotate-3">
+                                    <Image src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1000&auto=format&fit=crop" alt="Friends" fill className="object-cover grayscale opacity-80" />
+                                  </div>
+                                  {/* Floating Badges */}
+                                  <div className="absolute top-2 left-2 bg-[#6b21a8] text-white text-[10px] font-bold px-2 py-1 rounded-full rotate-6 shadow-lg">Fan Clubs</div>
+                                  <div className="absolute bottom-4 left-4 bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded-full -rotate-6 shadow-lg">Sports</div>
+                                  <div className="absolute bottom-8 right-2 bg-pink-600 text-white text-[10px] font-bold px-2 py-1 rounded-full rotate-12 shadow-lg">Travelling</div>
+                                </div>
+                                
+                                <h3 className="text-3xl font-black text-white mb-3 leading-tight tracking-tight drop-shadow-md">Build <br/>Community</h3>
+                                <p className="text-white/90 text-sm font-medium leading-relaxed drop-shadow-sm">Explore interest-based circles & connect with people who share your vibe.</p>
+                            </div>
+                        </motion.div>
                     </div>
                 </div>
             </div>
@@ -759,6 +850,12 @@ export default function WelcomeScreen() {
                     </motion.div>
                 </div>
             </div>
+
+            <TestimonialsMarquee />
+
+            <CityExplorer />
+
+            <FAQSection />
 
             {/* Contact Form Preview */}
             <div id="host-contact" className="relative z-20 bg-black py-32 px-6 overflow-hidden">

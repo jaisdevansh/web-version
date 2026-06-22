@@ -6,8 +6,6 @@ import { LayoutDashboard, User, Settings, Bell, Clock, Ticket, Compass, Calendar
 import { cn } from '@/lib/utils';
 
 const sidebarItems = [
-  { name: 'Discover', href: '/dashboard/discover', icon: Compass },
-  { name: 'Events', href: '/dashboard/events', icon: Calendar },
   { name: 'My Bookings', href: '/dashboard/tickets', icon: Ticket },
   { name: 'History', href: '/dashboard/history', icon: Clock },
   { name: 'Reviews', href: '/dashboard/review', icon: Star },

@@ -18,6 +18,8 @@ export default function Navbar() {
   const { city, setCity, setLocation } = useLocationStore();
   const [isLocating, setIsLocating] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDownloadOpen, setIsDownloadOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
@@ -30,8 +32,16 @@ export default function Navbar() {
       }
     };
     
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   const detectLocation = () => {
@@ -63,7 +73,11 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/5 bg-black/40 backdrop-blur-xl supports-[backdrop-filter]:bg-black/20">
+    <header className={`fixed top-0 z-50 w-full transition-all duration-300 ${
+      isScrolled 
+        ? 'bg-[#0A0A0A]/95 backdrop-blur-xl border-b border-white/5 py-0' 
+        : 'bg-transparent border-transparent py-2'
+    }`}>
       <div className="container mx-auto flex h-16 md:h-20 items-center justify-between px-4 md:px-8">
         {/* Left: Logo */}
         <div className="flex items-center md:w-[30%] shrink-0">
@@ -76,44 +90,88 @@ export default function Navbar() {
               <MobilePublicMenu />
             </div>
           )}
-          <Link href="/" className="flex items-center space-x-2 group">
-            <span className="font-bold text-base md:text-xl tracking-tight text-blue-500 drop-shadow-md">
-              ENTRY CLUB
+          <Link href="/" className="flex items-center space-x-2 md:space-x-3 group pt-1">
+            {/* Text Logo */}
+            <span className="font-bold text-lg md:text-2xl tracking-[0.25em] flex items-center">
+              <span className="text-white">ENTRY</span>
+              <span className="text-blue-500 ml-2">CLUB</span>
             </span>
           </Link>
         </div>
 
         {/* Center: Links */}
         <div className="hidden md:flex flex-1 justify-center md:w-[40%]">
-          <nav className="flex items-center space-x-10 lg:space-x-12 text-sm uppercase tracking-widest font-semibold">
-            <Link
-              href="/features"
-              className="relative text-blue-400 hover:text-white transition-colors duration-300 group"
+          <nav className={`flex items-center p-1 space-x-1 rounded-full transition-all duration-300 ${
+            isScrolled ? 'bg-white/5 backdrop-blur-md border border-white/10' : 'bg-transparent border-transparent'
+          }`}>
+            {[
+              { name: 'Home', href: '/' },
+              { name: 'Events', href: '/events' },
+              { name: 'About', href: '/about' }
+            ].map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
+                    isActive
+                      ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(59,130,246,0.3)]'
+                      : 'text-white/80 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              );
+            })}
+
+            {/* Explore Dropdown */}
+            <div 
+              className="relative"
+              onMouseEnter={() => setIsDownloadOpen(true)}
+              onMouseLeave={() => setIsDownloadOpen(false)}
             >
-              Features
-              <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
-            </Link>
-            <Link
-              href="/about"
-              className="relative text-blue-400 hover:text-white transition-colors duration-300 group"
-            >
-              About
-              <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-purple-500 transition-all duration-300 group-hover:w-full"></span>
-            </Link>
-            <Link
-              href="/contact"
-              className="relative text-blue-400 hover:text-white transition-colors duration-300 group"
-            >
-              Contact
-              <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-indigo-500 transition-all duration-300 group-hover:w-full"></span>
-            </Link>
-            <Link
-              href="/business"
-              className="relative text-blue-400 hover:text-white transition-colors duration-300 group"
-            >
-              Business
-              <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-pink-500 transition-all duration-300 group-hover:w-full"></span>
-            </Link>
+              {(() => {
+                const dropdownItems = [
+                  { name: 'Features', href: '/features' },
+                  { name: 'Contact', href: '/contact' },
+                  { name: 'Download', href: '/download' }
+                ];
+                const activeItem = dropdownItems.find(item => item.href === pathname);
+                const label = activeItem ? activeItem.name : 'Explore';
+
+                return (
+                  <>
+                    <button
+                      className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${activeItem ? 'bg-blue-600 text-white shadow-[0_0_15px_rgba(59,130,246,0.3)] border-transparent' : 'bg-transparent hover:bg-white/10 text-white border-transparent hover:border-white/10'} border`}
+                    >
+                      {label}
+                      <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isDownloadOpen ? 'rotate-180' : 'opacity-70'}`} />
+                    </button>
+                    
+                    {isDownloadOpen && (
+                      <div className="absolute top-full left-0 pt-2 w-52 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                        <div className="bg-[#0A0A0A]/95 backdrop-blur-3xl border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.7)] p-2">
+                          {dropdownItems.map((item) => {
+                            const isActive = pathname === item.href;
+                            return (
+                              <Link
+                                key={item.name}
+                                href={item.href}
+                                className={`block px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${isActive ? 'bg-blue-600/15 text-blue-400' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
+                                onClick={() => setIsDownloadOpen(false)}
+                              >
+                                {item.name}
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
+            </div>
           </nav>
         </div>
         

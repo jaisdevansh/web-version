@@ -472,11 +472,6 @@ export default function DashboardPage() {
                 <AnimatePresence mode="wait">
                     {!reviewingEvent && activeTab === "Home" && <div key="home" className="h-full">{renderHomeTab()}</div>}
                     {!reviewingEvent && activeTab === "Bookings" && <div key="bookings" className="h-full">{renderBookingsTab()}</div>}
-                    {!reviewingEvent && activeTab === "Discover" && (
-                        <div key="discover" className="flex items-center justify-center h-full text-white/50">
-                            Discover Search Coming Soon
-                        </div>
-                    )}
                     {!reviewingEvent && activeTab === "Profile" && (
                         <div key="profile" className="flex items-center justify-center h-full text-white/50">
                             Profile Coming Soon
@@ -495,7 +490,6 @@ export default function DashboardPage() {
                 <nav className="absolute bottom-0 left-0 right-0 h-[85px] bg-[#03060c]/90 backdrop-blur-2xl border-t border-white/5 px-4 flex justify-between items-start pt-3 z-20">
                     {[
                         { id: "Home", icon: Home, label: "Home" },
-                        { id: "Discover", icon: Search, label: "Discover" },
                         { id: "Bookings", icon: Ticket, label: "My Bookings" },
                         { id: "Profile", icon: User, label: "Profile" }
                     ].map((item) => {
