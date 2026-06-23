@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCoverflow, Autoplay } from 'swiper/modules';
 
@@ -20,7 +19,7 @@ const DEMO_EVENTS = [
   {
     id: 'shakira-delhi',
     title: 'SHAKIRA',
-    image: 'https://images.unsplash.com/photo-1540039155732-d68f7b7fce8d?q=80&w=2800&auto=format&fit=crop'
+    image: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=2800&auto=format&fit=crop'
   },
   {
     id: 'fun-day-out',
@@ -35,51 +34,57 @@ const DEMO_EVENTS = [
   {
     id: 'honey-singh',
     title: 'Yo Yo! Honey Singh',
-    image: 'https://images.unsplash.com/photo-1493225457124-a1a2a5f5cb3b?q=80&w=2800&auto=format&fit=crop'
+    image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2800&auto=format&fit=crop'
   }
 ];
 
 export default function EventsCarousel() {
   return (
-    <div className="relative w-full py-16 overflow-hidden bg-[#050B14]">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 text-center mb-10">
-        <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+    <div className="relative w-full py-10 sm:py-14 md:py-16 overflow-hidden bg-[#050B14]">
+      {/* Section Header */}
+      <div className="max-w-7xl mx-auto px-4 md:px-6 text-center mb-8 sm:mb-10">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 tracking-tight">
           Happening Around You
         </h2>
-        <p className="text-lg text-white/70">
+        <p className="text-sm sm:text-base md:text-lg text-white/70 px-2">
           More than events, explore experiences that bring people together.
         </p>
       </div>
 
-      <div className="w-full pb-10">
+      {/* Carousel */}
+      <div className="w-full pb-6 sm:pb-8 md:pb-10">
         <Swiper
           effect={'coverflow'}
           grabCursor={true}
           centeredSlides={true}
           slidesPerView={'auto'}
           loop={true}
+          loopAdditionalSlides={DEMO_EVENTS.length}
           autoplay={{
             delay: 2500,
             disableOnInteraction: false,
+            pauseOnMouseEnter: true,
           }}
+          speed={600}
           coverflowEffect={{
             rotate: 0,
             stretch: 0,
-            depth: 100,
-            modifier: 2.5,
+            depth: 80,
+            modifier: 2,
             slideShadows: false,
           }}
           modules={[EffectCoverflow, Autoplay]}
-          className="w-full !px-4 md:!px-10"
+          className="w-full events-carousel-swiper"
         >
-          {DEMO_EVENTS.map((event, index) => (
-            <SwiperSlide key={index} className="max-w-[280px] md:max-w-[320px] transition-all duration-300">
+          {/* Triple slides for seamless infinite loop with slidesPerView='auto' */}
+          {[...DEMO_EVENTS, ...DEMO_EVENTS, ...DEMO_EVENTS].map((event, index) => (
+            <SwiperSlide key={`${event.id}-${index}`} className="events-carousel-slide">
               {({ isActive }) => (
-                <div 
-                  className={`relative w-full aspect-[3/4] rounded-2xl overflow-hidden transition-all duration-500 border-2 ${
-                    isActive 
-                      ? 'border-[#a855f7] shadow-[0_0_30px_rgba(168,85,247,0.6)] scale-100 z-10' 
-                      : 'border-white/10 opacity-60 scale-90 z-0 hover:opacity-80'
+                <div
+                  className={`relative w-full aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden transition-all duration-500 border-2 ${
+                    isActive
+                      ? 'border-[#a855f7] shadow-[0_0_20px_rgba(168,85,247,0.5)] sm:shadow-[0_0_30px_rgba(168,85,247,0.6)] scale-100 z-10'
+                      : 'border-white/10 opacity-50 sm:opacity-60 scale-90 z-0 hover:opacity-80'
                   }`}
                 >
                   <Image
@@ -88,12 +93,16 @@ export default function EventsCarousel() {
                     fill
                     className="object-cover"
                   />
-                  {/* Subtle gradient overlay to make text pop if added later */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-                  
-                  {/* Event Title (Optional, mirroring the screenshot poster look) */}
-                  <div className="absolute bottom-4 left-4 right-4 text-left">
-                    <h3 className={`font-bold text-white uppercase tracking-wider ${isActive ? 'text-xl' : 'text-lg'}`}>
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent pointer-events-none" />
+
+                  {/* Event Title */}
+                  <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 right-3 sm:right-4 text-left">
+                    <h3
+                      className={`font-bold text-white uppercase tracking-wider leading-tight ${
+                        isActive ? 'text-base sm:text-lg md:text-xl' : 'text-sm sm:text-base md:text-lg'
+                      }`}
+                    >
                       {event.title}
                     </h3>
                   </div>
@@ -103,10 +112,46 @@ export default function EventsCarousel() {
           ))}
         </Swiper>
       </div>
-      
+
       <style dangerouslySetInnerHTML={{__html: `
-        .swiper-slide {
+        /* Mobile: smaller cards */
+        .events-carousel-slide {
+          width: 200px !important;
           transition: all 0.3s ease;
+        }
+
+        /* Tablet */
+        @media (min-width: 640px) {
+          .events-carousel-slide {
+            width: 260px !important;
+          }
+        }
+
+        /* Desktop */
+        @media (min-width: 768px) {
+          .events-carousel-slide {
+            width: 320px !important;
+          }
+        }
+
+        /* Swiper padding on mobile */
+        .events-carousel-swiper {
+          padding-left: 16px !important;
+          padding-right: 16px !important;
+        }
+
+        @media (min-width: 640px) {
+          .events-carousel-swiper {
+            padding-left: 24px !important;
+            padding-right: 24px !important;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .events-carousel-swiper {
+            padding-left: 40px !important;
+            padding-right: 40px !important;
+          }
         }
       `}} />
     </div>

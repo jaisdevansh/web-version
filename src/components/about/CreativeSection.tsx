@@ -17,7 +17,7 @@ export function CreativeSection() {
             className="relative h-[8vw] md:h-[7vw] w-[16vw] md:w-[14vw] rounded-xl md:rounded-2xl overflow-hidden mx-2 md:mx-4 shrink-0 transform-gpu"
           >
             <Image 
-              src="https://images.unsplash.com/photo-1501281668745-f7f5792203bba?q=80&w=2000&auto=format&fit=crop" 
+              src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2000&auto=format&fit=crop" 
               alt="Creative singer" 
               fill
               className="object-cover"

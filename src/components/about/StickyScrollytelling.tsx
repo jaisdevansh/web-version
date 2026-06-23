@@ -17,7 +17,7 @@ const SCENES = [
     headline: "MEET REAL PEOPLE",
     subhead: "Grow With Entry Club",
     description: "Turn events into opportunities. Host events, promote them through the network, and unlock new earning possibilities.",
-    image: "https://images.unsplash.com/photo-1511632765486-a01c80cf8cb4?q=80&w=1000&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=1000&auto=format&fit=crop"
   },
   {
     id: 3,
@@ -120,7 +120,7 @@ export function StickyScrollytelling() {
                 transition={{ duration: 0.6, ease: [0.25, 1, 0.5, 1] }} // power3.out equivalent
                 className="absolute inset-x-0"
               >
-                <h3 className="text-[#8b5cf6] font-black text-3xl md:text-5xl lg:text-6xl uppercase tracking-tighter leading-tight mb-2">
+                <h3 className="text-[#3B82F6] font-black text-3xl md:text-5xl lg:text-6xl uppercase tracking-tighter leading-tight mb-2">
                   {SCENES[activeIndex].headline}
                 </h3>
                 <h4 className="text-white font-bold text-2xl md:text-4xl tracking-tight mb-6">

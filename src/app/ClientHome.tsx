@@ -1,15 +1,16 @@
 'use client';
 
-import { useState, useEffect, useMemo, memo } from 'react';
+import { useState, useEffect, useMemo, memo, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
+import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
-import { TestimonialsMarquee } from '@/components/home/TestimonialsMarquee';
-import { CityExplorer } from '@/components/home/CityExplorer';
-import { FAQSection } from '@/components/home/FAQSection';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const TestimonialsMarquee = dynamic(() => import('@/components/home/TestimonialsMarquee').then(mod => mod.TestimonialsMarquee), { ssr: true });
+const CityExplorer = dynamic(() => import('@/components/home/CityExplorer').then(mod => mod.CityExplorer), { ssr: true });
+const FAQSection = dynamic(() => import('@/components/home/FAQSection').then(mod => mod.FAQSection), { ssr: true });
 import { ShieldCheck, Ticket, Users, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
@@ -47,15 +48,15 @@ const HeroCarousel = memo(({ heroEvents }: { heroEvents: any[] }) => {
         return () => clearInterval(interval);
     }, [currentIndex, eventImages]);
 
-    const nextSlide = () => {
+    const nextSlide = useCallback(() => {
         setCurrentIndex((prev) => (prev + 1) % heroEvents.length);
         setInnerImageIndex(0);
-    };
+    }, [heroEvents.length]);
 
-    const prevSlide = () => {
+    const prevSlide = useCallback(() => {
         setCurrentIndex((prev) => (prev - 1 + heroEvents.length) % heroEvents.length);
         setInnerImageIndex(0);
-    };
+    }, [heroEvents.length]);
 
     if (!event) return null;
 
@@ -296,7 +297,7 @@ export default function WelcomeScreen() {
                 startTime: "16:00",
                 venueName: "Delhi Golf Club Grounds",
                 displayPrice: 999,
-                coverImage: "https://images.unsplash.com/photo-1533174000273-e1f4ceb66150?q=80&w=2940&auto=format&fit=crop",
+                coverImage: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=2940&auto=format&fit=crop",
                 images: [],
                 city: "Delhi"
             },
@@ -318,7 +319,7 @@ export default function WelcomeScreen() {
                 startTime: "23:00",
                 venueName: "Koregaon Park Industrial Area",
                 displayPrice: 500,
-                coverImage: "https://images.unsplash.com/photo-1470229722913-7c090be5c5a4?q=80&w=2832&auto=format&fit=crop",
+                coverImage: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2832&auto=format&fit=crop",
                 images: [],
                 city: "Pune"
             },
@@ -349,14 +350,14 @@ export default function WelcomeScreen() {
     }, [fetchedEvents]);
 
     const heroEvents = useMemo(() => activeEvents.slice(0, 5), [activeEvents]);
-    const FILTERS = ['All', 'Today', 'Tomorrow', 'This Weekend', 'Under 10 km', 'Live Gigs', 'Music'];
+    const FILTERS = useMemo(() => ['All', 'Today', 'Tomorrow', 'This Weekend', 'Under 10 km', 'Live Gigs', 'Music'], []);
     const [activeFilter, setActiveFilter] = useState('All');
     
     // Use the global location store
     const { city: selectedCity, setCity: setSelectedCity, lat: userLat, lng: userLng, setLocation } = useLocationStore();
     const [isLocating, setIsLocating] = useState(false);
 
-    const requestLocation = () => {
+    const requestLocation = useCallback(() => {
         setIsLocating(true);
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(async (position) => {
@@ -383,7 +384,7 @@ export default function WelcomeScreen() {
             alert("Geolocation is not supported by your browser.");
             setIsLocating(false);
         }
-    };
+    }, [setLocation]);
 
     const allGridEvents = useMemo(() => {
         if (!activeEvents || activeEvents.length === 0) return [];
@@ -457,51 +458,51 @@ export default function WelcomeScreen() {
             {heroEvents.length > 0 && <HeroCarousel heroEvents={heroEvents} />}
 
             {/* All Events Section */}
-            <div className="relative z-20 bg-[#080b12] py-16 px-6 lg:px-12 xl:px-20">
+            <div className="relative z-20 bg-[#080b12] py-10 sm:py-16 px-4 sm:px-6 lg:px-12 xl:px-20">
                 <div className="max-w-[1400px] mx-auto">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                        <h2 className="text-section text-white mb-0">All events</h2>
-                        
-                        <div className="flex items-center gap-3">
-                            {/* Filter Dropdown */}
-                            <div className="relative flex items-center">
-                                <svg className="w-3.5 h-3.5 text-white/70 absolute left-3.5 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                                </svg>
-                                <select 
-                                    value={activeFilter} 
-                                    onChange={(e) => setActiveFilter(e.target.value)}
-                                    className="bg-white/5 border border-white/10 rounded-full pl-9 pr-8 py-1.5 text-white text-sm font-medium focus:outline-none focus:border-blue-500 cursor-pointer hover:bg-white/10 hover:border-white/30 hover:shadow-[0_0_15px_rgba(255,255,255,0.1)] transition-all duration-300 appearance-none"
-                                >
-                                    {FILTERS.map((filter) => (
-                                        <option key={filter} value={filter} className="bg-[#080b12] text-white">
-                                            Filter ({filter})
-                                        </option>
-                                    ))}
-                                </select>
-                                <svg className="w-3.5 h-3.5 text-white/70 absolute right-3 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </div>
-
+                    <div className="flex flex-col gap-3 mb-6">
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-section text-white mb-0">All events</h2>
+                            {/* Location button - icon only on mobile, full text on sm+ */}
                             <button 
                                 onClick={requestLocation}
                                 disabled={isLocating}
-                                className="flex items-center gap-2 bg-blue-600/20 text-blue-400 border border-blue-500/30 hover:bg-blue-600/30 rounded-full px-4 py-2 text-sm transition-colors whitespace-nowrap"
+                                className="flex items-center gap-1.5 bg-blue-600/20 text-blue-400 border border-blue-500/30 hover:bg-blue-600/30 rounded-full px-3 py-2 sm:px-4 text-xs sm:text-sm transition-colors shrink-0"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                                {isLocating ? "Locating..." : userLat ? "Location Access On" : "Location Access"}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                                <span className="hidden xs:inline">{isLocating ? "Locating..." : userLat ? "Location On" : "Location"}</span>
+                                <span className="xs:hidden">{isLocating ? "..." : userLat ? "On" : "📍"}</span>
                             </button>
+                        </div>
+                        {/* Filter Dropdown - full width on mobile */}
+                        <div className="relative flex items-center w-full sm:w-auto">
+                            <svg className="w-3.5 h-3.5 text-white/70 absolute left-3.5 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                            </svg>
+                            <select 
+                                value={activeFilter} 
+                                onChange={(e) => setActiveFilter(e.target.value)}
+                                className="w-full sm:w-auto bg-white/5 border border-white/10 rounded-full pl-9 pr-8 py-2 text-white text-sm font-medium focus:outline-none focus:border-blue-500 cursor-pointer hover:bg-white/10 hover:border-white/30 transition-all duration-300 appearance-none"
+                            >
+                                {FILTERS.map((filter) => (
+                                    <option key={filter} value={filter} className="bg-[#080b12] text-white">
+                                        Filter: {filter}
+                                    </option>
+                                ))}
+                            </select>
+                            <svg className="w-3.5 h-3.5 text-white/70 absolute right-3 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
                         </div>
                     </div>
 
                     {/* City Chips */}
-                    <div className="flex items-center space-x-3 overflow-x-auto pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                    <div className="flex items-center space-x-2 sm:space-x-3 overflow-x-auto pb-3 sm:pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                         {['All Cities', 'Mumbai', 'Delhi', 'Bengaluru', 'Pune', 'Hyderabad', 'Kolkata', 'Chennai'].map((cityOption) => (
                             <button
                                 key={cityOption}
                                 onClick={() => setSelectedCity(cityOption)}
-                                className={`whitespace-nowrap px-6 py-2.5 rounded-full text-sm font-semibold transition-all border flex items-center ${
+                                className={`whitespace-nowrap px-3 py-1.5 sm:px-6 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all border flex items-center ${
                                     selectedCity === cityOption 
                                     ? 'bg-blue-600 text-white border-blue-500 shadow-[0_0_15px_rgba(37,99,235,0.4)]' 
                                     : 'bg-white/5 text-white/80 border-white/10 hover:border-white/40 hover:text-white hover:bg-white/10'
@@ -517,21 +518,22 @@ export default function WelcomeScreen() {
 
                     {/* Events Grid */}
                     {allGridEvents.length > 0 ? (
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 gap-y-10 mt-2">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6 gap-y-6 sm:gap-y-10 mt-2">
                             {allGridEvents.map((ev: any) => (
                                 <Link href={`/events/${ev.id}`} key={ev.id} className="group block cursor-pointer">
-                                    <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-[#1a1f2e] mb-4 shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/5 group-hover:border-white/20 transition-all duration-300">
+                                    <div className="relative w-full aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden bg-[#1a1f2e] mb-2 sm:mb-4 shadow-[0_0_15px_rgba(0,0,0,0.5)] border border-white/5 group-hover:border-white/20 transition-all duration-300">
                                         <Image
                                             src={ev.image} 
                                             alt={ev.title} 
                                             fill
-                                            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
+                                            sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1200px) 25vw, 20vw"
                                             className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                            onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=600&auto=format&fit=crop'; }}
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                                     </div>
-                                    <h3 className="text-card-heading text-white group-hover:text-blue-400 transition-colors line-clamp-1">{ev.title}</h3>
-                                    <p className="text-white/60 text-small mt-1">{ev.date}</p>
+                                    <h3 className="text-xs sm:text-card-heading text-white group-hover:text-blue-400 transition-colors line-clamp-1 font-semibold">{ev.title}</h3>
+                                    <p className="text-white/60 text-[10px] sm:text-small mt-0.5 sm:mt-1">{ev.date}</p>
                                 </Link>
                             ))}
                         </div>
@@ -837,7 +839,7 @@ export default function WelcomeScreen() {
                             className="absolute z-10 w-[300px] h-[400px] bg-black/40 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 shadow-2xl flex flex-col gap-4 transform rotate-12 translate-x-20 translate-y-20"
                         >
                             <div className="w-full h-40 bg-gradient-to-br from-blue-500/20 to-indigo-600/20 rounded-2xl border border-white/5 flex items-center justify-center overflow-hidden relative">
-                                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=600')] bg-cover opacity-50 blend-overlay" />
+                                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=600')] bg-cover opacity-50 blend-overlay" />
                             </div>
                             <div className="w-3/4 h-6 bg-white/10 rounded-full mt-2" />
                             <div className="w-1/2 h-4 bg-white/5 rounded-full" />

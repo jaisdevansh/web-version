@@ -6,13 +6,13 @@ import Image from 'next/image';
 
 const POSTERS = [
   "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&q=80&w=300",
-  "https://images.unsplash.com/photo-1540039155732-d68f7b7fce8d?auto=format&fit=crop&q=80&w=300",
-  "https://images.unsplash.com/photo-1470229722913-7c090be5c560?auto=format&fit=crop&q=80&w=300",
+  "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&q=80&w=300",
+  "https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&q=80&w=300",
   "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&q=80&w=300",
   "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=300",
-  "https://images.unsplash.com/photo-1533174000222-921d7b69cdb9?auto=format&fit=crop&q=80&w=300",
+  "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&q=80&w=300",
   "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?auto=format&fit=crop&q=80&w=300",
-  "https://images.unsplash.com/photo-1478147424096-70e28f1181f7?auto=format&fit=crop&q=80&w=300",
+  "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?auto=format&fit=crop&q=80&w=300",
   "https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&q=80&w=300"
 ];
 

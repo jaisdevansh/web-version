@@ -217,7 +217,7 @@ export default function DashboardPage() {
                                 </div>
                                 
                                 <div className="flex items-center mb-6">
-                                    <div className="w-16 h-16 rounded-2xl bg-[#8b5cf6] flex items-center justify-center shrink-0">
+                                    <div className="w-16 h-16 rounded-2xl bg-[#3B82F6] flex items-center justify-center shrink-0">
                                         <span className="text-white text-2xl font-semibold">US</span>
                                     </div>
                                     <div className="ml-4">

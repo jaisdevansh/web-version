@@ -42,7 +42,7 @@ export default function VenueDetailsPage() {
     return evHostId && String(evHostId) === String(venueId);
   }) || [];
 
-  const displayImage = venueData?.heroImage || venueData?.image || venueData?.coverImage || 'https://images.unsplash.com/photo-1514525253361-bee8a197c0c1?auto=format&fit=crop&q=80&w=800';
+  const displayImage = venueData?.heroImage || venueData?.image || venueData?.coverImage || 'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?auto=format&fit=crop&q=80&w=800';
   const displayName = venueData?.name || venueData?.businessName || venueData?.venueName || 'Exclusive Venue';
   const displayType = venueData?.venueType || venueData?.type || venueData?.category || 'Nightclub';
   const displayRules = venueData?.rules || venueData?.dressCode || 'Smart Elegant';

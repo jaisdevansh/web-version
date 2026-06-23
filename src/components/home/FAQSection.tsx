@@ -54,7 +54,7 @@ export function FAQSection() {
       <div 
         className="absolute inset-0 z-0 opacity-20 pointer-events-none"
         style={{
-          backgroundImage: `linear-gradient(to right, #8B5CF6 1px, transparent 1px), linear-gradient(to bottom, #8B5CF6 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(to right, #3B82F6 1px, transparent 1px), linear-gradient(to bottom, #3B82F6 1px, transparent 1px)`,
           backgroundSize: '40px 40px'
         }}
       />
@@ -73,7 +73,7 @@ export function FAQSection() {
             <p className="text-white/80 text-lg mb-4">We're here to help.</p>
             <Link 
               href="/contact" 
-              className="text-[#8B5CF6] font-semibold text-lg hover:text-purple-400 transition-colors underline underline-offset-4"
+              className="text-[#3B82F6] font-semibold text-lg hover:text-blue-400 transition-colors underline underline-offset-4"
             >
               Get in touch.
             </Link>

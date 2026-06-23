@@ -28,7 +28,7 @@ export default function SplitPaymentPage() {
   const guests = Number(searchParams.get('guests')) || 4;
   const title = searchParams.get('title') || 'Private Event';
   const venueName = searchParams.get('venueName') || '';
-  const cover = searchParams.get('coverImage') || 'https://images.unsplash.com/photo-1514525253361-bee8a197c0c1';
+  const cover = searchParams.get('coverImage') || 'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec';
   const timeSlot = searchParams.get('timeSlot') || '10:30 PM onwards';
   const zone = searchParams.get('zone') || 'VIP';
   const eventId = searchParams.get('eventId') || '';

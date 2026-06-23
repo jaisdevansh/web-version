@@ -268,25 +268,29 @@ function MobilePublicMenu() {
       <SheetContent side="left" className="w-[300px] p-0 bg-[#0A0A0A] border-r border-white/10">
         <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
         <div className="flex flex-col h-full py-6">
+          {/* Logo */}
           <div className="px-6 mb-8">
-            <span className="font-bold text-xl tracking-tight text-blue-500 drop-shadow-md">
-              ENTRY CLUB
+            <span className="font-bold text-xl tracking-tight flex items-center">
+              <span className="text-white">ENTRY</span>
+              <span className="text-blue-500 ml-1">CLUB</span>
             </span>
           </div>
-          <nav className="flex flex-col gap-2 px-4">
+
+          {/* Main Nav */}
+          <nav className="flex flex-col gap-1 px-4">
+            <p className="text-white/30 text-[10px] font-bold tracking-[0.2em] uppercase px-4 mb-2">Menu</p>
             {[
-              { href: '/features', label: 'Features' },
+              { href: '/', label: 'Home' },
+              { href: '/events', label: 'Events' },
               { href: '/about', label: 'About' },
-              { href: '/contact', label: 'Contact' },
-              { href: '/business', label: 'Business' },
             ].map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`flex items-center px-4 py-3 rounded-xl transition-all duration-300 font-semibold uppercase tracking-widest text-sm ${
-                  pathname === link.href 
-                  ? 'bg-blue-600/10 text-blue-500' 
+                className={`flex items-center px-4 py-3 rounded-xl transition-all duration-300 font-semibold text-sm ${
+                  pathname === link.href
+                  ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20'
                   : 'text-white/70 hover:text-white hover:bg-white/5'
                 }`}
               >
@@ -294,8 +298,69 @@ function MobilePublicMenu() {
               </Link>
             ))}
           </nav>
+
+          {/* Divider */}
+          <div className="h-px bg-white/5 mx-6 my-4" />
+
+          {/* Explore Section */}
+          <nav className="flex flex-col gap-1 px-4">
+            <p className="text-white/30 text-[10px] font-bold tracking-[0.2em] uppercase px-4 mb-2">Explore</p>
+            {[
+              { href: '/features', label: 'Features' },
+              { href: '/contact', label: 'Contact' },
+              { href: '/download', label: 'Download App' },
+            ].map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className={`flex items-center px-4 py-3 rounded-xl transition-all duration-300 font-semibold text-sm ${
+                  pathname === link.href
+                  ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20'
+                  : 'text-white/70 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Bottom Auth Button */}
+          <div className="mt-auto px-6">
+            <MobileAuthButtons onClose={() => setIsOpen(false)} />
+          </div>
         </div>
       </SheetContent>
     </Sheet>
+  );
+}
+
+function MobileAuthButtons({ onClose }: { onClose: () => void }) {
+  const { isAuthenticated, logout } = useAuthStore();
+
+  if (isAuthenticated) {
+    return (
+      <div className="flex flex-col gap-2">
+        <Link href="/dashboard" onClick={onClose}>
+          <button className="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-white font-semibold text-sm hover:bg-white/10 transition-colors">
+            Dashboard
+          </button>
+        </Link>
+        <button
+          onClick={() => { logout(); onClose(); }}
+          className="w-full py-3 rounded-xl bg-red-600/10 border border-red-500/20 text-red-400 font-semibold text-sm hover:bg-red-600/20 transition-colors"
+        >
+          Log Out
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <Link href="/login" onClick={onClose}>
+      <button className="w-full py-3 rounded-xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/25">
+        Log In
+      </button>
+    </Link>
   );
 }

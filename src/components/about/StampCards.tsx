@@ -28,7 +28,7 @@ const CARDS: CardData[] = [
   {
     id: 3,
     title: "JOIN OR CREATE ANY PLAN",
-    image: "https://images.unsplash.com/photo-1511632765486-a01c80cf8cb4?q=80&w=1000&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=1000&auto=format&fit=crop",
     Icon: CalendarHeart,
   },
   {

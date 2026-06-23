@@ -18,9 +18,11 @@ export function EcosystemSection() {
   ];
 
   return (
-    <section className="py-48 px-4 md:px-8 max-w-7xl mx-auto">
-      <h2 className="text-6xl md:text-8xl font-bold text-center text-white mb-24 tracking-tight">Ecosystem</h2>
-      <div className="grid grid-cols-1 md:grid-cols-4 auto-rows-[280px] gap-6">
+    <section className="py-20 sm:py-32 md:py-48 px-4 md:px-8 max-w-7xl mx-auto">
+      <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-center text-white mb-10 sm:mb-16 md:mb-24 tracking-tight">
+        Ecosystem
+      </h2>
+      <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[160px] sm:auto-rows-[200px] md:auto-rows-[280px] gap-3 sm:gap-4 md:gap-6">
         {features.map((f, i) => (
           <motion.div
             key={i}
@@ -28,10 +30,12 @@ export function EcosystemSection() {
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.6, delay: (i % 4) * 0.08, ease }}
-            className={`${f.span} p-10 rounded-[2.5rem] bg-white/[0.03] border border-white/5 flex flex-col justify-end group hover:bg-white/[0.06] transition-colors cursor-pointer overflow-hidden relative will-change-transform`}
+            className={`${f.span} p-5 sm:p-7 md:p-10 rounded-2xl sm:rounded-3xl md:rounded-[2.5rem] bg-white/[0.03] border border-white/5 flex flex-col justify-end group hover:bg-white/[0.06] transition-colors cursor-pointer overflow-hidden relative will-change-transform`}
           >
             <div className="absolute inset-0 bg-gradient-to-t from-blue-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-            <h3 className="text-3xl font-bold text-white group-hover:text-blue-400 transition-colors relative z-10">{f.title}</h3>
+            <h3 className="text-lg sm:text-2xl md:text-3xl font-bold text-white group-hover:text-blue-400 transition-colors relative z-10 leading-tight">
+              {f.title}
+            </h3>
           </motion.div>
         ))}
       </div>
@@ -69,14 +73,16 @@ export function SocialProofSection() {
     { label: "Members", value: 1500, suffix: "+" }
   ];
   return (
-    <section className="py-48 px-4 md:px-8 bg-white/[0.02] border-y border-white/5 backdrop-blur-xl relative z-20">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-24 text-center md:text-left">
+    <section className="py-20 sm:py-32 md:py-48 px-4 md:px-8 bg-white/[0.02] border-y border-white/5 backdrop-blur-xl relative z-20">
+      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-10 sm:gap-16 md:gap-24 text-center">
         {metrics.map((m, i) => (
-          <div key={i}>
-            <div className="text-7xl md:text-9xl font-bold text-white mb-4 tracking-tighter">
+          <div key={i} className="flex flex-col items-center">
+            <div className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-white mb-2 sm:mb-4 tracking-tighter">
               <Counter value={m.value} />{m.suffix}
             </div>
-            <div className="text-2xl md:text-3xl text-white/50 tracking-[0.2em] uppercase font-bold">{m.label}</div>
+            <div className="text-base sm:text-xl md:text-2xl md:text-3xl text-white/50 tracking-[0.2em] uppercase font-bold">
+              {m.label}
+            </div>
           </div>
         ))}
       </div>

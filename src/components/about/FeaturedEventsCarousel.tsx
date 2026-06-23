@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import Image from 'next/image';
 import { MapPin, Calendar, ArrowRight } from 'lucide-react';
@@ -53,7 +53,7 @@ const swipePower = (offset: number, velocity: number) => {
   return Math.abs(offset) * velocity;
 };
 
-export function FeaturedEventsCarousel() {
+export const FeaturedEventsCarousel = memo(function FeaturedEventsCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -65,7 +65,6 @@ export function FeaturedEventsCarousel() {
     setActiveIndex((prev) => prev - 1);
   }, []);
 
-  // Auto-play interval
   useEffect(() => {
     if (isHovered) return;
     const timer = setInterval(() => {
@@ -76,78 +75,76 @@ export function FeaturedEventsCarousel() {
 
   const getOffset = (itemIndex: number) => {
     const totalItems = EVENTS.length;
-    // Normalize active index
     const normalizedActive = ((activeIndex % totalItems) + totalItems) % totalItems;
     let diff = itemIndex - normalizedActive;
-    
-    // Wrap around for infinite effect
     if (diff > totalItems / 2) diff -= totalItems;
     if (diff < -totalItems / 2) diff += totalItems;
     return diff;
   };
 
-  const handleDragEnd = (e: any, { offset, velocity }: PanInfo) => {
+  const handleDragEnd = useCallback((e: any, { offset, velocity }: PanInfo) => {
     const swipe = swipePower(offset.x, velocity.x);
     if (swipe < -swipeConfidenceThreshold) {
       nextSlide();
     } else if (swipe > swipeConfidenceThreshold) {
       prevSlide();
     } else if (offset.x < -50) {
-      nextSlide(); // fallback for slow swipes
+      nextSlide();
     } else if (offset.x > 50) {
       prevSlide();
     }
-  };
+  }, [nextSlide, prevSlide]);
 
-  const cardVariants = {
+  // Responsive card variants — smaller offsets on mobile
+  const cardVariants = useMemo(() => ({
     active: {
       x: "0%",
       scale: 1,
       opacity: 1,
       zIndex: 50,
-      z: 200, // Pop out heavily
+      z: 200,
       rotateY: 0,
       filter: "blur(0px) brightness(1)",
       boxShadow: "0 25px 50px -12px rgba(139, 92, 246, 0.5), 0 0 30px rgba(139, 92, 246, 0.4)",
     },
     left1: {
-      x: "-45%",
-      scale: 0.85,
-      opacity: 0.8,
+      x: "-38%",
+      scale: 0.83,
+      opacity: 0.75,
       zIndex: 40,
       z: 0,
-      rotateY: 25, // Angled inwards
-      filter: "blur(2px) brightness(0.6)",
+      rotateY: 20,
+      filter: "blur(1px) brightness(0.6)",
       boxShadow: "0 0 0 rgba(0,0,0,0)",
     },
     right1: {
-      x: "45%",
-      scale: 0.85,
-      opacity: 0.8,
+      x: "38%",
+      scale: 0.83,
+      opacity: 0.75,
       zIndex: 40,
       z: 0,
-      rotateY: -25, // Angled inwards
-      filter: "blur(2px) brightness(0.6)",
+      rotateY: -20,
+      filter: "blur(1px) brightness(0.6)",
       boxShadow: "0 0 0 rgba(0,0,0,0)",
     },
     left2: {
-      x: "-80%",
-      scale: 0.7,
-      opacity: 0.3,
+      x: "-72%",
+      scale: 0.68,
+      opacity: 0.25,
       zIndex: 30,
-      z: -200, // Pushed far back
-      rotateY: 45, // More extreme angle
-      filter: "blur(5px) brightness(0.3)",
+      z: -200,
+      rotateY: 40,
+      filter: "blur(4px) brightness(0.3)",
       pointerEvents: "none" as any,
     },
     right2: {
-      x: "80%",
-      scale: 0.7,
-      opacity: 0.3,
+      x: "72%",
+      scale: 0.68,
+      opacity: 0.25,
       zIndex: 30,
-      z: -200, // Pushed far back
-      rotateY: -45, // More extreme angle
-      filter: "blur(5px) brightness(0.3)",
+      z: -200,
+      rotateY: -40,
+      filter: "blur(4px) brightness(0.3)",
       pointerEvents: "none" as any,
     },
     hiddenLeft: {
@@ -170,25 +167,27 @@ export function FeaturedEventsCarousel() {
       filter: "blur(8px)",
       pointerEvents: "none" as any,
     }
-  };
+  }), []);
 
   return (
-    <section className="w-full bg-[#050505] py-32 overflow-hidden flex flex-col items-center justify-center relative">
-      <div className="text-center mb-16 relative z-10">
-        <h2 className="text-5xl md:text-7xl font-black text-white tracking-tighter uppercase mb-4">
-          Featured <span className="text-[#8B5CF6]">Events</span>
+    <section className="w-full bg-[#050505] py-16 sm:py-24 md:py-32 overflow-hidden flex flex-col items-center justify-center relative">
+      {/* Header */}
+      <div className="text-center mb-10 sm:mb-14 md:mb-16 relative z-10 px-4">
+        <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter uppercase mb-3 sm:mb-4">
+          Featured <span className="text-[#3B82F6]">Events</span>
         </h2>
-        <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto px-4">
+        <p className="text-gray-400 text-sm sm:text-base md:text-lg lg:text-xl max-w-2xl mx-auto">
           Discover handpicked experiences around you. The best events, curated for your vibe.
         </p>
       </div>
 
-      <div 
-        className="relative w-full max-w-[1200px] h-[500px] md:h-[600px] flex items-center justify-center perspective-[2000px] transform-style-3d"
+      {/* Carousel container */}
+      <div
+        className="relative w-full max-w-[1200px] h-[380px] sm:h-[480px] md:h-[560px] flex items-center justify-center perspective-[2000px] transform-style-3d"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {/* We use a large invisible drag layer to catch swipes easily */}
+        {/* Full-area drag layer */}
         <motion.div
           className="absolute inset-0 z-50 cursor-grab active:cursor-grabbing"
           drag="x"
@@ -199,7 +198,7 @@ export function FeaturedEventsCarousel() {
 
         {EVENTS.map((event, index) => {
           const offset = getOffset(index);
-          const state = 
+          const state =
             offset === 0 ? "active" :
             offset === -1 ? "left1" :
             offset === 1 ? "right1" :
@@ -213,60 +212,72 @@ export function FeaturedEventsCarousel() {
               variants={cardVariants}
               initial={false}
               animate={state}
-              transition={{ 
-                duration: 0.8, 
-                ease: [0.25, 1, 0.5, 1] // Power4.out equivalent
+              transition={{
+                duration: 0.8,
+                ease: [0.25, 1, 0.5, 1]
               }}
-              className="absolute top-0 w-[280px] md:w-[400px] h-[450px] md:h-[550px] rounded-3xl overflow-hidden bg-gray-900 border border-white/10 flex flex-col pointer-events-none"
+              // Responsive card size
+              className="absolute top-0 w-[200px] sm:w-[280px] md:w-[360px] h-[340px] sm:h-[430px] md:h-[520px] rounded-2xl sm:rounded-3xl overflow-hidden bg-gray-900 border border-white/10 flex flex-col pointer-events-none"
             >
               {/* Event Image */}
-              <div className="relative w-full h-[65%]">
-                <Image 
+              <div className="relative w-full h-[60%]">
+                <Image
                   src={event.image}
                   alt={event.title}
                   fill
                   className="object-cover"
                 />
-                <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
-                  <span className="text-white text-xs font-bold uppercase tracking-wider">{event.category}</span>
+                <div className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-black/50 backdrop-blur-md px-2 py-1 sm:px-3 sm:py-1.5 rounded-full border border-white/10">
+                  <span className="text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider">{event.category}</span>
                 </div>
-                {/* Gradient fade to blend image into card body */}
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent" />
               </div>
 
               {/* Event Details */}
-              <div className="flex-1 bg-gray-900 p-6 flex flex-col justify-between">
+              <div className="flex-1 bg-gray-900 p-4 sm:p-5 md:p-6 flex flex-col justify-between">
                 <div>
-                  <h3 className="text-white text-2xl font-bold leading-tight mb-3 line-clamp-2">
+                  <h3 className="text-white text-base sm:text-xl md:text-2xl font-bold leading-tight mb-2 sm:mb-3 line-clamp-2">
                     {event.title}
                   </h3>
-                  <div className="flex items-center text-gray-400 text-sm mb-2">
-                    <Calendar className="w-4 h-4 mr-2 text-[#8B5CF6]" />
+                  <div className="flex items-center text-gray-400 text-xs sm:text-sm mb-1 sm:mb-2">
+                    <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 text-[#3B82F6] shrink-0" />
                     {event.date}
                   </div>
-                  <div className="flex items-center text-gray-400 text-sm">
-                    <MapPin className="w-4 h-4 mr-2 text-[#8B5CF6]" />
+                  <div className="flex items-center text-gray-400 text-xs sm:text-sm">
+                    <MapPin className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 text-[#3B82F6] shrink-0" />
                     {event.location}
                   </div>
                 </div>
 
-                {/* Optional Action Button (Only fully visible/interactive on active card) */}
-                <div className="flex items-center justify-between mt-4">
-                  <span className="text-[#8B5CF6] text-sm font-bold uppercase tracking-wider">Explore</span>
-                  <div className="w-8 h-8 rounded-full bg-[#8B5CF6]/20 flex items-center justify-center">
-                    <ArrowRight className="w-4 h-4 text-[#8B5CF6]" />
+                <div className="flex items-center justify-between mt-3 sm:mt-4">
+                  <span className="text-[#3B82F6] text-xs sm:text-sm font-bold uppercase tracking-wider">Explore</span>
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-[#3B82F6]/20 flex items-center justify-center">
+                    <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 text-[#3B82F6]" />
                   </div>
                 </div>
               </div>
-
-              {/* Interactive overlay to handle clicks routing to the event. 
-                  Since drag layer is absolute full-screen, we keep this pointer-events-none,
-                  but in a real app we would map clicks via the drag layer coordinates or make the center card z-index higher than drag layer.
-              */}
             </motion.div>
+          );
+        })}
+      </div>
+
+      {/* Dot indicators for mobile */}
+      <div className="flex items-center gap-2 mt-6 sm:mt-8 relative z-10">
+        {EVENTS.map((_, i) => {
+          const normalizedActive = ((activeIndex % EVENTS.length) + EVENTS.length) % EVENTS.length;
+          return (
+            <button
+              key={i}
+              onClick={() => setActiveIndex(i)}
+              className={`transition-all duration-300 rounded-full ${
+                i === normalizedActive
+                  ? 'w-6 h-2 bg-[#3B82F6]'
+                  : 'w-2 h-2 bg-white/20 hover:bg-white/40'
+              }`}
+            />
           );
         })}
       </div>
     </section>
   );
-}
+});

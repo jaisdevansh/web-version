@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { memo } from 'react';
 import Image from 'next/image';
 import { Star } from 'lucide-react';
 
@@ -75,7 +75,7 @@ const REVIEWS = [
 const col1 = REVIEWS.slice(0, 4);
 const col2 = REVIEWS.slice(4, 8);
 
-function ReviewCard({ review }: { review: typeof REVIEWS[0] }) {
+const ReviewCard = memo(function ReviewCard({ review }: { review: typeof REVIEWS[0] }) {
   return (
     <div className="bg-[#11111b] border border-[#2a2a3b] rounded-3xl p-6 flex flex-col gap-4 shadow-lg shrink-0">
       <div className="flex gap-1 justify-end">
@@ -102,9 +102,9 @@ function ReviewCard({ review }: { review: typeof REVIEWS[0] }) {
       </div>
     </div>
   );
-}
+});
 
-export function TestimonialsMarquee() {
+export const TestimonialsMarquee = memo(function TestimonialsMarquee() {
   return (
     <section className="w-full bg-[#050505] py-24 px-4 md:px-8 overflow-hidden">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 lg:gap-8 relative">
@@ -135,7 +135,7 @@ export function TestimonialsMarquee() {
               -webkit-mask-composite: destination-out;
             }
           `}} />
-          <div className="stamp-cutout-large bg-[#8B5CF6] p-8 w-full max-w-[500px] aspect-square rounded-[3rem] relative shadow-[0_0_50px_rgba(139,92,246,0.3)]">
+          <div className="stamp-cutout-large bg-[#3B82F6] p-8 w-full max-w-[500px] aspect-square rounded-[3rem] relative shadow-[0_0_50px_rgba(59,130,246,0.3)]">
             <div className="w-full h-full rounded-2xl overflow-hidden relative">
               <Image 
                 src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=1000&auto=format&fit=crop" 
@@ -172,4 +172,4 @@ export function TestimonialsMarquee() {
       </div>
     </section>
   );
-}
+});

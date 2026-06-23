@@ -53,7 +53,7 @@ export default function WaitlistStatusPage() {
       <Card className="bg-white/[0.03] border-white/5 p-4 mb-8">
         <div className="flex gap-4 items-center mb-4">
           <img 
-            src="https://images.unsplash.com/photo-1514525253361-bee8a197c0c1?auto=format&fit=crop&q=80&w=200" 
+            src="https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?auto=format&fit=crop&q=80&w=200" 
             alt="Venue" 
             className="w-12 h-12 rounded-xl object-cover"
           />

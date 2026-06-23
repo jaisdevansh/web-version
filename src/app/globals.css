@@ -153,7 +153,7 @@
 }
 
 .animate-marquee-vertical {
-  animation: marquee-vertical 25s linear infinite;
+  animation: marquee-vertical 12s linear infinite;
 }
 
 @keyframes marquee-vertical-reverse {
@@ -162,5 +162,5 @@
 }
 
 .animate-marquee-vertical-reverse {
-  animation: marquee-vertical-reverse 25s linear infinite;
+  animation: marquee-vertical-reverse 12s linear infinite;
 }
