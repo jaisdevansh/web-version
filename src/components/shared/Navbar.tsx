@@ -80,21 +80,21 @@ export default function Navbar() {
     }`}>
       <div className="container mx-auto flex h-16 md:h-20 items-center justify-between px-4 md:px-8">
         {/* Left: Logo */}
-        <div className="flex items-center md:w-[30%] shrink-0">
+        <div className="flex items-center md:w-[30%] min-w-0">
           {mounted && pathname?.startsWith('/dashboard') ? (
-            <div className="mr-2 md:hidden">
+            <div className="mr-2 md:hidden shrink-0">
               <MobileSidebar />
             </div>
           ) : mounted && (
-            <div className="mr-2 md:hidden">
+            <div className="mr-2 md:hidden shrink-0">
               <MobilePublicMenu />
             </div>
           )}
-          <Link href="/" className="flex items-center space-x-2 md:space-x-3 group pt-1">
+          <Link href="/" className="flex items-center space-x-1 md:space-x-3 group pt-1 truncate">
             {/* Text Logo */}
-            <span className="font-bold text-lg md:text-2xl tracking-[0.25em] flex items-center">
+            <span className="font-bold text-base sm:text-lg md:text-2xl tracking-widest md:tracking-[0.25em] flex items-center">
               <span className="text-white">ENTRY</span>
-              <span className="text-blue-500 ml-2">CLUB</span>
+              <span className="text-blue-500 ml-1.5 md:ml-2">CLUB</span>
             </span>
           </Link>
         </div>
@@ -179,7 +179,7 @@ export default function Navbar() {
         <div className="flex items-center justify-end md:w-[30%] shrink-0 gap-2 md:gap-4">
           {/* Location Selector */}
           {mounted && (
-            <div className="relative" ref={dropdownRef}>
+            <div className="relative hidden sm:block" ref={dropdownRef}>
               <Button 
                 variant="ghost" 
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -235,7 +235,7 @@ export default function Navbar() {
             ) : (
               <>
                 <Link href="/login">
-                  <Button className="bg-blue-600 text-white hover:bg-blue-700 border-0 rounded-full px-4 md:px-8 h-8 md:h-10 text-xs md:text-sm font-bold shadow-lg shadow-blue-500/25 transition-all hover:-translate-y-0.5">
+                  <Button className="bg-blue-600 text-white hover:bg-blue-700 border-0 rounded-full px-4 md:px-8 h-8 md:h-10 text-xs md:text-sm font-bold shadow-lg shadow-blue-500/25 transition-all hover:-translate-y-0.5 whitespace-nowrap">
                     Log In
                   </Button>
                 </Link>
@@ -302,6 +302,12 @@ function MobilePublicMenu() {
           {/* Divider */}
           <div className="h-px bg-white/5 mx-6 my-4" />
 
+          {/* Mobile Location Selector */}
+          <div className="px-4 mb-4">
+            <p className="text-white/30 text-[10px] font-bold tracking-[0.2em] uppercase px-4 mb-2">Location</p>
+            <MobileLocationSelector />
+          </div>
+
           {/* Explore Section */}
           <nav className="flex flex-col gap-1 px-4">
             <p className="text-white/30 text-[10px] font-bold tracking-[0.2em] uppercase px-4 mb-2">Explore</p>
@@ -362,5 +368,88 @@ function MobileAuthButtons({ onClose }: { onClose: () => void }) {
         Log In
       </button>
     </Link>
+  );
+}
+
+function MobileLocationSelector() {
+  const { city, setCity, setLocation } = useLocationStore();
+  const [isLocating, setIsLocating] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const detectLocation = () => {
+    setIsLocating(true);
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          try {
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+            const data = await res.json();
+            let detectedCity = 'Unknown Location';
+            if (data && data.address) {
+              detectedCity = data.address.city || data.address.town || data.address.state_district || 'Unknown Location';
+            }
+            setLocation(latitude, longitude, detectedCity);
+          } catch (err) {
+            console.error(err);
+            setLocation(latitude, longitude, 'Location Found');
+          }
+          setIsLocating(false);
+          setIsOpen(false);
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+          setIsLocating(false);
+        }
+      );
+    } else {
+      setIsLocating(false);
+    }
+  };
+
+  return (
+    <div className="px-4">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between py-3 px-4 rounded-xl bg-white/5 border border-white/10 text-white text-sm font-semibold"
+      >
+        <div className="flex items-center gap-2">
+          <MapPin className="w-4 h-4 text-blue-500" />
+          <span className="truncate max-w-[150px]">{city}</span>
+        </div>
+        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : 'opacity-50'}`} />
+      </button>
+
+      {isOpen && (
+        <div className="mt-2 rounded-xl bg-[#18181b] border border-white/10 overflow-hidden shadow-lg animate-in fade-in duration-200">
+          <button
+            onClick={detectLocation}
+            disabled={isLocating}
+            className="w-full flex items-center px-4 py-3 text-sm text-blue-400 hover:bg-blue-500/10 transition-colors disabled:opacity-50"
+          >
+            <Navigation className={`w-4 h-4 mr-2 ${isLocating ? 'animate-pulse' : ''}`} />
+            {isLocating ? 'Locating...' : 'Detect my location'}
+          </button>
+          <div className="h-px bg-white/10 mx-2" />
+          <button
+            onClick={() => { setCity('All Cities'); setIsOpen(false); }}
+            className="w-full flex items-center justify-between px-4 py-3 text-sm text-white hover:bg-white/5 transition-colors"
+          >
+            <span>All Cities</span>
+            {city === 'All Cities' && <Check className="w-4 h-4 text-blue-500" />}
+          </button>
+          {CITIES.map((c) => (
+            <button
+              key={c}
+              onClick={() => { setCity(c); setIsOpen(false); }}
+              className="w-full flex items-center justify-between px-4 py-3 text-sm text-white hover:bg-white/5 transition-colors"
+            >
+              <span>{c}</span>
+              {city === c && <Check className="w-4 h-4 text-blue-500" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

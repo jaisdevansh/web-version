@@ -160,8 +160,8 @@ export const TestimonialsMarquee = memo(function TestimonialsMarquee() {
               ))}
             </div>
 
-            {/* Column 2 - Scrolling down (reverse) */}
-            <div className="flex flex-col gap-6 w-full max-w-[350px] animate-marquee-vertical-reverse">
+            {/* Column 2 - Scrolling down (reverse) - Hidden on mobile */}
+            <div className="hidden md:flex flex-col gap-6 w-full max-w-[350px] animate-marquee-vertical-reverse">
               {[...col2, ...col2].map((review, i) => (
                 <ReviewCard key={`c2-${i}`} review={review} />
               ))}

@@ -23,7 +23,7 @@ const DEMO_EVENTS: Record<string, any> = {
         venueName: "Mumbai Secret Warehouse, Andheri",
         displayPrice: 1500,
         coverImage: "https://images.unsplash.com/photo-1574169208507-84376144848b?q=80&w=2958&auto=format&fit=crop",
-        images: ["https://images.unsplash.com/photo-1545128485-c400e7702796?q=80&w=2000&auto=format&fit=crop", "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=2000&auto=format&fit=crop"],
+        images: ["https://images.unsplash.com/photo-1545128485-c400e7702796?q=80&w=2000&auto=format&fit=crop", "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=2000&auto=format&fit=crop"],
         description: "Experience the ultimate cyberpunk rave with cutting-edge visual mapping and underground techno.",
         tickets: [
             { id: "t1", name: "Early Bird", price: 999, description: "Entry before 11 PM" },
@@ -38,7 +38,7 @@ const DEMO_EVENTS: Record<string, any> = {
         startTime: "16:00",
         venueName: "Delhi Golf Club Grounds",
         displayPrice: 999,
-        coverImage: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=2940&auto=format&fit=crop",
+        coverImage: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=2940&auto=format&fit=crop",
         images: [],
         description: "A massive open-air festival featuring top electronic acts, food trucks, and art installations.",
         tickets: [
@@ -70,7 +70,7 @@ const DEMO_EVENTS: Record<string, any> = {
         startTime: "23:00",
         venueName: "Koregaon Park Industrial Area, Pune",
         displayPrice: 500,
-        coverImage: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2832&auto=format&fit=crop",
+        coverImage: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2832&auto=format&fit=crop",
         images: [],
         description: "Intimate boiler room style gig featuring upcoming tech-house producers. 360-degree stage.",
         tickets: [

@@ -34,7 +34,7 @@ const DEMO_EVENTS = [
   {
     id: 'honey-singh',
     title: 'Yo Yo! Honey Singh',
-    image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2800&auto=format&fit=crop'
+    image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2800&auto=format&fit=crop'
   }
 ];
 

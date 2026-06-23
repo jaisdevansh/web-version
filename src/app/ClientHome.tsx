@@ -287,7 +287,7 @@ export default function WelcomeScreen() {
                 venueName: "Mumbai Secret Warehouse, Andheri",
                 displayPrice: 1500,
                 coverImage: "https://images.unsplash.com/photo-1574169208507-84376144848b?q=80&w=2958&auto=format&fit=crop",
-                images: ["https://images.unsplash.com/photo-1545128485-c400e7702796?q=80&w=2000&auto=format&fit=crop", "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=2000&auto=format&fit=crop"],
+                images: ["https://images.unsplash.com/photo-1545128485-c400e7702796?q=80&w=2000&auto=format&fit=crop", "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=2000&auto=format&fit=crop"],
                 city: "Mumbai"
             },
             {
@@ -297,7 +297,7 @@ export default function WelcomeScreen() {
                 startTime: "16:00",
                 venueName: "Delhi Golf Club Grounds",
                 displayPrice: 999,
-                coverImage: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=2940&auto=format&fit=crop",
+                coverImage: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=2940&auto=format&fit=crop",
                 images: [],
                 city: "Delhi"
             },
@@ -319,7 +319,7 @@ export default function WelcomeScreen() {
                 startTime: "23:00",
                 venueName: "Koregaon Park Industrial Area",
                 displayPrice: 500,
-                coverImage: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2832&auto=format&fit=crop",
+                coverImage: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2832&auto=format&fit=crop",
                 images: [],
                 city: "Pune"
             },
@@ -839,7 +839,7 @@ export default function WelcomeScreen() {
                             className="absolute z-10 w-[300px] h-[400px] bg-black/40 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 shadow-2xl flex flex-col gap-4 transform rotate-12 translate-x-20 translate-y-20"
                         >
                             <div className="w-full h-40 bg-gradient-to-br from-blue-500/20 to-indigo-600/20 rounded-2xl border border-white/5 flex items-center justify-center overflow-hidden relative">
-                                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=600')] bg-cover opacity-50 blend-overlay" />
+                                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=600')] bg-cover opacity-50 blend-overlay" />
                             </div>
                             <div className="w-3/4 h-6 bg-white/10 rounded-full mt-2" />
                             <div className="w-1/2 h-4 bg-white/5 rounded-full" />

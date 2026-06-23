@@ -138,4 +138,4 @@ export const CityExplorer = memo(function CityExplorer() {
 
     </section>
   );
-}
+});
