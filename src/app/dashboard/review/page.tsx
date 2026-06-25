@@ -25,7 +25,7 @@ export default function WriteReviewPage() {
   const [hoverMusic, setHoverMusic] = useState(0);
 
   const reviewingEvent = {
-    title: searchParams.get('title') || "aujlaaa",
+    title: searchParams.get('title') || "Event",
     image: searchParams.get('image') || "/flawless.png"
   };
 

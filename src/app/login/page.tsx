@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Loader2, Phone, ArrowRight, CheckCircle2, User } from 'lucide-react';
+import { ArrowLeft, Loader2, Mail, ArrowRight, CheckCircle2, User } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -17,9 +17,9 @@ export default function LoginPage() {
   const { login } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
   
-  // Phone Auth State
-  const [phoneStep, setPhoneStep] = useState<'phone' | 'otp' | 'onboarding'>('phone');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  // Email Auth State
+  const [authStep, setAuthStep] = useState<'email' | 'otp' | 'onboarding'>('email');
+  const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   
   // Onboarding State
@@ -42,15 +42,16 @@ export default function LoginPage() {
   }, [images.length]);
 
   async function handleSendOtp() {
-    if (!phoneNumber || phoneNumber.length < 10) {
-      toast.error('Please enter a valid phone number');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      toast.error('Please enter a valid email address');
       return;
     }
     try {
       setIsLoading(true);
-      await api.post('/auth/send-otp', { identifier: phoneNumber });
+      await api.post('/auth/send-otp', { identifier: email });
       toast.success('OTP sent! (Use 123456 for local dev)');
-      setPhoneStep('otp');
+      setAuthStep('otp');
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Failed to send OTP');
     } finally {
@@ -65,7 +66,7 @@ export default function LoginPage() {
     }
     try {
       setIsLoading(true);
-      const response = await api.post('/auth/verify-otp', { identifier: phoneNumber, otp });
+      const response = await api.post('/auth/verify-otp', { identifier: email, otp });
       const data = response.data.data || response.data;
       
       if (data.onboardingCompleted) {
@@ -75,7 +76,7 @@ export default function LoginPage() {
       } else {
         // Needs onboarding
         setTempAuthData(data);
-        setPhoneStep('onboarding');
+        setAuthStep('onboarding');
         toast.success('OTP verified. Please complete your profile.');
       }
     } catch (error: any) {
@@ -185,13 +186,13 @@ export default function LoginPage() {
       </div>
       
       <div className="p-4 py-24 lg:p-8 flex items-center justify-center min-h-[100dvh] lg:min-h-full bg-black/95">
-        <div className="mx-auto flex w-full flex-col justify-center space-y-8 sm:w-[400px]">
+        <div className="mx-auto flex w-full flex-col justify-center space-y-8 sm:w-[400px] mt-24 lg:mt-0">
           <div className="flex flex-col space-y-2 text-center">
             <h1 className="text-subheading tracking-tight text-white">
-              {phoneStep === 'onboarding' ? 'Complete Profile' : 'Welcome back'}
+              {authStep === 'onboarding' ? 'Complete Profile' : 'Welcome back'}
             </h1>
             <p className="text-small text-white/60">
-              {phoneStep === 'onboarding' 
+              {authStep === 'onboarding' 
                 ? 'Just one more step to get started' 
                 : 'Log in or register to continue'}
             </p>
@@ -199,7 +200,7 @@ export default function LoginPage() {
           
           <AnimatePresence mode="wait">
             <motion.div 
-              key={phoneStep}
+              key={authStep}
               initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -10 }}
@@ -207,37 +208,36 @@ export default function LoginPage() {
               className="grid gap-6"
             >
               <div className="space-y-4">
-                {phoneStep === 'phone' ? (
+                {authStep === 'email' ? (
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-white/70">Mobile Number</label>
+                      <label className="text-sm font-medium text-white/70">Email Address</label>
                       <div className="flex shadow-sm rounded-xl overflow-hidden border border-white/10 bg-white/5 focus-within:ring-2 focus-within:ring-blue-500">
-                        <span className="flex items-center gap-2 px-4 border-r border-white/10 text-white/50 bg-black/20 font-medium">
-                          <img src="https://flagcdn.com/w40/in.png" alt="India Flag" className="w-6 h-4 rounded-[2px] object-cover" />
-                          +91
+                        <span className="flex items-center px-4 border-r border-white/10 text-white/50 bg-black/20 font-medium">
+                          <Mail className="w-5 h-5" />
                         </span>
                         <Input 
-                          className="border-0 bg-transparent text-white h-12 rounded-none focus-visible:ring-0 text-lg tracking-wide" 
-                          placeholder="9876543210" 
-                          type="tel"
-                          value={phoneNumber}
-                          onChange={(e) => setPhoneNumber(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
+                          className="border-0 bg-transparent text-white h-12 rounded-none focus-visible:ring-0 text-base" 
+                          placeholder="you@example.com" 
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
                           disabled={isLoading} 
                         />
                       </div>
                     </div>
-                    <Button onClick={handleSendOtp} className="w-full h-12 rounded-xl bg-blue-600 text-white hover:bg-blue-500 text-button shadow-lg shadow-blue-500/25 transition-all" disabled={isLoading || phoneNumber.length !== 10}>
-                      {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <><ArrowRight className="mr-2 h-4 w-4" /> Send OTP</>}
+                    <Button onClick={handleSendOtp} className="w-full h-12 rounded-xl bg-blue-600 text-white hover:bg-blue-500 text-button shadow-lg shadow-blue-500/25 transition-all" disabled={isLoading || !email}>
+                      {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <><ArrowRight className="mr-2 h-4 w-4" /> Continue with Email</>}
                     </Button>
                   </div>
-                ) : phoneStep === 'otp' ? (
+                ) : authStep === 'otp' ? (
                   <div className="space-y-4">
                     <div className="space-y-2 text-center mb-6">
                       <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/20 mb-2 text-blue-400">
                         <CheckCircle2 className="h-6 w-6" />
                       </div>
-                      <p className="text-sm text-white/70">We sent a verification code to<br/><span className="text-white font-medium">+91 {phoneNumber}</span></p>
-                      <button onClick={() => setPhoneStep('phone')} className="text-xs text-blue-400 hover:text-blue-300">Change number</button>
+                      <p className="text-sm text-white/70">We sent a verification code to<br/><span className="text-white font-medium">{email}</span></p>
+                      <button onClick={() => setAuthStep('email')} className="text-xs text-blue-400 hover:text-blue-300">Change email</button>
                     </div>
                     <Input 
                       className="bg-white/5 border-white/10 text-white focus-visible:ring-blue-500 h-14 rounded-xl text-center text-2xl tracking-[0.5em] font-mono" 
@@ -247,7 +247,7 @@ export default function LoginPage() {
                       onChange={(e) => setOtp(e.target.value.replace(/[^0-9]/g, ''))}
                       disabled={isLoading} 
                     />
-                    <Button onClick={handleVerifyOtp} className="w-full h-12 rounded-xl bg-white text-black hover:bg-gray-200 text-button" disabled={isLoading || otp.length < 4}>
+                    <Button onClick={handleVerifyOtp} className="w-full h-12 rounded-xl bg-white text-black font-bold hover:bg-gray-200" disabled={isLoading || otp.length < 4}>
                       {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Verify OTP'}
                     </Button>
                   </div>
@@ -278,7 +278,7 @@ export default function LoginPage() {
             </motion.div>
           </AnimatePresence>
           
-          {phoneStep !== 'onboarding' && (
+          {authStep !== 'onboarding' && (
             <>
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">

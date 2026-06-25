@@ -8,16 +8,16 @@ const REVIEWS = [
   {
     id: 1,
     name: "Vikram Patel",
-    time: "5 days ago",
-    text: "Thought it would be just another app, but plans actually happen here.",
-    rating: 4,
+    time: "2 days ago",
+    text: "finally an app where people actually show up lol. went for a coffee meetup and ended up chilling for 3 hours.",
+    rating: 5,
     avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&h=100&fit=crop"
   },
   {
     id: 2,
     name: "Tanvi Kulkarni",
     time: "1 week ago",
-    text: "People matter more than the app, and here you find people who actually show up.",
+    text: "so much better than making plans on whatsapp groups where everyone just ghosts you 💀",
     rating: 5,
     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop"
   },
@@ -25,39 +25,39 @@ const REVIEWS = [
     id: 3,
     name: "Neha Gupta",
     time: "4 days ago",
-    text: "The best part? You don't have to convince anyone. People are already ready to join.",
-    rating: 5,
+    text: "Ngl, was skeptical but ended up going to a pottery workshop. met some really cool folks there.",
+    rating: 4,
     avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop"
   },
   {
     id: 4,
     name: "Priya Verma",
     time: "3 days ago",
-    text: "Less overthinking here. Just join a plan and see for yourself.",
-    rating: 4,
+    text: "the guestlist feature is an absolute lifesaver. skipped a massive queue at the club last saturday night.",
+    rating: 5,
     avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop"
   },
   {
     id: 5,
     name: "Siddharth Reddy",
     time: "2 days ago",
-    text: "Tried a coffee meetup. Felt a bit awkward at first, but got comfortable quickly.",
-    rating: 4,
+    text: "found a sick techno gig through this. the crowd was amazing and the whole process was super smooth tbh",
+    rating: 5,
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop"
   },
   {
     id: 6,
     name: "Ananya Iyer",
     time: "1 week ago",
-    text: "Posted a movie plan just to test it out. People actually showed up and we watched the movie.",
+    text: "Love how easy it is to find niche stuff. went for a jazz & wine night and the vibe was immaculate ✨",
     rating: 5,
     avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop"
   },
   {
     id: 7,
     name: "Rohan Das",
-    time: "1 days ago",
-    text: "New to the city and didn't know anyone. Honestly, it was incredibly helpful.",
+    time: "5 days ago",
+    text: "Just moved to BLR and didn't know anyone. attended a board game night and already made a solid group of friends",
     rating: 5,
     avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop"
   },
@@ -65,7 +65,7 @@ const REVIEWS = [
     id: 8,
     name: "Meera Joshi",
     time: "3 days ago",
-    text: "I'm an introvert, but this community makes it so much easier to step out.",
+    text: "was tired of my friends always bailing on weekend plans so I hosted a sundowner here. 15 people showed up and it was mad fun.",
     rating: 5,
     avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop"
   }

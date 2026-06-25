@@ -79,44 +79,7 @@ export default function HistoryPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
-            {/* Dummy UI Card for Past Event if no real data exists */}
-            {pastBookings.length === 0 && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-[#12161f] rounded-3xl p-6 border border-white/[0.03] shadow-lg shadow-black/50 flex flex-col"
-              >
-                <div className="flex justify-between items-center mb-6">
-                  <span className="bg-[#064e3b]/30 text-[#34d399] text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-md uppercase">Approved</span>
-                  <span className="text-white/30 text-xs font-mono">#6A17DF22</span>
-                </div>
-                
-                <div className="flex items-center mb-8 flex-1">
-                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-pink-500 to-red-500 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
-                    <img src="/flawless.png" className="w-full h-full object-cover" alt="Event cover" />
-                  </div>
-                  <div className="ml-5">
-                    <p className="text-[#3b82f6] text-xs font-bold tracking-wider uppercase mb-1.5">Exclusive Club</p>
-                    <h3 className="text-white text-xl font-medium leading-tight mb-2">aujlaaa</h3>
-                    <p className="text-white/40 text-sm">Sat, 30 May</p>
-                  </div>
-                </div>
-                
-                <div className="flex justify-between items-center pt-5 border-t border-white/5 mb-6">
-                  <p className="text-white/80 font-medium text-base">Price: <span className="font-bold">₹25</span></p>
-                  <button className="text-[#3b82f6] text-sm font-medium flex items-center hover:text-blue-400 transition-colors">
-                    View Details <ArrowRight className="w-4 h-4 ml-1.5" />
-                  </button>
-                </div>
 
-                <button 
-                  onClick={() => router.push('/dashboard/review?title=aujlaaa&image=%2Fflawless.png')}
-                  className="w-full py-3.5 bg-[#2e1a47] hover:bg-[#3b2359] text-[#d8b4fe] rounded-xl font-semibold text-sm transition-colors border border-purple-500/20 mt-auto"
-                >
-                  Write a Review
-                </button>
-              </motion.div>
-            )}
 
             {/* Real Data Rendering */}
             {pastBookings.map((booking: any, i: number) => (
@@ -217,7 +180,7 @@ export default function HistoryPage() {
                     <img src={reviewingEvent.image || "/flawless.png"} className="w-full h-full object-cover" alt="Event" />
                   </div>
                   <div className="ml-6">
-                    <h2 className="text-white font-bold text-2xl mb-1.5">{reviewingEvent.title || 'aujlaaa'}</h2>
+                    <h2 className="text-white font-bold text-2xl mb-1.5">{reviewingEvent.title || 'Event'}</h2>
                     <p className="text-white/60 text-lg leading-tight">How was your elite experience? ✨</p>
                   </div>
                 </div>

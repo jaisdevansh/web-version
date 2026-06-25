@@ -222,7 +222,7 @@ export default function TicketsPage() {
                     <img src={reviewingEvent.image || "/flawless.png"} className="w-full h-full object-cover" alt="Event" />
                   </div>
                   <div className="ml-6">
-                    <h2 className="text-white font-bold text-2xl mb-1.5">{reviewingEvent.title || 'aujlaaa'}</h2>
+                    <h2 className="text-white font-bold text-2xl mb-1.5">{reviewingEvent.title || 'Event'}</h2>
                     <p className="text-white/60 text-lg leading-tight">How was your elite experience? ✨</p>
                   </div>
                 </div>

@@ -5,7 +5,7 @@ import { Mail } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="relative border-t border-white/10 bg-black pt-16 pb-8 overflow-hidden">
+    <footer className="relative border-t border-white/10 bg-gradient-to-b from-black to-blue-950/40 pt-16 pb-8 overflow-hidden">
       {/* Background Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/4 h-[50px] bg-blue-500/10 blur-[50px]" />
@@ -54,7 +54,7 @@ export default function Footer() {
               <li><Link href="/privacy" className="hover:text-blue-400 transition-colors">Privacy Policy</Link></li>
               <li className="flex items-center space-x-2 pt-2">
                 <Mail className="w-4 h-4 text-blue-400" />
-                <Link href="/contact" className="hover:text-white transition-colors">support@entryclub.com</Link>
+                <Link href="/contact" className="hover:text-white transition-colors">info@zenborg.com</Link>
               </li>
             </ul>
           </div>
@@ -71,6 +71,13 @@ export default function Footer() {
             <span>Secure & Encrypted</span>
           </div>
         </div>
+      </div>
+
+      {/* Massive Designer Watermark */}
+      <div className="absolute bottom-0 left-0 right-0 flex justify-center items-end overflow-hidden pointer-events-none select-none z-0">
+        <span className="text-[19vw] sm:text-[17vw] md:text-[16vw] lg:text-[14.5vw] font-black text-transparent bg-clip-text bg-gradient-to-b from-white/[0.15] to-transparent leading-[0.8] tracking-tighter whitespace-nowrap translate-y-2">
+          ENTRY CLUB
+        </span>
       </div>
     </footer>
   );

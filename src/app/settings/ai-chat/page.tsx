@@ -12,7 +12,29 @@ export default function AIChatPage() {
   const [messages, setMessages] = useState<{role: 'user'|'ai', text: string}[]>([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Fetch chat history on mount
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const res = await api.get('/support/support-chat');
+        if (res.data?.success && res.data.data) {
+          const formattedMessages = res.data.data.map((msg: any) => ({
+            role: msg.role,
+            text: msg.content
+          }));
+          setMessages(formattedMessages);
+        }
+      } catch (err) {
+        console.error('Failed to fetch chat history', err);
+      } finally {
+        setIsLoadingHistory(false);
+      }
+    };
+    fetchHistory();
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -40,7 +62,14 @@ export default function AIChatPage() {
     }
   };
 
-  const clearChat = () => setMessages([]);
+  const clearChat = async () => {
+    try {
+      await api.delete('/support/support-chat');
+      setMessages([]);
+    } catch (err) {
+      console.error('Failed to clear chat', err);
+    }
+  };
 
   return (
     <div className="min-h-[85vh] py-8 lg:py-12 px-4 sm:px-6 lg:px-8 font-sans">
@@ -104,7 +133,11 @@ export default function AIChatPage() {
 
               {/* Chat Content */}
               <div className="flex-1 overflow-y-auto mb-4 pr-2 space-y-6 hide-scrollbar relative z-10 flex flex-col">
-                {messages.length === 0 ? (
+                {isLoadingHistory ? (
+                  <div className="flex-1 flex items-center justify-center">
+                    <div className="w-8 h-8 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+                  </div>
+                ) : messages.length === 0 ? (
                   <div className="flex-1 flex flex-col items-center justify-center pb-8 mt-10">
                     <div className="w-20 h-20 rounded-3xl bg-blue-500/10 flex items-center justify-center mb-6 border border-blue-500/20 shadow-[0_0_30px_rgba(37,99,235,0.15)]">
                       <MessageCircle className="w-10 h-10 text-blue-500 fill-blue-500/20" />

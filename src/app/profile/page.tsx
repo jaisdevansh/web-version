@@ -98,7 +98,7 @@ export default function ProfilePage() {
     return <div className="flex h-[50vh] justify-center items-center"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
   }
 
-  const defaultImage = 'https://via.placeholder.com/100';
+  const defaultImage = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.name || user?.name || 'User')}&background=4f46e5&color=fff&size=200`;
   let profileImageUrl = user?.profileImage || profile?.profileImage || defaultImage;
   
   // Note: mobile handles base64 format differently, we mock it closely here
@@ -121,12 +121,10 @@ export default function ProfilePage() {
             <CardContent className="p-8 flex flex-col items-center text-center relative z-10">
               <div className="w-24 h-24 rounded-full border-2 border-indigo-500/30 p-1 mb-4 shadow-lg shadow-indigo-500/20 relative overflow-hidden flex items-center justify-center">
                 <div className="w-full h-full relative rounded-full overflow-hidden">
-                  <Image 
+                  <img 
                     src={profileImageUrl} 
                     alt="Profile" 
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover"
+                    className="w-full h-full object-cover"
                   />
                 </div>
               </div>

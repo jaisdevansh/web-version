@@ -5,8 +5,8 @@ async function handler(req: NextRequest) {
   const path = req.nextUrl.pathname.replace(/^\/api1/, '');
   const search = req.nextUrl.search;
   
-  // Hardcode the target URL to bypass CORS locally
-  const targetUrl = `https://party.stayin.in/api1${path}${search}`;
+  // Use local backend so we can test new endpoints like AI Chat
+  const targetUrl = `http://localhost:3001/api/v1${path}${search}`;
 
   const headers = new Headers(req.headers);
   // Remove headers that often cause WAF/CORS blocks on proxies

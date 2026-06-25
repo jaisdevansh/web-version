@@ -60,6 +60,7 @@ export default function EventsCarousel() {
           slidesPerView={'auto'}
           loop={true}
           loopAdditionalSlides={DEMO_EVENTS.length}
+          slideToClickedSlide={true}
           autoplay={{
             delay: 2500,
             disableOnInteraction: false,

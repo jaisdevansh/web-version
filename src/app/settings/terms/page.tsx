@@ -1,11 +1,66 @@
 'use client';
 
-import { ChevronLeft, FileText, Shield, AlertTriangle, LifeBuoy, MessageCircle, RefreshCw, Trash2, ChevronRight } from 'lucide-react';
+import { ChevronLeft, FileText, Shield, AlertTriangle, LifeBuoy, MessageCircle, RefreshCw, Trash2, ChevronRight, CheckCircle2, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 
 export default function TermsSupportPage() {
   const router = useRouter();
+  const [cacheSize, setCacheSize] = useState('24.5 MB');
+  const [isClearing, setIsClearing] = useState(false);
+  const [isCleared, setIsCleared] = useState(false);
+  const [isDeactivateModalOpen, setIsDeactivateModalOpen] = useState(false);
+  const [isDeactivating, setIsDeactivating] = useState(false);
+
+  // Randomize initial cache size slightly for realism
+  useEffect(() => {
+    const size = (Math.random() * 30 + 10).toFixed(1);
+    setCacheSize(`${size} MB`);
+  }, []);
+
+  const handleClearCache = () => {
+    if (isClearing || isCleared) return;
+    
+    setIsClearing(true);
+    
+    // Simulate cache clearing delay
+    setTimeout(() => {
+      // Clear non-essential localStorage items
+      const keepKeys = ['party_user_token', 'party_user_role'];
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && !keepKeys.includes(key)) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(k => localStorage.removeItem(k));
+      sessionStorage.clear();
+      
+      setIsClearing(false);
+      setIsCleared(true);
+      setCacheSize('0 B');
+      toast.success('App cache cleared successfully');
+      
+      // Reset after a while
+      setTimeout(() => setIsCleared(false), 3000);
+    }, 1200);
+  };
+
+  const handleDeactivate = () => {
+    setIsDeactivating(true);
+    // Simulate API call for deactivation request
+    setTimeout(() => {
+      setIsDeactivating(false);
+      setIsDeactivateModalOpen(false);
+      localStorage.removeItem('party_user_token');
+      localStorage.removeItem('party_user_role');
+      toast.success('Deactivation request submitted successfully.');
+      router.push('/login');
+    }, 2000);
+  };
 
   return (
     <div className="min-h-[85vh] py-8 lg:py-12 px-4 sm:px-6 lg:px-8 font-sans">
@@ -156,22 +211,30 @@ export default function TermsSupportPage() {
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <button className="bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 hover:bg-white/[0.04] hover:border-white/10 transition-all group text-left">
-                      <div className="flex items-start justify-between">
+                    <button onClick={handleClearCache} disabled={isClearing || isCleared} className="bg-white/[0.02] border border-white/[0.05] rounded-2xl p-6 hover:bg-white/[0.04] hover:border-white/10 transition-all group text-left relative overflow-hidden">
+                      <div className="flex items-start justify-between relative z-10">
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center">
-                            <RefreshCw className="w-6 h-6 text-white/80" />
+                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${isCleared ? 'bg-green-500/10' : 'bg-white/5'}`}>
+                            {isCleared ? (
+                              <CheckCircle2 className="w-6 h-6 text-green-400" />
+                            ) : (
+                              <RefreshCw className={`w-6 h-6 ${isClearing ? 'animate-spin text-blue-400' : 'text-white/80'}`} />
+                            )}
                           </div>
                           <div>
-                            <h4 className="text-base font-semibold text-white mb-1 group-hover:text-white transition-colors">Clear App Cache</h4>
-                            <p className="text-sm text-white/40">Free up storage (24.5 MB)</p>
+                            <h4 className={`text-base font-semibold mb-1 transition-colors ${isCleared ? 'text-green-400' : 'text-white group-hover:text-white'}`}>
+                              {isClearing ? 'Clearing Cache...' : isCleared ? 'Cache Cleared' : 'Clear App Cache'}
+                            </h4>
+                            <p className="text-sm text-white/40">Free up storage ({cacheSize})</p>
                           </div>
                         </div>
-                        <ChevronRight className="w-5 h-5 text-white/20 group-hover:text-white/60 group-hover:translate-x-1 transition-all" />
+                        {!isClearing && !isCleared && (
+                          <ChevronRight className="w-5 h-5 text-white/20 group-hover:text-white/60 group-hover:translate-x-1 transition-all" />
+                        )}
                       </div>
                     </button>
 
-                    <button className="bg-red-500/5 border border-red-500/10 rounded-2xl p-6 hover:bg-red-500/10 hover:border-red-500/20 transition-all group text-left">
+                    <button onClick={() => setIsDeactivateModalOpen(true)} className="bg-red-500/5 border border-red-500/10 rounded-2xl p-6 hover:bg-red-500/10 hover:border-red-500/20 transition-all group text-left">
                       <div className="flex items-start justify-between">
                         <div className="flex items-center gap-4">
                           <div className="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center">
@@ -193,6 +256,53 @@ export default function TermsSupportPage() {
           </div>
         </div>
       </div>
+
+      {/* Deactivate Account Modal */}
+      {isDeactivateModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => !isDeactivating && setIsDeactivateModalOpen(false)} />
+          <div className="bg-[#111111] border border-white/10 rounded-[2rem] p-8 max-w-md w-full relative z-10 shadow-2xl overflow-hidden">
+            {/* Red Glow */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-red-500/10 rounded-full blur-[80px] pointer-events-none" />
+            
+            <div className="relative">
+              <div className="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center mb-6 border border-red-500/20 mx-auto">
+                <AlertTriangle className="w-8 h-8 text-red-500" />
+              </div>
+              
+              <h3 className="text-2xl font-bold text-white text-center mb-2">Deactivate Account?</h3>
+              <p className="text-white/60 text-center mb-8 text-sm leading-relaxed">
+                This will submit a request to permanently delete your account and all associated data. You will be logged out immediately. This action cannot be undone.
+              </p>
+              
+              <div className="flex flex-col gap-3">
+                <button 
+                  onClick={handleDeactivate}
+                  disabled={isDeactivating}
+                  className="w-full py-4 bg-red-500 hover:bg-red-600 disabled:bg-red-500/50 text-white font-semibold rounded-xl transition-all shadow-[0_0_15px_rgba(239,68,68,0.3)] flex items-center justify-center"
+                >
+                  {isDeactivating ? (
+                    <span className="flex items-center gap-2">
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Processing...
+                    </span>
+                  ) : (
+                    "Confirm Deactivation"
+                  )}
+                </button>
+                <button 
+                  onClick={() => setIsDeactivateModalOpen(false)}
+                  disabled={isDeactivating}
+                  className="w-full py-4 bg-white/5 hover:bg-white/10 disabled:opacity-50 text-white font-medium rounded-xl transition-all"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

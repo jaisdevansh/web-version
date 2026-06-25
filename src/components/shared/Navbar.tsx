@@ -6,7 +6,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { useLocationStore } from '@/store/useLocationStore';
 import { useEffect, useState, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import { Sparkles, MapPin, ChevronDown, Navigation, Check } from 'lucide-react';
+import { Sparkles, MapPin, ChevronDown, Navigation, Check, User } from 'lucide-react';
 
 import { MobileSidebar } from '@/components/shared/Sidebar';
 
@@ -228,7 +228,9 @@ export default function Navbar() {
             {!mounted ? null : isAuthenticated ? (
               <>
                 <Link href="/dashboard">
-                  <Button variant="ghost" className="text-white hover:bg-white/10 hover:text-white rounded-full px-3 md:px-6 h-8 md:h-10 text-xs md:text-sm">Dashboard</Button>
+                  <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-white rounded-full w-8 h-8 md:w-10 md:h-10 bg-white/5 border border-white/10">
+                    <User className="w-4 h-4 md:w-5 md:h-5" />
+                  </Button>
                 </Link>
                 <Button onClick={logout} className="bg-red-600/90 hover:bg-red-500 text-white border border-red-500/30 rounded-full px-4 md:px-6 h-8 md:h-10 text-xs md:text-sm cursor-pointer shadow-[0_0_15px_rgba(220,38,38,0.3)] transition-all">Log out</Button>
               </>

@@ -76,7 +76,7 @@ export default function ContactPage() {
                   <p className="text-white/50 mb-6 max-w-md leading-relaxed">
                     Prefer the classic way? Drop us an email and our human support team will respond within 24 hours.
                   </p>
-                  <a href="mailto:support@entryclub.com" className="text-purple-400 hover:text-purple-300 font-semibold flex items-center gap-2 group w-fit">
+                  <a href="mailto:info@zenborg.com" className="text-purple-400 hover:text-purple-300 font-semibold flex items-center gap-2 group w-fit">
                     Send an email
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </a>

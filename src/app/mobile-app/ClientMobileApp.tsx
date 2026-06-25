@@ -172,70 +172,9 @@ export default function DashboardPage() {
 
                 <div className="mt-4 px-5 flex-1 overflow-y-auto pb-32 z-10 relative space-y-4 hide-scrollbar">
                     
-                    {/* Dummy Past Event Card matching screenshot */}
-                    {bookingTab === "Past" && (
-                        <div className="bg-[#12161f] rounded-3xl p-5 border border-white/[0.03]">
-                            <div className="flex justify-between items-center mb-5">
-                                <span className="bg-[#064e3b]/30 text-[#34d399] text-[10px] font-bold tracking-widest px-2.5 py-1 rounded-sm uppercase">Approved</span>
-                                <span className="text-white/30 text-xs font-mono">#6A17DF22</span>
-                            </div>
-                            
-                            <div className="flex items-center mb-6">
-                                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-red-500 flex items-center justify-center shrink-0 overflow-hidden">
-                                    <img src="/flawless.png" className="w-full h-full object-cover" alt="Event Cover" />
-                                </div>
-                                <div className="ml-4">
-                                    <p className="text-[#3b82f6] text-xs font-semibold tracking-wider uppercase mb-1">Exclusive Club</p>
-                                    <h3 className="text-white text-[20px] font-medium leading-tight mb-1">aujlaaa</h3>
-                                    <p className="text-white/40 text-sm">Sat, 30 May</p>
-                                </div>
-                            </div>
-                            
-                            <div className="flex justify-between items-center pt-4 border-t border-white/5 mb-4">
-                                <p className="text-white/80 font-medium text-[15px]">Price: <span className="font-bold">₹25</span></p>
-                                <button className="text-[#3b82f6] text-[14px] font-medium flex items-center">
-                                    View Details <ArrowRight className="w-4 h-4 ml-1" />
-                                </button>
-                            </div>
 
-                            <button 
-                                onClick={() => setReviewingEvent({ title: "aujlaaa", date: "Sat, 30 May", image: "/flawless.png" })}
-                                className="w-full py-4 bg-[#2e1a47] hover:bg-[#3b2359] text-[#d8b4fe] rounded-2xl font-semibold text-[15px] transition-colors"
-                            >
-                                Write a Review
-                            </button>
-                        </div>
-                    )}
 
-                    {/* Dummy Upcoming Booking Cards */}
-                    {bookingTab === "Upcoming" && (
-                        <>
-                            <div className="bg-[#12161f] rounded-3xl p-5 border border-white/[0.03]">
-                                <div className="flex justify-between items-center mb-5">
-                                    <span className="bg-[#064e3b]/30 text-[#34d399] text-[10px] font-bold tracking-widest px-2.5 py-1 rounded-sm uppercase">Approved</span>
-                                    <span className="text-white/30 text-xs font-mono">#6A12C5F9</span>
-                                </div>
-                                
-                                <div className="flex items-center mb-6">
-                                    <div className="w-16 h-16 rounded-2xl bg-[#3B82F6] flex items-center justify-center shrink-0">
-                                        <span className="text-white text-2xl font-semibold">US</span>
-                                    </div>
-                                    <div className="ml-4">
-                                        <p className="text-[#3b82f6] text-xs font-semibold tracking-wider uppercase mb-1">Exclusive Club</p>
-                                        <h3 className="text-white text-[20px] font-medium leading-tight mb-1">General Access</h3>
-                                        <p className="text-white/40 text-sm">Sun, 24 May</p>
-                                    </div>
-                                </div>
-                                
-                                <div className="flex justify-between items-center pt-4 border-t border-white/5">
-                                    <p className="text-white/80 font-medium text-[15px]">Price: <span className="font-bold">₹3</span></p>
-                                    <button className="text-[#3b82f6] text-[14px] font-medium flex items-center">
-                                        View Details <ArrowRight className="w-4 h-4 ml-1" />
-                                    </button>
-                                </div>
-                            </div>
-                        </>
-                    )}
+
 
                     {/* Actual Fetched Bookings */}
                     {bookingTab === "Upcoming" && upcomingBookings.length > 0 && upcomingBookings.map((booking: any) => (
@@ -361,7 +300,7 @@ export default function DashboardPage() {
                             <img src={reviewingEvent.image || "/flawless.png"} className="w-full h-full object-cover" alt="Event Review" />
                         </div>
                         <div className="ml-5">
-                            <h2 className="text-white font-bold text-xl mb-1">{reviewingEvent.title || 'aujlaaa'}</h2>
+                            <h2 className="text-white font-bold text-xl mb-1">{reviewingEvent.title || 'Event'}</h2>
                             <p className="text-white/60 text-[15px] leading-tight">How was your elite experience? ✨</p>
                         </div>
                     </div>
