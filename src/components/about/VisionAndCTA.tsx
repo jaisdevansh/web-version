@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { ArrowUpRight, ArrowRight } from 'lucide-react';
 
 export function VisionSection() {
   // Static rendering of particles to avoid state-driven re-renders
@@ -15,7 +16,7 @@ export function VisionSection() {
   }));
 
   return (
-    <section className="relative py-64 px-4 flex items-center justify-center overflow-hidden bg-black z-0">
+    <section className="relative py-20 md:py-32 px-4 flex items-center justify-center overflow-hidden bg-black z-0">
       {particles.map((p, i) => (
         <motion.div
           key={i}
@@ -75,15 +76,21 @@ export function CTASection() {
       <div className="relative z-10 text-center px-4 max-w-5xl">
         <h2 className="text-6xl md:text-8xl lg:text-[7rem] font-bold text-white mb-16 tracking-tight leading-tight">Ready To Find Your Next Community?</h2>
         <div className="flex flex-col md:flex-row items-center justify-center gap-8">
-          <Link href="/dashboard">
-            <motion.button whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }} className="px-14 py-6 bg-white text-black font-bold rounded-full text-2xl shadow-[0_0_50px_rgba(255,255,255,0.3)]">
-              Explore Events
-            </motion.button>
+          <Link href="/events">
+            <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }} className="group inline-flex items-center gap-6 pl-10 pr-3 py-3 bg-[#131620] text-white rounded-full shadow-[0_0_40px_rgba(59,130,246,0.15)] border border-blue-500/10 cursor-pointer">
+              <span className="font-medium text-2xl tracking-wide">Explore Events</span>
+              <div className="bg-[#6D28D9] text-white p-4 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:rotate-12 group-hover:bg-[#7C3AED]">
+                <ArrowUpRight className="w-6 h-6" />
+              </div>
+            </motion.div>
           </Link>
           <Link href="/business">
-            <motion.button whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }} className="px-14 py-6 bg-white/5 text-white font-bold rounded-full text-2xl border border-white/10 backdrop-blur-xl hover:bg-white/10">
-              Become A Host
-            </motion.button>
+            <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.2 }} className="group inline-flex items-center gap-6 pr-10 pl-3 py-3 bg-[#3B2164] text-white rounded-full shadow-[0_0_40px_rgba(109,40,217,0.2)] border border-[#5B31A4] cursor-pointer hover:bg-[#4B2A80]">
+              <div className="bg-white text-[#6D28D9] p-4 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:-rotate-12">
+                <ArrowRight className="w-6 h-6" />
+              </div>
+              <span className="font-medium text-2xl tracking-wide">Become A Host</span>
+            </motion.div>
           </Link>
         </div>
       </div>

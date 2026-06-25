@@ -277,38 +277,72 @@ export function BottomSections() {
                         initial={{ opacity: 0, scale: 0.9, x: 50 }}
                         whileInView={{ opacity: 1, scale: 1, x: 0 }}
                         viewport={{ once: true }}
-                        className="relative h-[600px] hidden lg:flex items-center justify-center"
+                        className="relative h-[450px] lg:h-[600px] w-full flex items-center justify-center scale-75 sm:scale-90 lg:scale-100 mt-4 lg:mt-0"
                     >
+                        {/* Top Card Wrapper for Floating */}
                         <motion.div 
-                            animate={{ y: [-10, 10, -10] }}
+                            animate={{ y: [-12, 12, -12] }}
                             transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
-                            className="absolute z-20 w-[300px] h-[400px] bg-black/60 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-6 shadow-2xl flex flex-col gap-4 transform -rotate-6 -translate-x-10"
+                            className="absolute z-30 transform -rotate-6 -translate-x-10"
                         >
-                            <div className="w-full h-40 bg-gradient-to-br from-fuchsia-500/20 to-purple-600/20 rounded-2xl border border-white/5 flex items-center justify-center overflow-hidden relative">
-                                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1545128485-c400e7702796?q=80&w=600')] bg-cover opacity-50 blend-overlay" />
-                            </div>
-                            <div className="w-3/4 h-6 bg-white/10 rounded-full mt-2" />
-                            <div className="w-1/2 h-4 bg-white/5 rounded-full" />
-                            <div className="mt-auto w-full h-12 bg-fuchsia-500/20 rounded-xl border border-fuchsia-500/30 flex items-center justify-center text-fuchsia-300 font-bold text-sm">
-                                Get Ticket
-                            </div>
+                            {/* Inner Card for Drag & Hover */}
+                            <motion.div 
+                                drag
+                                dragConstraints={{ left: -30, right: 30, top: -30, bottom: 30 }}
+                                dragElastic={0.2}
+                                whileHover={{ scale: 1.05, rotate: 2, cursor: "grab" }}
+                                whileTap={{ scale: 0.95, cursor: "grabbing" }}
+                                className="w-[300px] h-[400px] bg-[#0A0A0F]/90 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-6 shadow-2xl flex flex-col gap-4 hover:shadow-[0_0_50px_rgba(217,70,239,0.2)] transition-shadow border-t-white/20"
+                            >
+                                <div className="w-full h-40 bg-gradient-to-br from-fuchsia-500/20 to-purple-600/20 rounded-2xl border border-white/5 flex items-center justify-center overflow-hidden relative group">
+                                    <motion.div 
+                                        whileHover={{ scale: 1.1 }}
+                                        transition={{ duration: 0.4 }}
+                                        className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1545128485-c400e7702796?q=80&w=600')] bg-cover opacity-60 blend-overlay" 
+                                    />
+                                </div>
+                                <motion.div animate={{ opacity: [0.3, 0.7, 0.3] }} transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }} className="w-3/4 h-6 bg-white/10 rounded-full mt-2" />
+                                <motion.div animate={{ opacity: [0.3, 0.7, 0.3] }} transition={{ repeat: Infinity, duration: 2, ease: "easeInOut", delay: 0.5 }} className="w-1/2 h-4 bg-white/5 rounded-full" />
+                                <motion.button 
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    className="mt-auto w-full h-12 bg-fuchsia-500/20 rounded-xl border border-fuchsia-500/30 flex items-center justify-center text-fuchsia-300 font-bold text-sm hover:bg-fuchsia-500/30 transition-colors shadow-[0_0_15px_rgba(217,70,239,0.1)] hover:shadow-[0_0_25px_rgba(217,70,239,0.4)]"
+                                >
+                                    Get Ticket
+                                </motion.button>
+                            </motion.div>
                         </motion.div>
 
+                        {/* Bottom Card Wrapper for Floating */}
                         <motion.div 
-                            animate={{ y: [10, -10, 10] }}
+                            animate={{ y: [12, -12, 12] }}
                             transition={{ repeat: Infinity, duration: 7, ease: "easeInOut" }}
-                            className="absolute z-10 w-[300px] h-[400px] bg-black/40 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 shadow-2xl flex flex-col gap-4 transform rotate-12 translate-x-20 translate-y-20"
+                            className="absolute z-10 transform rotate-12 translate-x-20 translate-y-20"
                         >
-                            <div className="w-full h-40 bg-gradient-to-br from-blue-500/20 to-indigo-600/20 rounded-2xl border border-white/5 flex items-center justify-center overflow-hidden relative">
-                                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=600')] bg-cover opacity-50 blend-overlay" />
-                            </div>
-                            <div className="w-3/4 h-6 bg-white/10 rounded-full mt-2" />
-                            <div className="w-1/2 h-4 bg-white/5 rounded-full" />
-                            <div className="mt-auto w-full flex gap-2">
-                                 <div className="w-10 h-10 rounded-full bg-white/20 border border-white/10 flex items-center justify-center text-xs">+3</div>
-                                 <div className="w-10 h-10 rounded-full bg-blue-500/30 -ml-4 border border-white/10 backdrop-blur-md" />
-                                 <div className="w-10 h-10 rounded-full bg-purple-500/30 -ml-4 border border-white/10 backdrop-blur-md" />
-                            </div>
+                            {/* Inner Card for Drag & Hover */}
+                            <motion.div 
+                                drag
+                                dragConstraints={{ left: -30, right: 30, top: -30, bottom: 30 }}
+                                dragElastic={0.2}
+                                whileHover={{ scale: 1.05, rotate: 6, zIndex: 40, cursor: "grab" }}
+                                whileTap={{ scale: 0.95, cursor: "grabbing" }}
+                                className="w-[300px] h-[400px] bg-[#0A0A0F]/80 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 shadow-2xl flex flex-col gap-4 hover:shadow-[0_0_50px_rgba(59,130,246,0.2)] transition-shadow border-t-white/20"
+                            >
+                                <div className="w-full h-40 bg-gradient-to-br from-blue-500/20 to-indigo-600/20 rounded-2xl border border-white/5 flex items-center justify-center overflow-hidden relative group">
+                                    <motion.div 
+                                        whileHover={{ scale: 1.1 }}
+                                        transition={{ duration: 0.4 }}
+                                        className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=600')] bg-cover opacity-60 blend-overlay" 
+                                    />
+                                </div>
+                                <motion.div animate={{ opacity: [0.3, 0.7, 0.3] }} transition={{ repeat: Infinity, duration: 2, ease: "easeInOut", delay: 0.3 }} className="w-3/4 h-6 bg-white/10 rounded-full mt-2" />
+                                <motion.div animate={{ opacity: [0.3, 0.7, 0.3] }} transition={{ repeat: Infinity, duration: 2, ease: "easeInOut", delay: 0.8 }} className="w-1/2 h-4 bg-white/5 rounded-full" />
+                                <div className="mt-auto w-full flex gap-2">
+                                     <motion.div whileHover={{ y: -5 }} className="w-10 h-10 rounded-full bg-white/20 border border-white/10 flex items-center justify-center text-xs font-bold shadow-lg z-30 cursor-pointer">+3</motion.div>
+                                     <motion.div whileHover={{ y: -5 }} className="w-10 h-10 rounded-full bg-blue-500/40 -ml-4 border border-white/20 backdrop-blur-md shadow-lg z-20 cursor-pointer" />
+                                     <motion.div whileHover={{ y: -5 }} className="w-10 h-10 rounded-full bg-purple-500/40 -ml-4 border border-white/20 backdrop-blur-md shadow-lg z-10 cursor-pointer" />
+                                </div>
+                            </motion.div>
                         </motion.div>
                     </motion.div>
                 </div>

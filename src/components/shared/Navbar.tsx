@@ -14,7 +14,7 @@ const CITIES = ['Mumbai', 'Delhi', 'Bengaluru', 'Pune', 'Hyderabad', 'Kolkata', 
 
 export default function Navbar() {
   const [mounted, setMounted] = useState(false);
-  const { isAuthenticated, logout } = useAuthStore();
+  const { isAuthenticated, logout, user } = useAuthStore();
   const { city, setCity, setLocation } = useLocationStore();
   const [isLocating, setIsLocating] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -71,6 +71,10 @@ export default function Navbar() {
         setIsLocating(false);
     }
   };
+
+  if (pathname === '/login') {
+    return null;
+  }
 
   return (
     <header className={`fixed top-0 z-50 w-full transition-all duration-300 ${
@@ -228,8 +232,17 @@ export default function Navbar() {
             {!mounted ? null : isAuthenticated ? (
               <>
                 <Link href="/dashboard">
-                  <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-white rounded-full w-8 h-8 md:w-10 md:h-10 bg-white/5 border border-white/10">
-                    <User className="w-4 h-4 md:w-5 md:h-5" />
+                  <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-white rounded-full w-8 h-8 md:w-10 md:h-10 bg-white/5 border border-white/10 overflow-hidden p-0 relative">
+                    {user?.profileImage ? (
+                      <img 
+                        src={user.profileImage.startsWith('http') || user.profileImage.startsWith('data:') ? user.profileImage : `data:image/jpeg;base64,${user.profileImage}`} 
+                        alt="Profile" 
+                        className="w-full h-full object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <User className="w-4 h-4 md:w-5 md:h-5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                    )}
                   </Button>
                 </Link>
                 <Button onClick={logout} className="bg-red-600/90 hover:bg-red-500 text-white border border-red-500/30 rounded-full px-4 md:px-6 h-8 md:h-10 text-xs md:text-sm cursor-pointer shadow-[0_0_15px_rgba(220,38,38,0.3)] transition-all">Log out</Button>

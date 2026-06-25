@@ -2,35 +2,63 @@
 
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Globe, Star } from 'lucide-react';
+import { Globe } from 'lucide-react';
 
 const ease: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
+import Image from 'next/image';
+
 export function MarqueeSection() {
-  const items = [
-    "College Events", "Startup Meetups", "Music Nights", "Sports Clubs",
-    "Workshops", "Food Walks", "Hackathons", "Networking", "Open Mics", "Travel Groups"
-  ];
+  const items = Array.from({ length: 12 });
+  
   return (
-    <section className="py-16 sm:py-24 md:py-32 overflow-hidden relative bg-black">
-      <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black z-20 pointer-events-none" />
-      <div className="relative flex whitespace-nowrap group w-[200%]">
+    <section className="py-12 md:py-20 overflow-hidden relative bg-black flex flex-col items-center">
+      <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-8 md:mb-12 tracking-tight">Explore Vibe</h2>
+      
+      {/* Row 1 - Moving Left */}
+      <div className="relative flex whitespace-nowrap group w-full border-y border-white/10 bg-[#111]">
+        {/* Grid Background */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
+        
         <motion.div
           animate={{ x: [0, "-50%"] }}
-          transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-          className="flex gap-3 sm:gap-4 md:gap-6 px-2 sm:px-3 group-hover:[animation-play-state:paused] will-change-transform"
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          className="flex items-center group-hover:[animation-play-state:paused] will-change-transform w-max"
         >
-          {[...items, ...items, ...items, ...items].map((item, i) => (
-            <motion.div
-              key={i}
-              whileHover={{ y: -6, transition: { duration: 0.2 } }}
-              className="px-6 py-8 sm:px-10 sm:py-12 md:px-12 md:py-16 rounded-2xl sm:rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-md flex-shrink-0 flex flex-col items-center justify-center min-w-[180px] sm:min-w-[240px] md:min-w-[320px] cursor-pointer will-change-transform"
-            >
-              <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-blue-500/10 flex items-center justify-center mb-3 sm:mb-5 md:mb-6">
-                <Star className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-blue-400" />
+          {items.map((_, i) => (
+            <div key={i} className="flex items-center gap-8 md:gap-12 px-4 md:px-6 py-4 md:py-6">
+              <span className="text-6xl md:text-[8rem] lg:text-[10rem] font-black text-white tracking-tighter leading-none uppercase">
+                CHILL VIBE
+              </span>
+              <div className="w-16 h-16 md:w-28 md:h-28 lg:w-32 lg:h-32 relative flex-shrink-0">
+                <Image src="/favicon.png" alt="Entry Club" fill className="object-contain drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
               </div>
-              <span className="text-lg sm:text-2xl md:text-3xl font-bold text-white tracking-tight text-center">{item}</span>
-            </motion.div>
+            </div>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* Row 2 - Moving Right */}
+      <div className="relative flex whitespace-nowrap group w-full border-b border-white/10 bg-[#0a1128]">
+        {/* Subtle texture/gradient for second row */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0a1128] via-[#15274d] to-[#0a1128] opacity-50 pointer-events-none" />
+        
+        <motion.div
+          animate={{ x: ["-50%", 0] }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          className="flex items-center group-hover:[animation-play-state:paused] will-change-transform w-max"
+        >
+          {items.map((_, i) => (
+            <div key={i} className="flex items-center gap-8 md:gap-12 px-4 md:px-6 py-4 md:py-6 relative z-10">
+              <div className="drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">
+                <span className="text-6xl md:text-[8rem] lg:text-[10rem] font-black tracking-tighter leading-none text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-200 to-gray-500 uppercase">
+                  CHILL VIBE
+                </span>
+              </div>
+              <div className="w-16 h-16 md:w-28 md:h-28 lg:w-32 lg:h-32 relative flex-shrink-0">
+                <Image src="/favicon.png" alt="Entry Club" fill className="object-contain drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
+              </div>
+            </div>
           ))}
         </motion.div>
       </div>
@@ -47,16 +75,24 @@ function StackingCard({ block, index, progress, targetScale }: { block: any, ind
         style={{ scale, top: `calc(-5vh + ${index * 20}px)` }}
         className="relative w-full max-w-5xl h-auto min-h-[300px] sm:h-[480px] md:h-[600px] rounded-2xl sm:rounded-[2.5rem] bg-[#0A0A0A] border border-white/10 shadow-2xl p-6 sm:p-10 md:p-16 flex flex-col md:flex-row items-center gap-6 sm:gap-10 md:gap-12 origin-top will-change-transform"
       >
-        <div className="flex-1 w-full">
+        <div className="flex-1 w-full relative z-10">
           <h3 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-5 md:mb-6 tracking-tight">
             {block.title}
           </h3>
-          <p className="text-base sm:text-xl md:text-2xl text-white/60 font-light leading-relaxed">
+          <p className="text-base sm:text-xl md:text-2xl text-white/80 md:text-white/60 font-light leading-relaxed">
             {block.text}
           </p>
         </div>
-        <div className="flex-shrink-0 w-full md:flex-1 relative h-40 sm:h-52 md:h-full rounded-2xl md:rounded-[2rem] bg-gradient-to-br from-white/[0.08] to-transparent border border-white/5 flex items-center justify-center overflow-hidden">
-          <Globe className="w-24 h-24 sm:w-36 sm:h-36 md:w-48 md:h-48 text-white/10 stroke-[0.5]" />
+        <div className="flex-shrink-0 w-full md:flex-1 relative h-48 sm:h-64 md:h-full rounded-2xl md:rounded-[2rem] bg-gradient-to-br from-white/[0.08] to-transparent border border-white/5 flex items-center justify-center overflow-hidden">
+          {block.image ? (
+            <>
+              <div className="absolute inset-0 bg-black/20 z-10 hidden md:block" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10 md:hidden" />
+              <Image src={block.image} alt={block.title} fill className="object-cover transition-transform duration-700 hover:scale-105" />
+            </>
+          ) : (
+            <Globe className="w-24 h-24 sm:w-36 sm:h-36 md:w-48 md:h-48 text-white/10 stroke-[0.5]" />
+          )}
         </div>
       </motion.div>
     </div>
@@ -72,10 +108,10 @@ export function WhyEntryClub() {
   });
 
   const blocks = [
-    { title: "Discover Experiences", text: "Find curated events that perfectly match your vibe and aesthetic." },
-    { title: "Meet Your Tribe", text: "Connect deeply with people who share your obscure passions." },
-    { title: "Build Communities", text: "Grow your network in the real world and forge lasting bonds." },
-    { title: "Host And Earn", text: "Monetize your passion by organizing events the right way." }
+    { title: "Discover Experiences", text: "Find curated events that perfectly match your vibe and aesthetic.", image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2000&auto=format&fit=crop" },
+    { title: "Meet Your Tribe", text: "Connect deeply with people who share your obscure passions.", image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=2000&auto=format&fit=crop" },
+    { title: "Build Communities", text: "Grow your network in the real world and forge lasting bonds.", image: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?q=80&w=2000&auto=format&fit=crop" },
+    { title: "Host And Earn", text: "Monetize your passion by organizing events the right way.", image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=2000&auto=format&fit=crop" }
   ];
 
   return (

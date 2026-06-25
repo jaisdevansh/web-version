@@ -3,7 +3,15 @@
 import Link from 'next/link';
 import { Mail } from 'lucide-react';
 
+import { usePathname } from 'next/navigation';
+
 export default function Footer() {
+  const pathname = usePathname();
+
+  if (pathname === '/login') {
+    return null;
+  }
+
   return (
     <footer className="relative border-t border-white/10 bg-gradient-to-b from-black to-blue-950/40 pt-16 pb-8 overflow-hidden">
       {/* Background Glow */}

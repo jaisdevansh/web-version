@@ -56,7 +56,7 @@ export default function ContactPage() {
                   <p className="text-white/50 mb-6 max-w-md leading-relaxed">
                     Experience the future of support. Get instant, intelligent answers tailored to your Entry Club experience.
                   </p>
-                  <Link href="/dashboard/support" className="text-blue-500 hover:text-blue-400 font-semibold flex items-center gap-2 group w-fit">
+                  <Link href="/settings/ai-chat" className="text-blue-500 hover:text-blue-400 font-semibold flex items-center gap-2 group w-fit">
                     Start a conversation
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
@@ -76,7 +76,7 @@ export default function ContactPage() {
                   <p className="text-white/50 mb-6 max-w-md leading-relaxed">
                     Prefer the classic way? Drop us an email and our human support team will respond within 24 hours.
                   </p>
-                  <a href="mailto:info@zenborg.com" className="text-purple-400 hover:text-purple-300 font-semibold flex items-center gap-2 group w-fit">
+                  <a href="https://mail.google.com/mail/?view=cm&fs=1&to=info.zenbourg@gmail.com&su=Support%20Query%20-%20Entry%20Club&body=Hi%20Entry%20Club%20Team,%0A%0A[Please%20write%20your%20query%20here...]%0A%0AThanks!" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300 font-semibold flex items-center gap-2 group w-fit">
                     Send an email
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </a>

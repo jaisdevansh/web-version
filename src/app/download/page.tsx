@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Apple, Play } from 'lucide-react';
+import { Apple, Play, Download } from 'lucide-react';
 
 export default function DownloadPage() {
   const ease: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -121,9 +121,13 @@ export default function DownloadPage() {
               {/* Bottom Card overlapping background */}
               <div className="mt-auto mb-8 mx-5 p-6 bg-white/[0.08] backdrop-blur-md rounded-3xl border border-white/10 text-center shadow-xl">
                 <h3 className="font-bold text-white text-lg mb-2">Welcome to Entry Club</h3>
-                <p className="text-[11px] text-white/70 leading-relaxed font-medium">
+                <p className="text-[11px] text-white/70 leading-relaxed font-medium mb-5">
                   The social app where real people meet real vibes. Discover, host or join events and turn every moment into a memory worth keeping!
                 </p>
+                <button className="w-full py-3.5 bg-white hover:bg-gray-100 text-black font-bold rounded-2xl text-sm transition-all duration-300 hover:scale-[1.02] active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] flex items-center justify-center gap-2">
+                  <Download className="w-4 h-4" />
+                  Download Now
+                </button>
               </div>
 
             </div>

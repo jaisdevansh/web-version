@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion, useScroll, useSpring } from 'framer-motion';
-import { ReactLenis } from 'lenis/react';
+import SmoothScroll from '@/components/shared/SmoothScroll';
 
 // Import modularized sections
 import { CursorGlow } from '@/components/about/CursorGlow';
@@ -33,7 +33,7 @@ export default function AboutPage() {
   if (!isClient) return null;
 
   return (
-    <ReactLenis root options={{ lerp: 0.08, smoothWheel: true }}>
+    <SmoothScroll>
       <div className="bg-black min-h-screen text-white font-sans selection:bg-blue-500/30 overflow-clip relative">
         
         {/* Progress Bar */}
@@ -61,6 +61,6 @@ export default function AboutPage() {
           <CTASection />
         </div>
       </div>
-    </ReactLenis>
+    </SmoothScroll>
   );
 }

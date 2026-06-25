@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCoverflow, Autoplay } from 'swiper/modules';
 
@@ -59,7 +60,6 @@ export default function EventsCarousel() {
           centeredSlides={true}
           slidesPerView={'auto'}
           loop={true}
-          loopAdditionalSlides={DEMO_EVENTS.length}
           slideToClickedSlide={true}
           autoplay={{
             delay: 2500,
@@ -77,12 +77,12 @@ export default function EventsCarousel() {
           modules={[EffectCoverflow, Autoplay]}
           className="w-full events-carousel-swiper"
         >
-          {/* Triple slides for seamless infinite loop with slidesPerView='auto' */}
-          {[...DEMO_EVENTS, ...DEMO_EVENTS, ...DEMO_EVENTS].map((event, index) => (
+          {[...DEMO_EVENTS, ...DEMO_EVENTS, ...DEMO_EVENTS, ...DEMO_EVENTS].map((event, index) => (
             <SwiperSlide key={`${event.id}-${index}`} className="events-carousel-slide">
               {({ isActive }) => (
-                <div
-                  className={`relative w-full aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden transition-all duration-500 border-2 ${
+                <Link
+                  href={`/events/${event.id}`}
+                  className={`block relative w-full aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden transition-all duration-500 border-2 ${
                     isActive
                       ? 'border-[#a855f7] shadow-[0_0_20px_rgba(168,85,247,0.5)] sm:shadow-[0_0_30px_rgba(168,85,247,0.6)] scale-100 z-10'
                       : 'border-white/10 opacity-50 sm:opacity-60 scale-90 z-0 hover:opacity-80'
@@ -107,7 +107,7 @@ export default function EventsCarousel() {
                       {event.title}
                     </h3>
                   </div>
-                </div>
+                </Link>
               )}
             </SwiperSlide>
           ))}

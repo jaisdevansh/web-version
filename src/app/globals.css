@@ -149,18 +149,20 @@
 }
 @keyframes marquee-vertical {
   0% { transform: translateY(0); }
-  100% { transform: translateY(-50%); }
+  100% { transform: translateY(calc(-50% - 12px)); }
 }
 
 .animate-marquee-vertical {
-  animation: marquee-vertical 12s linear infinite;
+  animation: marquee-vertical 30s linear infinite;
+  will-change: transform;
 }
 
 @keyframes marquee-vertical-reverse {
-  0% { transform: translateY(-50%); }
+  0% { transform: translateY(calc(-50% - 12px)); }
   100% { transform: translateY(0); }
 }
 
 .animate-marquee-vertical-reverse {
-  animation: marquee-vertical-reverse 12s linear infinite;
+  animation: marquee-vertical-reverse 30s linear infinite;
+  will-change: transform;
 }

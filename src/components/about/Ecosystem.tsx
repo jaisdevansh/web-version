@@ -3,18 +3,20 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useSpring } from 'framer-motion';
 
+import Image from 'next/image';
+
 const ease: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 export function EcosystemSection() {
   const features = [
-    { title: "Event Discovery", span: "md:col-span-2 md:row-span-2" },
-    { title: "Communities", span: "md:col-span-1 md:row-span-1" },
-    { title: "Host Dashboard", span: "md:col-span-1 md:row-span-2" },
-    { title: "Smart Recommendations", span: "md:col-span-1 md:row-span-1" },
-    { title: "Private Clubs", span: "md:col-span-2 md:row-span-1" },
-    { title: "QR Check-In", span: "md:col-span-1 md:row-span-1" },
-    { title: "Analytics", span: "md:col-span-1 md:row-span-1" },
-    { title: "Networking", span: "md:col-span-2 md:row-span-1" },
+    { title: "Event Discovery", span: "md:col-span-2 md:row-span-2", image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1000&auto=format&fit=crop" },
+    { title: "Communities", span: "md:col-span-1 md:row-span-1", image: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?q=80&w=1000&auto=format&fit=crop" },
+    { title: "Host Dashboard", span: "md:col-span-1 md:row-span-2", image: "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?q=80&w=1000&auto=format&fit=crop" },
+    { title: "Smart Recommendations", span: "md:col-span-1 md:row-span-1", image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000&auto=format&fit=crop" },
+    { title: "Private Clubs", span: "md:col-span-2 md:row-span-1", image: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?q=80&w=1000&auto=format&fit=crop" },
+    { title: "QR Check-In", span: "md:col-span-1 md:row-span-1", image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?q=80&w=1000&auto=format&fit=crop" },
+    { title: "Analytics", span: "md:col-span-1 md:row-span-1", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop" },
+    { title: "Networking", span: "md:col-span-2 md:row-span-1", image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1000&auto=format&fit=crop" },
   ];
 
   return (
@@ -30,9 +32,18 @@ export function EcosystemSection() {
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.6, delay: (i % 4) * 0.08, ease }}
-            className={`${f.span} p-5 sm:p-7 md:p-10 rounded-2xl sm:rounded-3xl md:rounded-[2.5rem] bg-white/[0.03] border border-white/5 flex flex-col justify-end group hover:bg-white/[0.06] transition-colors cursor-pointer overflow-hidden relative will-change-transform`}
+            className={`${f.span} p-5 sm:p-7 md:p-10 rounded-2xl sm:rounded-3xl md:rounded-[2.5rem] bg-white/[0.03] border border-white/5 flex flex-col justify-end group hover:border-white/20 transition-all cursor-pointer overflow-hidden relative will-change-transform`}
           >
-            <div className="absolute inset-0 bg-gradient-to-t from-blue-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            {f.image && (
+              <Image 
+                src={f.image} 
+                alt={f.title} 
+                fill 
+                className="object-cover opacity-30 group-hover:opacity-50 transition-all duration-700 group-hover:scale-105 pointer-events-none" 
+              />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none opacity-80" />
+            <div className="absolute inset-0 bg-gradient-to-t from-blue-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             <h3 className="text-lg sm:text-2xl md:text-3xl font-bold text-white group-hover:text-blue-400 transition-colors relative z-10 leading-tight">
               {f.title}
             </h3>

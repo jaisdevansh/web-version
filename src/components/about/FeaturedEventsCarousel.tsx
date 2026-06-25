@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
-import { motion, AnimatePresence, PanInfo } from 'framer-motion';
+import React, { useState, useEffect, useCallback, useMemo, memo, useRef } from 'react';
+import { motion, AnimatePresence, PanInfo, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import { MapPin, Calendar, ArrowRight } from 'lucide-react';
 
@@ -56,6 +56,15 @@ const swipePower = (offset: number, velocity: number) => {
 export const FeaturedEventsCarousel = memo(function FeaturedEventsCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Parallax transform: moves up as you scroll down
+  const containerY = useTransform(scrollYProgress, [0, 1], [80, -80]);
 
   const nextSlide = useCallback(() => {
     setActiveIndex((prev) => prev + 1);
@@ -170,9 +179,9 @@ export const FeaturedEventsCarousel = memo(function FeaturedEventsCarousel() {
   }), []);
 
   return (
-    <section className="w-full bg-[#050505] py-16 sm:py-24 md:py-32 overflow-hidden flex flex-col items-center justify-center relative">
+    <section ref={sectionRef} className="w-full bg-[#050505] py-16 sm:py-24 md:py-32 overflow-hidden flex flex-col items-center justify-center relative">
       {/* Header */}
-      <div className="text-center mb-10 sm:mb-14 md:mb-16 relative z-10 px-4">
+      <div className="text-center relative z-10 px-4">
         <h2 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter uppercase mb-3 sm:mb-4">
           Featured <span className="text-[#3B82F6]">Events</span>
         </h2>
@@ -182,20 +191,13 @@ export const FeaturedEventsCarousel = memo(function FeaturedEventsCarousel() {
       </div>
 
       {/* Carousel container */}
-      <div
-        className="relative w-full max-w-[1200px] h-[380px] sm:h-[480px] md:h-[560px] flex items-center justify-center perspective-[2000px] transform-style-3d"
+      <motion.div
+        style={{ y: containerY }}
+        className="relative w-full max-w-[1200px] h-[380px] sm:h-[480px] md:h-[560px] flex items-center justify-center perspective-[2000px] transform-style-3d mt-8 z-20"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        onPanEnd={handleDragEnd}
       >
-        {/* Full-area drag layer */}
-        <motion.div
-          className="absolute inset-0 z-50 cursor-grab active:cursor-grabbing"
-          drag="x"
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.1}
-          onDragEnd={handleDragEnd}
-        />
-
         {EVENTS.map((event, index) => {
           const offset = getOffset(index);
           const state =
@@ -216,8 +218,13 @@ export const FeaturedEventsCarousel = memo(function FeaturedEventsCarousel() {
                 duration: 0.8,
                 ease: [0.25, 1, 0.5, 1]
               }}
+              onClick={() => {
+                if (offset !== 0) {
+                  setActiveIndex((prev) => prev + offset);
+                }
+              }}
               // Responsive card size
-              className="absolute top-0 w-[200px] sm:w-[280px] md:w-[360px] h-[340px] sm:h-[430px] md:h-[520px] rounded-2xl sm:rounded-3xl overflow-hidden bg-gray-900 border border-white/10 flex flex-col pointer-events-none"
+              className={`absolute top-0 w-[200px] sm:w-[280px] md:w-[360px] h-[340px] sm:h-[430px] md:h-[520px] rounded-2xl sm:rounded-3xl overflow-hidden bg-gray-900 border border-white/10 flex flex-col ${offset !== 0 ? 'cursor-pointer' : ''}`}
             >
               {/* Event Image */}
               <div className="relative w-full h-[60%]">
@@ -251,7 +258,7 @@ export const FeaturedEventsCarousel = memo(function FeaturedEventsCarousel() {
 
                 <div className="flex items-center justify-between mt-3 sm:mt-4">
                   <span className="text-[#3B82F6] text-xs sm:text-sm font-bold uppercase tracking-wider">Explore</span>
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-[#3B82F6]/20 flex items-center justify-center">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-[#3B82F6]/20 flex items-center justify-center cursor-pointer hover:bg-[#3B82F6]/30 transition-colors">
                     <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 text-[#3B82F6]" />
                   </div>
                 </div>
@@ -259,7 +266,7 @@ export const FeaturedEventsCarousel = memo(function FeaturedEventsCarousel() {
             </motion.div>
           );
         })}
-      </div>
+      </motion.div>
 
       {/* Dot indicators for mobile */}
       <div className="flex items-center gap-2 mt-6 sm:mt-8 relative z-10">

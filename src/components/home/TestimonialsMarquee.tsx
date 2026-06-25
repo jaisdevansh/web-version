@@ -11,7 +11,7 @@ const REVIEWS = [
     time: "2 days ago",
     text: "finally an app where people actually show up lol. went for a coffee meetup and ended up chilling for 3 hours.",
     rating: 5,
-    avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&h=100&fit=crop"
+    avatar: "https://images.unsplash.com/photo-1615109398623-88346a601842?w=100&h=100&fit=crop"
   },
   {
     id: 2,
@@ -19,7 +19,7 @@ const REVIEWS = [
     time: "1 week ago",
     text: "so much better than making plans on whatsapp groups where everyone just ghosts you 💀",
     rating: 5,
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop"
+    avatar: "https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=100&h=100&fit=crop"
   },
   {
     id: 3,
@@ -27,7 +27,7 @@ const REVIEWS = [
     time: "4 days ago",
     text: "Ngl, was skeptical but ended up going to a pottery workshop. met some really cool folks there.",
     rating: 4,
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop"
+    avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop"
   },
   {
     id: 4,
@@ -35,7 +35,7 @@ const REVIEWS = [
     time: "3 days ago",
     text: "the guestlist feature is an absolute lifesaver. skipped a massive queue at the club last saturday night.",
     rating: 5,
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop"
+    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop"
   },
   {
     id: 5,
@@ -43,7 +43,7 @@ const REVIEWS = [
     time: "2 days ago",
     text: "found a sick techno gig through this. the crowd was amazing and the whole process was super smooth tbh",
     rating: 5,
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop"
+    avatar: "https://images.unsplash.com/photo-1531384441138-2736e62e0919?w=100&h=100&fit=crop"
   },
   {
     id: 6,
@@ -59,7 +59,7 @@ const REVIEWS = [
     time: "5 days ago",
     text: "Just moved to BLR and didn't know anyone. attended a board game night and already made a solid group of friends",
     rating: 5,
-    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop"
+    avatar: "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?w=100&h=100&fit=crop"
   },
   {
     id: 8,
@@ -67,7 +67,7 @@ const REVIEWS = [
     time: "3 days ago",
     text: "was tired of my friends always bailing on weekend plans so I hosted a sundowner here. 15 people showed up and it was mad fun.",
     rating: 5,
-    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop"
+    avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100&h=100&fit=crop"
   }
 ];
 
@@ -111,34 +111,13 @@ export const TestimonialsMarquee = memo(function TestimonialsMarquee() {
         
         {/* LEFT: Sticky Stamp Card */}
         <div className="w-full lg:w-[45%] lg:h-[600px] lg:sticky lg:top-24 flex items-center justify-center">
-          <style dangerouslySetInnerHTML={{__html: `
-            .stamp-cutout-large {
-              mask: 
-                linear-gradient(#000 0 0), 
-                radial-gradient(circle at 0 24px, #000 16px, transparent 16.5px), 
-                radial-gradient(circle at 100% 24px, #000 16px, transparent 16.5px), 
-                radial-gradient(circle at 24px 0, #000 16px, transparent 16.5px), 
-                radial-gradient(circle at 24px 100%, #000 16px, transparent 16.5px);
-              mask-size: 100% 100%, 16px 48px, 16px 48px, 48px 16px, 48px 16px;
-              mask-position: 0 0, 0 0, 100% 0, 0 0, 0 100%;
-              mask-repeat: no-repeat, repeat-y, repeat-y, repeat-x, repeat-x;
-              mask-composite: subtract;
-              -webkit-mask: 
-                linear-gradient(#000 0 0), 
-                radial-gradient(circle at 0 24px, #000 16px, transparent 16.5px), 
-                radial-gradient(circle at 100% 24px, #000 16px, transparent 16.5px), 
-                radial-gradient(circle at 24px 0, #000 16px, transparent 16.5px), 
-                radial-gradient(circle at 24px 100%, #000 16px, transparent 16.5px);
-              -webkit-mask-size: 100% 100%, 16px 48px, 16px 48px, 48px 16px, 48px 16px;
-              -webkit-mask-position: 0 0, 0 0, 100% 0, 0 0, 0 100%;
-              -webkit-mask-repeat: no-repeat, repeat-y, repeat-y, repeat-x, repeat-x;
-              -webkit-mask-composite: destination-out;
-            }
-          `}} />
-          <div className="stamp-cutout-large bg-[#3B82F6] p-8 w-full max-w-[500px] aspect-square rounded-[3rem] relative shadow-[0_0_50px_rgba(59,130,246,0.3)]">
-            <div className="w-full h-full rounded-2xl overflow-hidden relative">
+          <div className="bg-[#a855f7] p-6 md:p-8 w-full max-w-[450px] aspect-square relative flex items-center justify-center overflow-hidden rounded-[2rem] shadow-[0_0_50px_rgba(168,85,247,0.2)]">
+            {/* Fake Stamp Cutout using section background color to simulate holes */}
+            <div className="absolute inset-[-14px] border-[28px] border-dotted border-[#050505] rounded-[3rem] pointer-events-none z-10"></div>
+            
+            <div className="w-full h-full rounded-[1.5rem] overflow-hidden relative z-0">
               <Image 
-                src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=1000&auto=format&fit=crop" 
+                src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=1000&auto=format&fit=crop" 
                 alt="Friends hanging out" 
                 fill 
                 className="object-cover"
