@@ -7,7 +7,10 @@ export async function POST(req: Request) {
     const { email, subject, message, html, secret } = body;
 
     // Verify secret to ensure only backend can call this
-    const expectedSecret = process.env.EMAIL_API_SECRET || 'entry_club_secure_api_secret_2026';
+    const expectedSecret = process.env.EMAIL_API_SECRET;
+    if (!expectedSecret) {
+      return NextResponse.json({ success: false, error: 'Server configuration error' }, { status: 500 });
+    }
     if (secret !== expectedSecret) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 403 });
     }

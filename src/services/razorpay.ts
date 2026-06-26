@@ -1,6 +1,6 @@
 import axiosInstance from '@/lib/axios';
 
-const RAZORPAY_KEY_ID = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_SZ2UV8QmCtqOFR';
+const RAZORPAY_KEY_ID = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '';
 
 export interface PaymentOptions {
   amount: number; // In INR

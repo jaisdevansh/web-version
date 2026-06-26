@@ -3,7 +3,10 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { MongoClient, ObjectId } from 'mongodb';
 import jwt from 'jsonwebtoken';
 
-const mongoUri = process.env.MONGO_URI || "mongodb+srv://jaisdevansh2004_db_user:V3pU4sMZdEEPwPzT@party.qaycsm4.mongodb.net/?appName=party";
+const mongoUri = process.env.MONGO_URI;
+if (!mongoUri) {
+  throw new Error("MONGO_URI is not defined. Please set it in your environment variables.");
+}
 const client = new MongoClient(mongoUri);
 
 // Helper to authenticate user from token by proxying to backend
@@ -104,7 +107,10 @@ export async function POST(req: Request) {
     }));
 
     // 3. Initialize Gemini with correct model (gemini-1.5-flash)
-    const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyAE0WK337l5d_ZMDljKvg0qu_H3zEHm1to';
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not defined. Please set it in your environment variables.");
+    }
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 

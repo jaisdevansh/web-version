@@ -8,7 +8,7 @@ import { Loader2, Star, MapPin, Navigation, Calendar, PlayCircle } from 'lucide-
 import Link from 'next/link';
 import { useState } from 'react';
 
-const GEOAPIFY_KEY = process.env.NEXT_PUBLIC_GEOAPIFY_KEY || 'e6f13848c19246eab1bef2662e18ebd0';
+const GEOAPIFY_KEY = process.env.NEXT_PUBLIC_GEOAPIFY_KEY || '';
 
 export default function VenueDetailsPage() {
   const params = useParams();
