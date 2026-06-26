@@ -49,15 +49,18 @@ export const useAuthStore = create<AuthState>()(
       login: (user, token) => {
         set({ user, token, isAuthenticated: true });
         if (typeof window !== 'undefined') {
-          localStorage.setItem('party_user_token', token);
+          // Set secure cookie for token instead of localStorage
+          document.cookie = `party_auth_token=${token}; path=/; max-age=7776000; Secure; SameSite=Lax`;
           if (user.role) localStorage.setItem('party_user_role', user.role);
         }
       },
       logout: () => {
         set({ user: null, token: null, isAuthenticated: false });
         if (typeof window !== 'undefined') {
-          localStorage.removeItem('party_user_token');
+          // Clear cookie
+          document.cookie = 'party_auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=Lax';
           localStorage.removeItem('party_user_role');
+          localStorage.removeItem('party-auth-storage'); // Clear the persisted store
           window.location.href = '/login';
         }
       },
@@ -66,13 +69,18 @@ export const useAuthStore = create<AuthState>()(
       })),
     }),
     {
-      name: 'party-auth-storage', // name of the item in the storage (must be unique)
+      name: 'party-auth-storage', 
+      partialize: (state) => Object.fromEntries(
+        Object.entries(state).filter(([key]) => key !== 'token')
+      ) as Partial<AuthState>,
       onRehydrateStorage: () => (state) => {
-        if (state?.token) {
-          // You could also set the axios header here or in a separate hook
-          localStorage.setItem('party_user_token', state.token);
-        } else {
-          localStorage.removeItem('party_user_token');
+        // Read token from cookie on rehydration
+        if (typeof window !== 'undefined') {
+          const match = document.cookie.match(/(?:^|; )party_auth_token=([^;]+)/);
+          const cookieToken = match ? match[1] : null;
+          if (cookieToken && state) {
+            state.token = cookieToken;
+          }
         }
       },
     }

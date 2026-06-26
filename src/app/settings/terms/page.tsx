@@ -70,7 +70,7 @@ export default function TermsSupportPage() {
     setTimeout(() => {
       setIsDeactivating(false);
       setIsDeactivateModalOpen(false);
-      localStorage.removeItem('party_user_token');
+      document.cookie = 'party_auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=Lax';
       localStorage.removeItem('party_user_role');
       toast.success('Deactivation request submitted successfully.');
       router.push('/login');

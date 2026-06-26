@@ -19,7 +19,8 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('party_user_token');
+      const match = document.cookie.match(/(?:^|; )party_auth_token=([^;]+)/);
+      const token = match ? match[1] : null;
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -43,8 +44,9 @@ api.interceptors.response.use(
 
       if (status === 401) {
         // Handle Unauthorized gracefully
-        const hadToken = !!localStorage.getItem('party_user_token');
-        localStorage.removeItem('party_user_token');
+        const match = document.cookie.match(/(?:^|; )party_auth_token=([^;]+)/);
+        const hadToken = !!match;
+        document.cookie = 'party_auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=Lax';
         localStorage.removeItem('party_user_role');
         
         // Only show toast and redirect if they actually had a session that expired,
