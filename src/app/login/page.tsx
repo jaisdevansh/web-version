@@ -53,11 +53,25 @@ export default function LoginPage() {
     
     startTransition(async () => {
       try {
-        await api.post('/auth/send-otp', { identifier: email });
+        // We use standard fetch/axios to hit the Next.js API route (frontend server)
+        // rather than the 'api' instance which points to the AWS backend.
+        // This ensures the email is sent securely by the Next.js server.
+        const res = await fetch('/api/auth/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier: email })
+        });
+        
+        const data = await res.json();
+        
+        if (!res.ok || !data.success) {
+          throw new Error(data.message || 'Failed to send OTP');
+        }
+
         toast.success('OTP sent successfully!');
         setAuthStep('otp');
       } catch (error: any) {
-        toast.error(error.response?.data?.message || 'Failed to send OTP');
+        toast.error(error.message || 'Failed to send OTP');
       }
     });
   }, [email]);

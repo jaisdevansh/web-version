@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useAuthStore } from '@/store/useAuthStore';
 import { Button } from '@/components/ui/button';
-import { Send, MessageSquare, AlertCircle } from 'lucide-react';
+import { Send, MessageSquare, AlertCircle, Paperclip } from 'lucide-react';
 import { toast } from 'sonner';
 import api from '@/lib/axios';
 
@@ -11,6 +11,7 @@ export default function SupportPage() {
   const { user } = useAuthStore();
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -28,6 +29,7 @@ export default function SupportPage() {
         toast.success('Complaint submitted successfully. Our team will review it shortly.');
         setSubject('');
         setMessage('');
+        setSelectedFile(null);
       } else {
         toast.error('Failed to submit. Please try again.');
       }
@@ -78,6 +80,38 @@ export default function SupportPage() {
               className="w-full bg-[#1A1A1A] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors min-h-[150px] resize-y"
               required
             />
+          </div>
+
+          <div className="space-y-2">
+            <div>
+              <label className="text-xs font-bold tracking-[0.2em] text-gray-500 uppercase">Attachments (Optional)</label>
+              <p className="text-xs text-gray-400 mt-1">To find exact error or problem please attach attachment</p>
+            </div>
+            <div className="flex items-center gap-4 mt-2">
+              <label className="cursor-pointer flex items-center gap-2 px-4 py-3 bg-[#1A1A1A] border border-white/10 rounded-xl text-white hover:bg-[#222] transition-colors">
+                <Paperclip className="w-4 h-4 text-gray-400" />
+                <span className="text-sm">{selectedFile ? selectedFile.name : 'Upload Media'}</span>
+                <input 
+                  type="file" 
+                  accept="image/*,video/*"
+                  className="hidden" 
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      setSelectedFile(e.target.files[0]);
+                    }
+                  }}
+                />
+              </label>
+              {selectedFile && (
+                <button 
+                  type="button" 
+                  onClick={() => setSelectedFile(null)}
+                  className="text-red-400 hover:text-red-300 text-sm"
+                >
+                  Remove
+                </button>
+              )}
+            </div>
           </div>
 
           <Button 

@@ -13,13 +13,14 @@ export default function AIChatPage() {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   // Fetch chat history on mount
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await api.get('/support/support-chat');
+        const res = await api.get('/support/chat');
+        
         if (res.data?.success && res.data.data) {
           const formattedMessages = res.data.data.map((msg: any) => ({
             role: msg.role,
@@ -37,7 +38,12 @@ export default function AIChatPage() {
   }, []);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
   }, [messages, isTyping]);
 
   const handleSend = async () => {
@@ -49,7 +55,8 @@ export default function AIChatPage() {
     setIsTyping(true);
 
     try {
-      const res = await api.post('/support/support-chat', { message: userMsg });
+      const res = await api.post('/support/ask', { message: userMsg });
+      
       if (res.data?.success) {
         setMessages(prev => [...prev, { role: 'ai', text: res.data.data.message }]);
       } else {
@@ -64,7 +71,7 @@ export default function AIChatPage() {
 
   const clearChat = async () => {
     try {
-      await api.delete('/support/support-chat');
+      await api.delete('/support/chat');
       setMessages([]);
     } catch (err) {
       console.error('Failed to clear chat', err);
@@ -132,7 +139,7 @@ export default function AIChatPage() {
               </div>
 
               {/* Chat Content */}
-              <div className="flex-1 overflow-y-auto mb-4 pr-2 space-y-6 hide-scrollbar relative z-10 flex flex-col">
+              <div ref={chatContainerRef} className="flex-1 overflow-y-auto mb-4 pr-2 space-y-6 hide-scrollbar relative z-10 flex flex-col">
                 {isLoadingHistory ? (
                   <div className="flex-1 flex items-center justify-center">
                     <div className="w-8 h-8 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
@@ -171,7 +178,6 @@ export default function AIChatPage() {
                         </div>
                       </div>
                     )}
-                    <div ref={messagesEndRef} />
                   </>
                 )}
               </div>

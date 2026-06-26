@@ -287,6 +287,61 @@ export default function WelcomeScreen() {
                 coverImage: "https://images.unsplash.com/photo-1485872299829-c673f5194813?q=80&w=2960&auto=format&fit=crop",
                 images: [],
                 city: "Hyderabad"
+            },
+            {
+                _id: "movie-screening",
+                title: "MOVIE SCREENING",
+                date: new Date(new Date().setDate(new Date().getDate() + 3)),
+                startTime: "20:00",
+                venueName: "Open Air Theatre, Mumbai",
+                displayPrice: 499,
+                coverImage: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2825&auto=format&fit=crop",
+                images: [],
+                city: "Mumbai"
+            },
+            {
+                _id: "shakira-delhi",
+                title: "SHAKIRA",
+                date: new Date(new Date().setDate(new Date().getDate() + 10)),
+                startTime: "19:00",
+                venueName: "JLN Stadium, Delhi",
+                displayPrice: 3500,
+                coverImage: "https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=2800&auto=format&fit=crop",
+                images: [],
+                city: "Delhi"
+            },
+            {
+                _id: "fun-day-out",
+                title: "FUN DAY-OUT",
+                date: new Date(new Date().setDate(new Date().getDate() + 4)),
+                startTime: "10:00",
+                venueName: "Adventure Park, Bengaluru",
+                displayPrice: 1500,
+                coverImage: "https://images.unsplash.com/photo-1473625247510-8ceb1760943f?q=80&w=2800&auto=format&fit=crop",
+                images: [],
+                city: "Bengaluru"
+            },
+            {
+                _id: "gaurav-gupta",
+                title: "GAURAV GUPTA",
+                date: new Date(new Date().setDate(new Date().getDate() + 6)),
+                startTime: "21:00",
+                venueName: "Comedy Club, Pune",
+                displayPrice: 999,
+                coverImage: "https://images.unsplash.com/photo-1585699324551-f6c309eedeca?q=80&w=2800&auto=format&fit=crop",
+                images: [],
+                city: "Pune"
+            },
+            {
+                _id: "honey-singh",
+                title: "Yo Yo! Honey Singh",
+                date: new Date(new Date().setDate(new Date().getDate() + 15)),
+                startTime: "20:00",
+                venueName: "NSCI Dome, Mumbai",
+                displayPrice: 2000,
+                coverImage: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2800&auto=format&fit=crop",
+                images: [],
+                city: "Mumbai"
             }
         ];
 

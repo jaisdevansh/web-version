@@ -20,14 +20,24 @@ export default function TermsSupportPage() {
     setCacheSize(`${size} MB`);
   }, []);
 
-  const handleClearCache = () => {
+  const handleClearCache = async () => {
     if (isClearing || isCleared) return;
     
     setIsClearing(true);
     
-    // Simulate cache clearing delay
+    try {
+      // 1. Clear CacheStorage API (PWA / Service Worker Caches)
+      if ('caches' in window) {
+        const cacheNames = await caches.keys();
+        await Promise.all(cacheNames.map(name => caches.delete(name)));
+      }
+    } catch (e) {
+      console.error('Failed to clear Cache API', e);
+    }
+    
+    // Simulate slight delay for UX
     setTimeout(() => {
-      // Clear non-essential localStorage items
+      // 2. Clear non-essential localStorage items
       const keepKeys = ['party_user_token', 'party_user_role'];
       const keysToRemove = [];
       for (let i = 0; i < localStorage.length; i++) {
@@ -37,7 +47,12 @@ export default function TermsSupportPage() {
         }
       }
       keysToRemove.forEach(k => localStorage.removeItem(k));
+      
+      // 3. Clear sessionStorage
       sessionStorage.clear();
+      
+      // 4. Refresh Next.js Router Cache
+      router.refresh();
       
       setIsClearing(false);
       setIsCleared(true);
@@ -46,7 +61,7 @@ export default function TermsSupportPage() {
       
       // Reset after a while
       setTimeout(() => setIsCleared(false), 3000);
-    }, 1200);
+    }, 800);
   };
 
   const handleDeactivate = () => {

@@ -94,6 +94,66 @@ const DEMO_EVENTS: Record<string, any> = {
             { id: "t3", name: "VIP Cabana", price: 10000, description: "Reserved seating for 6 + 1 Bottle" }
         ],
         houseRules: ["Beachwear/Casual chic", "Right of admission reserved"]
+    },
+    'movie-screening': {
+        _id: "movie-screening",
+        title: "MOVIE SCREENING",
+        date: new Date(new Date().setDate(new Date().getDate() + 3)),
+        startTime: "20:00",
+        venueName: "Open Air Theatre, Mumbai",
+        displayPrice: 499,
+        coverImage: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2825&auto=format&fit=crop",
+        images: [],
+        description: "Experience classic cinema under the stars with great food and friends.",
+        tickets: [{ id: "t1", name: "General Access", price: 499, description: "Includes one popcorn" }]
+    },
+    'shakira-delhi': {
+        _id: "shakira-delhi",
+        title: "SHAKIRA",
+        date: new Date(new Date().setDate(new Date().getDate() + 10)),
+        startTime: "19:00",
+        venueName: "JLN Stadium, Delhi",
+        displayPrice: 3500,
+        coverImage: "https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=2800&auto=format&fit=crop",
+        images: [],
+        description: "The global superstar brings her world tour to Delhi. Expect all the hits and incredible choreography.",
+        tickets: [{ id: "t1", name: "Gold Circle", price: 3500, description: "Standing area close to stage" }, { id: "t2", name: "VIP", price: 10000, description: "Lounge access and fast track entry" }]
+    },
+    'fun-day-out': {
+        _id: "fun-day-out",
+        title: "FUN DAY-OUT",
+        date: new Date(new Date().setDate(new Date().getDate() + 4)),
+        startTime: "10:00",
+        venueName: "Adventure Park, Bengaluru",
+        displayPrice: 1500,
+        coverImage: "https://images.unsplash.com/photo-1473625247510-8ceb1760943f?q=80&w=2800&auto=format&fit=crop",
+        images: [],
+        description: "A full day of thrilling rides, games, and outdoor activities for the whole family.",
+        tickets: [{ id: "t1", name: "Day Pass", price: 1500, description: "Access to all rides" }]
+    },
+    'gaurav-gupta': {
+        _id: "gaurav-gupta",
+        title: "GAURAV GUPTA",
+        date: new Date(new Date().setDate(new Date().getDate() + 6)),
+        startTime: "21:00",
+        venueName: "Comedy Club, Pune",
+        displayPrice: 999,
+        coverImage: "https://images.unsplash.com/photo-1585699324551-f6c309eedeca?q=80&w=2800&auto=format&fit=crop",
+        images: [],
+        description: "Get ready to laugh out loud with one of India's top stand-up comedians.",
+        tickets: [{ id: "t1", name: "Standard", price: 999, description: "First come first serve seating" }]
+    },
+    'honey-singh': {
+        _id: "honey-singh",
+        title: "Yo Yo! Honey Singh",
+        date: new Date(new Date().setDate(new Date().getDate() + 15)),
+        startTime: "20:00",
+        venueName: "NSCI Dome, Mumbai",
+        displayPrice: 2000,
+        coverImage: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2800&auto=format&fit=crop",
+        images: [],
+        description: "The desi hip hop king is back with a massive arena show. Don't miss this high energy performance.",
+        tickets: [{ id: "t1", name: "Fan Pit", price: 2000, description: "Closest to the action" }, { id: "t2", name: "VIP Lounge", price: 8000, description: "Premium views and unlimited drinks" }]
     }
 };
 
@@ -105,8 +165,8 @@ export default function EventDetailsPage() {
   const { data: fetchedEvent, isLoading } = useQuery({
     queryKey: ['eventFull', eventId],
     queryFn: async () => {
-      if (eventId?.startsWith('demo-')) {
-          return DEMO_EVENTS[eventId] || null;
+      if (DEMO_EVENTS[eventId]) {
+          return DEMO_EVENTS[eventId];
       }
       const res = await axiosInstance.get(`/user/events/${eventId}/full`);
       return res.data?.data || null;
@@ -250,7 +310,7 @@ export default function EventDetailsPage() {
   return (
     <div className="min-h-screen bg-[#050505] text-white pb-20 font-sans">
       {/* Header Banner */}
-      <div className="w-full max-w-6xl mx-auto pt-10 px-4 md:px-8">
+      <div className="w-full max-w-6xl mx-auto pt-24 md:pt-28 px-4 md:px-8">
         <div className="mb-6">
           <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white mb-2">{event.title}</h1>
           <div className="flex flex-wrap items-center text-sm md:text-base font-semibold text-blue-400 space-x-2">

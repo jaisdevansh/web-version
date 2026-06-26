@@ -1,6 +1,6 @@
 import EventsCarousel from '@/components/shared/EventsCarousel';
-import { FeaturedEventsCarousel } from '@/components/about/FeaturedEventsCarousel';
 import SmoothScroll from '@/components/shared/SmoothScroll';
+import AllEventsList from '@/components/events/AllEventsList';
 
 export const metadata = {
   title: 'Events',
@@ -14,8 +14,8 @@ export default function EventsPage() {
         {/* Happening Around You Carousel */}
         <EventsCarousel />
         
-        {/* Featured 3D Circular Events */}
-        <FeaturedEventsCarousel />
+        {/* Filter and Grid of Events */}
+        <AllEventsList />
         
       </main>
     </SmoothScroll>

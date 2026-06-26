@@ -45,10 +45,10 @@ export default function EventsCarousel() {
       {/* Section Header */}
       <div className="max-w-7xl mx-auto px-4 md:px-6 text-center mb-8 sm:mb-10">
         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 tracking-tight">
-          Happening Around You
+          Exclusive Experiences
         </h2>
         <p className="text-sm sm:text-base md:text-lg text-white/70 px-2">
-          More than events, explore experiences that bring people together.
+          Handpicked events, electrifying concerts, and unforgettable nights.
         </p>
       </div>
 

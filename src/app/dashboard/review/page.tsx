@@ -5,12 +5,17 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ChevronLeft, Eye, Star, Sparkles, Users, Music } from 'lucide-react';
 
+import { toast } from 'sonner';
+import api from '@/lib/axios';
+
 export default function WriteReviewPage() {
   const { isAuthenticated } = useAuthStore();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
   const [isAnon, setIsAnon] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [existingReviewId, setExistingReviewId] = useState<string | null>(null);
   
   const [overallRating, setOverallRating] = useState(0);
   const [hoverOverall, setHoverOverall] = useState(0);
@@ -26,7 +31,8 @@ export default function WriteReviewPage() {
 
   const reviewingEvent = {
     title: searchParams.get('title') || "Event",
-    image: searchParams.get('image') || "/flawless.png"
+    image: searchParams.get('image') || "/flawless.png",
+    eventId: searchParams.get('eventId') || ""
   };
 
   useEffect(() => {
@@ -38,6 +44,85 @@ export default function WriteReviewPage() {
       router.push('/login');
     }
   }, [mounted, isAuthenticated, router]);
+
+  // Fetch existing review
+  useEffect(() => {
+    const fetchExistingReview = async () => {
+      if (mounted && isAuthenticated && reviewingEvent.eventId) {
+        try {
+          const res = await api.get(`/user/reviews/my?eventId=${reviewingEvent.eventId}`);
+          if (res.data?.success && res.data.data) {
+            const review = res.data.data;
+            setExistingReviewId(review._id);
+            setVibeRating(review.scores?.vibe || 0);
+            setServiceRating(review.scores?.service || 0);
+            setMusicRating(review.scores?.music || 0);
+            setOverallRating(Math.round(review.avgScore || 0));
+            setIsAnon(Boolean(review.isAnonymous));
+          }
+        } catch (error) {
+          console.error("Failed to fetch existing review", error);
+        }
+      }
+    };
+    fetchExistingReview();
+  }, [mounted, isAuthenticated, reviewingEvent.eventId]);
+
+  const handleSubmit = async () => {
+    if (!vibeRating || !serviceRating || !musicRating) {
+      toast.error('Please rate all categories before submitting.');
+      return;
+    }
+    
+    if (!reviewingEvent.eventId) {
+      toast.error('Event ID is missing. Cannot submit review.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      if (existingReviewId) {
+        // Update existing review
+        const res = await api.put('/user/reviews', {
+          reviewId: existingReviewId,
+          vibe: vibeRating,
+          service: serviceRating,
+          music: musicRating,
+          isAnonymous: isAnon
+        });
+        if (res.data?.success) {
+          toast.success('Review updated successfully!');
+          router.push('/dashboard');
+        }
+      } else {
+        // Create new review
+        const res = await api.post('/user/reviews', {
+          eventId: reviewingEvent.eventId,
+          vibe: vibeRating,
+          service: serviceRating,
+          music: musicRating,
+          isAnonymous: isAnon
+        });
+        if (res.data?.success) {
+          toast.success('Review submitted successfully!');
+          router.push('/dashboard');
+        }
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error?.response?.data?.message || 'Failed to submit review.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Derive overall rating from details if the user sets them
+  useEffect(() => {
+    if (vibeRating || serviceRating || musicRating) {
+      const avg = Math.round((vibeRating + serviceRating + musicRating) / 3);
+      setOverallRating(avg);
+    }
+  }, [vibeRating, serviceRating, musicRating]);
 
   if (!mounted || !isAuthenticated) return null;
 
@@ -189,10 +274,11 @@ export default function WriteReviewPage() {
               {/* Footer Button */}
               <div className="p-5 sm:p-8 lg:p-10 pt-4 sm:pt-6 bg-[#0b0c10] mt-auto border-t border-white/[0.03]">
                 <button 
-                  className="w-full py-4 sm:py-5 bg-white text-black hover:bg-white/90 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg transition-all transform hover:scale-[1.01]"
-                  onClick={() => router.push('/dashboard')}
+                  className="w-full py-4 sm:py-5 bg-white text-black hover:bg-white/90 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg transition-all transform hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
                 >
-                  Submit Rating
+                  {isSubmitting ? 'Saving...' : existingReviewId ? 'Update Rating' : 'Submit Rating'}
                 </button>
               </div>
             </div>
