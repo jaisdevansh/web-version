@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 const replacements = {
   '1492684223066-81342ee5ff30': '1514525253161-7a46d19cd819',

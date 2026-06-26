@@ -235,7 +235,7 @@ export default function AllEventsList() {
         }
 
         return filtered;
-    }, [activeEvents, selectedCity, activeFilter, fetchedEvents, userLat, userLng]);
+    }, [activeEvents, selectedCity, activeFilter, fetchedEvents]);
 
     return (
         <div className="relative z-20 bg-[#080b12] py-10 sm:py-16 px-4 sm:px-6 lg:px-12 xl:px-20 min-h-screen">
