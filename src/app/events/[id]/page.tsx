@@ -1,4 +1,5 @@
 import ClientPage from './ClientPage';
+import SmoothScroll from '@/components/shared/SmoothScroll';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -14,6 +15,8 @@ export async function generateMetadata(props: Props) {
 
 export default async function Page(props: Props) {
   return (
-    <ClientPage />
+    <SmoothScroll>
+      <ClientPage />
+    </SmoothScroll>
   );
 }
