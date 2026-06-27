@@ -7,6 +7,7 @@ import Footer from "@/components/shared/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import Preloader from "@/components/shared/Preloader";
 
+import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
 import { Inter } from "next/font/google";
 
 const inter = Inter({
@@ -74,17 +75,19 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${inter.variable} font-sans antialiased min-h-screen flex flex-col`}
       >
-        <Preloader />
-        <ReCaptchaProvider>
-          <QueryProvider>
+        <SmoothScrollProvider>
+          <Preloader />
+          <ReCaptchaProvider>
+            <QueryProvider>
             <Navbar />
             <main className="flex-1">
               {children}
             </main>
             <Footer />
             <Toaster />
-          </QueryProvider>
-        </ReCaptchaProvider>
+            </QueryProvider>
+          </ReCaptchaProvider>
+        </SmoothScrollProvider>
       </body>
     </html>
   );

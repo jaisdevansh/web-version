@@ -58,14 +58,6 @@ export const FeaturedEventsCarousel = memo(function FeaturedEventsCarousel() {
   const [isHovered, setIsHovered] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-
-  // Parallax transform: moves up as you scroll down
-  const containerY = useTransform(scrollYProgress, [0, 1], [80, -80]);
-
   const nextSlide = useCallback(() => {
     setActiveIndex((prev) => prev + 1);
   }, []);
@@ -190,9 +182,7 @@ export const FeaturedEventsCarousel = memo(function FeaturedEventsCarousel() {
         </p>
       </div>
 
-      {/* Carousel container */}
       <motion.div
-        style={{ y: containerY }}
         className="relative w-full max-w-[1200px] h-[380px] sm:h-[480px] md:h-[560px] flex items-center justify-center perspective-[2000px] transform-style-3d mt-8 z-20"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}

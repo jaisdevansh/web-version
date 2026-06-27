@@ -26,7 +26,8 @@ export function HeroSection() {
       <motion.div
         animate={{ scale: [1, 1.05, 1], opacity: [0.5, 0.8, 0.5] }}
         transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-        className="absolute w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] md:w-[800px] md:h-[800px] bg-indigo-500/10 rounded-full blur-[120px] will-change-transform"
+        className="absolute w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] md:w-[800px] md:h-[800px] bg-indigo-500/10 rounded-full blur-[120px] will-change-transform transform-gpu"
+        style={{ transform: 'translateZ(0)' }}
       />
       <motion.div
         style={{ y, opacity, scale }}
