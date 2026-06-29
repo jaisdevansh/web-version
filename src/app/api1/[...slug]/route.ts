@@ -32,10 +32,26 @@ async function handler(req: NextRequest) {
             from: 'users',
             localField: 'hostId',
             foreignField: '_id',
-            as: 'host'
+            as: 'userHost'
           }
         },
-        { $unwind: { path: '$host', preserveNullAndEmptyArrays: true } },
+        { $lookup: {
+            from: 'hosts',
+            localField: 'hostId',
+            foreignField: '_id',
+            as: 'orgHost'
+          }
+        },
+        { $addFields: {
+            host: {
+              $cond: {
+                if: { $eq: ['$hostModel', 'User'] },
+                then: { $arrayElemAt: ['$userHost', 0] },
+                else: { $arrayElemAt: ['$orgHost', 0] }
+              }
+            }
+          }
+        },
         { $project: {
             title: 1, date: 1, startTime: 1, coverImage: 1, 
             locationVisibility: 1, isLocationRevealed: 1, 
