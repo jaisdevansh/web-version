@@ -14,149 +14,6 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
 import { toast } from 'sonner';
 
-const DEMO_EVENTS: Record<string, any> = {
-    'demo-1': {
-        _id: "demo-1",
-        title: "Neon Nights: Cyberpunk Rave",
-        date: new Date(new Date().setDate(new Date().getDate() + 2)),
-        startTime: "22:00",
-        venueName: "Mumbai Secret Warehouse, Andheri",
-        displayPrice: 1500,
-        coverImage: "https://images.unsplash.com/photo-1574169208507-84376144848b?q=80&w=2958&auto=format&fit=crop",
-        images: ["https://images.unsplash.com/photo-1545128485-c400e7702796?q=80&w=2000&auto=format&fit=crop", "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=2000&auto=format&fit=crop"],
-        description: "Experience the ultimate cyberpunk rave with cutting-edge visual mapping and underground techno.",
-        tickets: [
-            { id: "t1", name: "Early Bird", price: 999, description: "Entry before 11 PM" },
-            { id: "t2", name: "VIP Pass", price: 2500, description: "Skip the line + 2 free drinks" }
-        ],
-        houseRules: ["21+ Only", "No flash photography", "Rave attire encouraged"]
-    },
-    'demo-2': {
-        _id: "demo-2",
-        title: "Sundance Open Air Festival",
-        date: new Date(new Date().setDate(new Date().getDate() + 5)),
-        startTime: "16:00",
-        venueName: "Delhi Golf Club Grounds",
-        displayPrice: 999,
-        coverImage: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=2940&auto=format&fit=crop",
-        images: [],
-        description: "A massive open-air festival featuring top electronic acts, food trucks, and art installations.",
-        tickets: [
-            { id: "t1", name: "General Access", price: 999, description: "Full day access" },
-            { id: "t2", name: "Backstage Pass", price: 4999, description: "Access to artist area and premium bar" }
-        ],
-        houseRules: ["No outside food/drinks", "Re-entry allowed with wristband"]
-    },
-    'demo-3': {
-        _id: "demo-3",
-        title: "Velvet Lounge: Jazz & Wine",
-        date: new Date(new Date().setDate(new Date().getDate() + 1)),
-        startTime: "19:00",
-        venueName: "The Ritz-Carlton, Bengaluru",
-        displayPrice: 2500,
-        coverImage: "https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=2832&auto=format&fit=crop",
-        images: [],
-        description: "An elegant evening of smooth jazz, premium wine tasting, and gourmet hors d'oeuvres.",
-        tickets: [
-            { id: "t1", name: "Standard Pairing", price: 2500, description: "Includes 3 wine glasses" },
-            { id: "t2", name: "Premium Pairing", price: 5000, description: "Includes 5 vintage wine glasses + cheese platter" }
-        ],
-        houseRules: ["Smart casual attire required", "18+ Only"]
-    },
-    'demo-4': {
-        _id: "demo-4",
-        title: "Tech-House Boiler Room",
-        date: new Date(new Date().setDate(new Date().getDate() + 14)),
-        startTime: "23:00",
-        venueName: "Koregaon Park Industrial Area, Pune",
-        displayPrice: 500,
-        coverImage: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2832&auto=format&fit=crop",
-        images: [],
-        description: "Intimate boiler room style gig featuring upcoming tech-house producers. 360-degree stage.",
-        tickets: [
-            { id: "t1", name: "Entry Ticket", price: 500, description: "Valid for one person" }
-        ],
-        houseRules: ["Camera lenses will be taped", "Respect the dancefloor"]
-    },
-    'demo-5': {
-        _id: "demo-5",
-        title: "Rooftop Sundowner: Tropical Vibes",
-        date: new Date(new Date().setDate(new Date().getDate() + 7)),
-        startTime: "17:00",
-        venueName: "Banjara Hills Rooftop, Hyderabad",
-        displayPrice: 1200,
-        coverImage: "https://images.unsplash.com/photo-1485872299829-c673f5194813?q=80&w=2960&auto=format&fit=crop",
-        images: [],
-        description: "Catch the sunset with tropical house music, exotic cocktails, and a stunning view of the city skyline.",
-        tickets: [
-            { id: "t1", name: "Phase 1", price: 1200, description: "Early bird access" },
-            { id: "t2", name: "Phase 2", price: 1500, description: "Regular access" },
-            { id: "t3", name: "VIP Cabana", price: 10000, description: "Reserved seating for 6 + 1 Bottle" }
-        ],
-        houseRules: ["Beachwear/Casual chic", "Right of admission reserved"]
-    },
-    'movie-screening': {
-        _id: "movie-screening",
-        title: "MOVIE SCREENING",
-        date: new Date(new Date().setDate(new Date().getDate() + 3)),
-        startTime: "20:00",
-        venueName: "Open Air Theatre, Mumbai",
-        displayPrice: 499,
-        coverImage: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2825&auto=format&fit=crop",
-        images: [],
-        description: "Experience classic cinema under the stars with great food and friends.",
-        tickets: [{ id: "t1", name: "General Access", price: 499, description: "Includes one popcorn" }]
-    },
-    'shakira-delhi': {
-        _id: "shakira-delhi",
-        title: "SHAKIRA",
-        date: new Date(new Date().setDate(new Date().getDate() + 10)),
-        startTime: "19:00",
-        venueName: "JLN Stadium, Delhi",
-        displayPrice: 3500,
-        coverImage: "https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=2800&auto=format&fit=crop",
-        images: [],
-        description: "The global superstar brings her world tour to Delhi. Expect all the hits and incredible choreography.",
-        tickets: [{ id: "t1", name: "Gold Circle", price: 3500, description: "Standing area close to stage" }, { id: "t2", name: "VIP", price: 10000, description: "Lounge access and fast track entry" }]
-    },
-    'fun-day-out': {
-        _id: "fun-day-out",
-        title: "FUN DAY-OUT",
-        date: new Date(new Date().setDate(new Date().getDate() + 4)),
-        startTime: "10:00",
-        venueName: "Adventure Park, Bengaluru",
-        displayPrice: 1500,
-        coverImage: "https://images.unsplash.com/photo-1473625247510-8ceb1760943f?q=80&w=2800&auto=format&fit=crop",
-        images: [],
-        description: "A full day of thrilling rides, games, and outdoor activities for the whole family.",
-        tickets: [{ id: "t1", name: "Day Pass", price: 1500, description: "Access to all rides" }]
-    },
-    'gaurav-gupta': {
-        _id: "gaurav-gupta",
-        title: "GAURAV GUPTA",
-        date: new Date(new Date().setDate(new Date().getDate() + 6)),
-        startTime: "21:00",
-        venueName: "Comedy Club, Pune",
-        displayPrice: 999,
-        coverImage: "https://images.unsplash.com/photo-1585699324551-f6c309eedeca?q=80&w=2800&auto=format&fit=crop",
-        images: [],
-        description: "Get ready to laugh out loud with one of India's top stand-up comedians.",
-        tickets: [{ id: "t1", name: "Standard", price: 999, description: "First come first serve seating" }]
-    },
-    'honey-singh': {
-        _id: "honey-singh",
-        title: "Yo Yo! Honey Singh",
-        date: new Date(new Date().setDate(new Date().getDate() + 15)),
-        startTime: "20:00",
-        venueName: "NSCI Dome, Mumbai",
-        displayPrice: 2000,
-        coverImage: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2800&auto=format&fit=crop",
-        images: [],
-        description: "The desi hip hop king is back with a massive arena show. Don't miss this high energy performance.",
-        tickets: [{ id: "t1", name: "Fan Pit", price: 2000, description: "Closest to the action" }, { id: "t2", name: "VIP Lounge", price: 8000, description: "Premium views and unlimited drinks" }]
-    }
-};
-
 export default function EventDetailsPage() {
   const params = useParams();
   const router = useRouter();
@@ -165,9 +22,6 @@ export default function EventDetailsPage() {
   const { data: fetchedEvent, isLoading } = useQuery({
     queryKey: ['eventFull', eventId],
     queryFn: async () => {
-      if (DEMO_EVENTS[eventId]) {
-          return DEMO_EVENTS[eventId];
-      }
       const res = await axiosInstance.get(`/user/events/${eventId}/full`);
       return res.data?.data || null;
     },
@@ -239,10 +93,6 @@ export default function EventDetailsPage() {
 
   const bookEventMutation = useMutation({
     mutationFn: async (payload: any) => {
-      // If it's a demo event, simulate a successful backend booking response
-      if (payload.eventId?.toString().startsWith('demo-')) {
-        return new Promise(resolve => setTimeout(() => resolve({ success: true }), 1000));
-      }
       // For REAL events, connect to the actual backend API
       const res = await axiosInstance.post('/user/events/book', payload);
       return res.data;

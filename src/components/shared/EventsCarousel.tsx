@@ -1,45 +1,39 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCoverflow, Autoplay } from 'swiper/modules';
+import { useQuery } from '@tanstack/react-query';
+import axiosInstance from '@/lib/axios';
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/autoplay';
 
-const DEMO_EVENTS = [
-  {
-    id: 'movie-screening',
-    title: 'MOVIE SCREENING',
-    image: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2825&auto=format&fit=crop'
-  },
-  {
-    id: 'shakira-delhi',
-    title: 'SHAKIRA',
-    image: 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=2800&auto=format&fit=crop'
-  },
-  {
-    id: 'fun-day-out',
-    title: 'FUN DAY-OUT',
-    image: 'https://images.unsplash.com/photo-1473625247510-8ceb1760943f?q=80&w=2800&auto=format&fit=crop'
-  },
-  {
-    id: 'gaurav-gupta',
-    title: 'GAURAV GUPTA',
-    image: 'https://images.unsplash.com/photo-1585699324551-f6c309eedeca?q=80&w=2800&auto=format&fit=crop'
-  },
-  {
-    id: 'honey-singh',
-    title: 'Yo Yo! Honey Singh',
-    image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2800&auto=format&fit=crop'
-  }
-];
-
 export default function EventsCarousel() {
+  const { data: fetchedEvents } = useQuery({
+      queryKey: ['publicEvents'],
+      queryFn: async () => {
+          const res = await axiosInstance.get('/user/events?limit=20');
+          return res.data?.data || [];
+      },
+      enabled: typeof window !== 'undefined',
+  });
+
+  const displayEvents = useMemo(() => {
+      if (!fetchedEvents || fetchedEvents.length === 0) return [];
+      return fetchedEvents.map((ev: any) => ({
+          id: ev._id,
+          title: ev.title,
+          image: ev.coverImage || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop'
+      }));
+  }, [fetchedEvents]);
+
+  if (displayEvents.length === 0) return null;
+
   return (
     <div className="relative w-full py-10 sm:py-14 md:py-16 overflow-hidden bg-[#050B14]">
       {/* Section Header */}
@@ -77,7 +71,9 @@ export default function EventsCarousel() {
           modules={[EffectCoverflow, Autoplay]}
           className="w-full events-carousel-swiper"
         >
-          {[...DEMO_EVENTS, ...DEMO_EVENTS, ...DEMO_EVENTS, ...DEMO_EVENTS].map((event, index) => (
+          {Array.from({ length: Math.max(1, Math.ceil(15 / displayEvents.length)) })
+            .flatMap(() => displayEvents)
+            .map((event, index) => (
             <SwiperSlide key={`${event.id}-${index}`} className="events-carousel-slide">
               {({ isActive }) => (
                 <Link

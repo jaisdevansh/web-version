@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '@/store/useAuthStore';
 import { X, ChevronDown, Loader2, User } from 'lucide-react';
@@ -118,11 +119,15 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
 
   const handleGoogleLogin = () => {
     const redirectUri = encodeURIComponent(window.location.origin + '/auth/callback');
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://party.stayin.in/api1';
-    window.location.href = `${baseUrl}/auth/google?redirectUri=${redirectUri}`;
+    const isDev = process.env.NODE_ENV === 'development';
+    const baseUrl = isDev ? 'http://127.0.0.1:3001' : (process.env.NEXT_PUBLIC_API_URL || 'https://party.stayin.in/api1');
+    window.location.href = `${baseUrl}/auth/google?redirect_uri=${redirectUri}`;
   };
 
-  return (
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const modalContent = (
     <AnimatePresence>
       {isOpen && (
         <>
@@ -131,7 +136,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={handleClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]"
+            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100]"
           />
           <div className="fixed inset-0 flex items-end md:items-center justify-center z-[100] pointer-events-none p-4 md:p-0">
             <motion.div
@@ -139,21 +144,21 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: '100%', opacity: 0 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="w-full max-w-md bg-white rounded-t-3xl md:rounded-3xl shadow-2xl overflow-hidden pointer-events-auto"
+              className="w-full max-w-md bg-[#111111] border border-white/10 rounded-t-3xl md:rounded-3xl shadow-[0_0_40px_rgba(0,0,0,0.8)] overflow-hidden pointer-events-auto"
             >
               {/* Header */}
               <div className="p-6 pb-2 relative flex flex-col items-center">
                 <button 
                   onClick={handleClose}
-                  className="absolute right-4 top-4 p-2 text-gray-400 hover:text-gray-800 bg-gray-50 hover:bg-gray-100 rounded-full transition-colors"
+                  className="absolute right-4 top-4 p-2 text-white/40 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
-                <div className="w-12 h-1.5 bg-gray-200 rounded-full mb-6 md:hidden" />
-                <h2 className="text-subheading text-gray-900 mb-2">
+                <div className="w-12 h-1.5 bg-white/10 rounded-full mb-6 md:hidden" />
+                <h2 className="text-subheading text-white mb-2">
                   {step === 'onboarding' ? 'Complete Profile' : 'Welcome'}
                 </h2>
-                <p className="text-gray-500 text-small text-center">
+                <p className="text-white/50 text-small text-center">
                   {step === 'onboarding' ? 'Just one more step to get started' : 'Log in or register to continue'}
                 </p>
               </div>
@@ -177,7 +182,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
                               value={email}
                               onChange={(e) => setEmail(e.target.value)}
                               placeholder="Email address"
-                              className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all text-lg font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal"
+                              className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all text-lg font-medium text-white placeholder:text-white/30"
                               autoFocus
                             />
                           </div>
@@ -185,7 +190,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
                         <Button 
                           type="submit" 
                           disabled={!email || !email.includes('@') || isLoading}
-                          className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white text-button rounded-xl disabled:opacity-50 transition-all"
+                          className="w-full h-14 bg-blue-600 hover:bg-blue-500 shadow-[0_0_20px_rgba(37,99,235,0.3)] text-white text-button rounded-xl disabled:opacity-50 transition-all"
                         >
                           {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : 'Send OTP'}
                         </Button>
@@ -193,22 +198,22 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
                     ) : step === 'otp' ? (
                       <form onSubmit={handleVerifyOtp} className="space-y-6">
                         <div className="space-y-2 text-center">
-                          <p className="text-sm text-gray-600">Enter code sent to <span className="font-bold text-black">{email}</span></p>
-                          <button type="button" onClick={() => setStep('email')} className="text-xs text-blue-600 font-semibold hover:underline">Change email</button>
+                          <p className="text-sm text-white/60">Enter code sent to <span className="font-bold text-white">{email}</span></p>
+                          <button type="button" onClick={() => setStep('email')} className="text-xs text-blue-400 font-semibold hover:underline">Change email</button>
                         </div>
                         <input
                           type="text"
                           value={otp}
                           onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
                           placeholder="••••••"
-                          className="w-full border border-gray-300 rounded-xl px-4 py-3 outline-none focus:border-black focus:ring-1 focus:ring-black transition-all text-center text-2xl tracking-[0.5em] font-mono text-gray-900 placeholder:text-gray-400"
+                          className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all text-center text-2xl tracking-[0.5em] font-mono text-white placeholder:text-white/20"
                           maxLength={6}
                           autoFocus
                         />
                         <Button 
                           type="submit" 
                           disabled={otp.length < 4 || isLoading}
-                          className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white text-button rounded-xl disabled:opacity-50 transition-all"
+                          className="w-full h-14 bg-blue-600 hover:bg-blue-500 shadow-[0_0_20px_rgba(37,99,235,0.3)] text-white text-button rounded-xl disabled:opacity-50 transition-all"
                         >
                           {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : 'Verify OTP'}
                         </Button>
@@ -216,15 +221,15 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
                     ) : (
                       <form onSubmit={handleOnboarding} className="space-y-6">
                         <div className="space-y-2">
-                          <label className="text-sm font-semibold text-gray-800">Full Name</label>
-                          <div className="flex items-center space-x-2 border border-gray-300 rounded-xl px-4 py-3 bg-white focus-within:border-black focus-within:ring-1 focus-within:ring-black transition-all">
-                            <User className="w-5 h-5 text-gray-400" />
+                          <label className="text-sm font-semibold text-white/80">Full Name</label>
+                          <div className="flex items-center space-x-2 border border-white/10 rounded-xl px-4 py-3 bg-black/40 focus-within:border-blue-500/50 focus-within:ring-1 focus-within:ring-blue-500/50 transition-all">
+                            <User className="w-5 h-5 text-white/40" />
                             <input
                               type="text"
                               value={fullName}
                               onChange={(e) => setFullName(e.target.value)}
                               placeholder="John Doe"
-                              className="w-full border-0 outline-none text-lg font-medium text-gray-900 placeholder:text-gray-400 placeholder:font-normal"
+                              className="w-full border-0 bg-transparent outline-none text-lg font-medium text-white placeholder:text-white/30"
                               autoFocus
                             />
                           </div>
@@ -232,7 +237,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
                         <Button 
                           type="submit" 
                           disabled={!fullName.trim() || isLoading}
-                          className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white text-button rounded-xl disabled:opacity-50 transition-all"
+                          className="w-full h-14 bg-blue-600 hover:bg-blue-500 shadow-[0_0_20px_rgba(37,99,235,0.3)] text-white text-button rounded-xl disabled:opacity-50 transition-all"
                         >
                           {isLoading ? <Loader2 className="w-6 h-6 animate-spin" /> : 'Create Account'}
                         </Button>
@@ -245,16 +250,16 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
                   <>
                     <div className="relative mt-6">
                       <div className="absolute inset-0 flex items-center">
-                        <span className="w-full border-t border-gray-200" />
+                        <span className="w-full border-t border-white/10" />
                       </div>
                       <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-white px-4 text-gray-400 tracking-widest font-medium">
+                        <span className="bg-[#111111] px-4 text-white/40 tracking-widest font-medium">
                           Or continue with
                         </span>
                       </div>
                     </div>
                     
-                    <Button variant="outline" type="button" className="w-full h-14 mt-6 rounded-xl border border-gray-200 bg-white text-gray-800 hover:bg-gray-50 text-button shadow-sm transition-all" disabled={isLoading} onClick={handleGoogleLogin}>
+                    <Button variant="outline" type="button" className="w-full h-14 mt-6 rounded-xl border border-white/10 bg-white/5 text-white hover:bg-white/10 hover:border-white/20 text-button shadow-sm transition-all" disabled={isLoading} onClick={handleGoogleLogin}>
                       <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24">
                         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                         <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -266,10 +271,10 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
                   </>
                 )}
 
-                <div className="text-center text-xs font-medium text-gray-500 mt-6 pb-2">
+                <div className="text-center text-xs font-medium text-white/40 mt-6 pb-2">
                   By continuing, you agree to our <br/>
-                  <a href="#" className="underline hover:text-black decoration-gray-400 underline-offset-2">Terms of Service</a> &nbsp;
-                  <a href="#" className="underline hover:text-black decoration-gray-400 underline-offset-2">Privacy Policy</a>
+                  <a href="#" className="underline hover:text-white decoration-white/20 underline-offset-2">Terms of Service</a> &nbsp;
+                  <a href="#" className="underline hover:text-white decoration-white/20 underline-offset-2">Privacy Policy</a>
                 </div>
               </div>
             </motion.div>
@@ -278,4 +283,7 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
       )}
     </AnimatePresence>
   );
+
+  if (!mounted) return null;
+  return createPortal(modalContent, document.body);
 }

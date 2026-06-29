@@ -5,8 +5,11 @@ async function handler(req: NextRequest) {
   const path = req.nextUrl.pathname.replace(/^\/api1/, '');
   const search = req.nextUrl.search;
   
-  // Use production backend
-  const targetUrl = `https://party.stayin.in/api1${path}${search}`;
+  const isDev = process.env.NODE_ENV === 'development';
+  // Use local backend in dev, or the configured API URL in production
+  // Using 127.0.0.1 instead of localhost to prevent IPv6 ECONNREFUSED errors in Node.js 18+
+  const baseUrl = isDev ? 'http://127.0.0.1:3001' : (process.env.NEXT_PUBLIC_API_URL || 'https://party.stayin.in/api1');
+  const targetUrl = `${baseUrl}${path}${search}`;
 
   const headers = new Headers(req.headers);
   // Remove headers that often cause WAF/CORS blocks on proxies
