@@ -20,7 +20,7 @@ async function handler(req: NextRequest) {
   if (path === '/user/events' && req.method === 'GET') {
     try {
       const client = await getMongoClient();
-      const db = client.db();
+      const db = client.db('entry_club'); // Explicitly query entry_club database
       
       const now = new Date();
       const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
