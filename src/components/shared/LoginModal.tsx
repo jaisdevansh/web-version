@@ -6,6 +6,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { X, ChevronDown, Loader2, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import api from '@/lib/axios';
+import axios from 'axios';
 import { toast } from 'sonner';
 
 interface LoginModalProps {
@@ -41,16 +42,9 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
     e.preventDefault();
     if (!email || !email.includes('@')) return;
     
-    // Frontend-only bypass for dev testing
-    if (email.toLowerCase() === 'dev@entryclub.test') {
-      toast.success('Developer Bypass Activated! (Use OTP: 123456)');
-      setStep('otp');
-      return;
-    }
-    
     try {
       setIsLoading(true);
-      await api.post('/auth/send-otp', { identifier: email });
+      await axios.post('/api/auth/send-otp', { identifier: email });
       toast.success('OTP sent to your email!');
       setStep('otp');
     } catch (error: any) {
@@ -63,15 +57,6 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!otp || otp.length < 4) return;
-    
-    // Frontend-only bypass for dev testing
-    if (email.toLowerCase() === 'dev@entryclub.test' && otp === '123456') {
-      login({ id: "dev-user-id", role: "user", name: "Devansh (Test)", email: "devansh@entryclub.test", profileImage: "" }, "dummy_frontend_token");
-      toast.success('Logged in successfully via Bypass');
-      if (onSuccess) onSuccess();
-      handleClose();
-      return;
-    }
 
     try {
       setIsLoading(true);
