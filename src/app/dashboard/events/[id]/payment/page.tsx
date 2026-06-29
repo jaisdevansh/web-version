@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, Suspense } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import {
   Loader2, ChevronLeft, CreditCard, Shield, CheckCircle2,
-  Calendar, MapPin, Users, Ticket, Lock, Sparkles
+  Calendar, MapPin, Users, Ticket, Lock, Sparkles, Armchair
 } from 'lucide-react';
 import { toast } from 'sonner';
 import axiosInstance from '@/lib/axios';
@@ -26,6 +26,8 @@ function PaymentPageInner() {
   const quantity     = parseInt(searchParams.get('qty') || '1', 10);
   const pricePerSeat = parseFloat(searchParams.get('price') || '0');
   const commissionRate = parseFloat(searchParams.get('commission') || '10');
+  const seatIdsStr   = searchParams.get('seats') || '';
+  const seatIds      = seatIdsStr ? seatIdsStr.split(',') : [];
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentDone, setPaymentDone] = useState(false);
@@ -59,6 +61,7 @@ function PaymentPageInner() {
           guestCount: quantity,
           guests: quantity,
           hostId: event.hostId?._id,
+          seatIds: seatIds,
         });
         setPaymentDone(true);
         toast.success('You are in! Booking confirmed.');
@@ -82,6 +85,7 @@ function PaymentPageInner() {
         guestCount: quantity,
         guests: quantity,
         hostId: event.hostId?._id,
+        seatIds: seatIds,
       };
 
       const result = await initiateRazorpayPayment(po, bd);
@@ -170,7 +174,7 @@ function PaymentPageInner() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
               className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
               <h3 className="text-sm font-semibold text-white/40 uppercase tracking-wider mb-4">Booking Details</h3>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-violet-500/20 border border-violet-500/30 flex items-center justify-center">
@@ -183,6 +187,7 @@ function PaymentPageInner() {
                   </div>
                   <span className="text-lg font-bold text-white">{isFree ? 'FREE' : 'Rs ' + pricePerSeat.toLocaleString('en-IN')}<span className="text-xs font-normal text-white/40 ml-1">/ person</span></span>
                 </div>
+                
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-violet-500/20 border border-violet-500/30 flex items-center justify-center">
@@ -195,6 +200,24 @@ function PaymentPageInner() {
                   </div>
                   {!isFree && <span className="text-lg font-bold text-white">Rs {basePrice.toLocaleString('en-IN')}</span>}
                 </div>
+
+                {seatIds.length > 0 && (
+                  <div className="flex items-center gap-3 pt-3 border-t border-white/10 mt-3">
+                    <div className="w-10 h-10 rounded-xl bg-violet-500/20 border border-violet-500/30 flex items-center justify-center shrink-0">
+                      <Armchair className="w-5 h-5 text-violet-400" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-white text-sm">Selected Seats</p>
+                      <div className="flex flex-wrap gap-1.5 mt-1.5">
+                        {seatIds.map((seatId: string) => (
+                          <span key={seatId} className="bg-white/10 text-white text-xs font-bold px-2 py-0.5 rounded">
+                            {seatId}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </motion.div>
 
