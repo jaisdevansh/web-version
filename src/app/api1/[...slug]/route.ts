@@ -74,9 +74,10 @@ async function handler(req: NextRequest) {
         const tickets = e.tickets || [];
         const floors = e.floors || [];
         
-        let prices: number[] = [];
-        if (tickets.length > 0) prices.push(...tickets.map((t: any) => t.price));
-        if (floors.length > 0) prices.push(...floors.map((f: any) => f.price));
+        const prices: number[] = [
+          ...tickets.map((t: any) => t.price),
+          ...floors.map((f: any) => f.price),
+        ];
         
         const validPrices = prices.filter(p => p !== undefined && p !== null && !isNaN(p));
         const paidPrices = validPrices.filter(p => p > 0);
