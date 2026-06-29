@@ -4,6 +4,7 @@ import { ChevronLeft, Gift, Share2, Search, RefreshCw, Loader2 } from 'lucide-re
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
+import { toast } from 'sonner';
 
 export default function InviteAndEarnPage() {
   const router = useRouter();
@@ -29,7 +30,7 @@ export default function InviteAndEarnPage() {
       }
     } else if (referralData?.referralCode) {
       navigator.clipboard.writeText(referralData.referralCode);
-      alert('Referral code copied to clipboard!');
+      toast.success('Referral code copied to clipboard!');
     }
   };
 

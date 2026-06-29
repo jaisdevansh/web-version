@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const BottomSections = dynamic(() => import('@/components/home/BottomSections').then(mod => mod.BottomSections), { ssr: true });
 import { Ticket, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
+import { toast } from 'sonner';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
 import { useLocationStore } from '@/store/useLocationStore';
@@ -274,11 +275,11 @@ export default function WelcomeScreen() {
                 setIsLocating(false);
             }, (error) => {
                 console.error("Error getting location:", error);
-                alert("Please enable location access to use distance filters.");
+                toast.error('Please enable location access to use distance filters.');
                 setIsLocating(false);
             });
         } else {
-            alert("Geolocation is not supported by your browser.");
+            toast.error('Geolocation is not supported by your browser.');
             setIsLocating(false);
         }
     }, [setLocation]);

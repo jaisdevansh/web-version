@@ -7,6 +7,7 @@ import { Ticket, MapPin } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
 import { useLocationStore } from '@/store/useLocationStore';
+import { toast } from 'sonner';
 
 export default function AllEventsList() {
     const { data: fetchedEvents, isLoading } = useQuery({
@@ -59,11 +60,11 @@ export default function AllEventsList() {
                 setIsLocating(false);
             }, (error) => {
                 console.error("Error getting location:", error);
-                alert("Please enable location access to use distance filters.");
+                toast.error('Please enable location access to use distance filters.');
                 setIsLocating(false);
             });
         } else {
-            alert("Geolocation is not supported by your browser.");
+            toast.error('Geolocation is not supported by your browser.');
             setIsLocating(false);
         }
     }, [setLocation]);

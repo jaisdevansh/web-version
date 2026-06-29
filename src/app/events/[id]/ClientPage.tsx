@@ -377,7 +377,7 @@ export default function EventDetailsPage() {
       <LoginModal 
         isOpen={isLoginModalOpen} 
         onClose={() => setIsLoginModalOpen(false)} 
-        onSuccess={() => alert(`Logged in successfully! Added ${totalTickets} tickets to booking.`)}
+        onSuccess={() => toast.success(`Logged in successfully! Added ${totalTickets} tickets to booking.`)}
       />
     </div>
   );
