@@ -66,7 +66,19 @@ async function handler(req: NextRequest) {
       });
     } catch (err: any) {
       console.error('Direct MongoDB bypass error:', err);
-      // Fallback to the standard proxy if the database fetch fails
+      // Instead of falling back to the broken backend, return the exact error to the frontend
+      return new Response(JSON.stringify({ 
+        success: false, 
+        message: 'MongoDB Bypass Failed', 
+        error: err.message,
+        stack: err.stack
+      }), {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        }
+      });
     }
   }
   // -- END OPTION 2 BYPASS --
