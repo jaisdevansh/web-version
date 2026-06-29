@@ -1,15 +1,12 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, ChevronLeft, Users, Zap, CheckCircle2, Minus, Plus, CreditCard, Shield, RefreshCw } from 'lucide-react';
+import { ChevronLeft, Users, Zap, CheckCircle2, Minus, Plus, ArrowRight, Shield, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import axiosInstance from '@/lib/axios';
-import { initiateRazorpayPayment } from '@/services/razorpay';
-import type { PaymentOptions, BookingData } from '@/services/razorpay';
-import { useAuthStore } from '@/store/useAuthStore';
 
 interface Zone {
   _id: string;
@@ -26,10 +23,8 @@ export default function SeatAllocationPage() {
   const params = useParams();
   const router = useRouter();
   const eventId = params.id as string;
-  const { user } = useAuthStore();
   const [selectedZone, setSelectedZone] = useState<Zone | null>(null);
   const [quantity, setQuantity] = useState(1);
-  const [isProcessing, setIsProcessing] = useState(false);
 
   const { data: event, isLoading, isFetching } = useQuery({
     queryKey: ['event-seats', eventId],
@@ -85,17 +80,17 @@ export default function SeatAllocationPage() {
     setSelectedZone(zone); setQuantity(1);
   }, []);
 
-  const handlePayment = async () => {
+  const handleProceedToPayment = () => {
     if (!selectedZone || !event) return;
     if (quantity > selectedZone.capacity - selectedZone.bookedCount) { toast.error('Not enough spots available.'); return; }
-    setIsProcessing(true);
-    try {
-      const po: PaymentOptions = { amount: totalPrice, receipt: 'rcpt_' + eventId + '_' + Date.now(), description: selectedZone.name + ' - ' + event.title, prefillName: user?.name || '', prefillEmail: user?.email || '', prefillContact: user?.phone || '' };
-      const bd: BookingData = { eventId: event._id, ticketType: selectedZone.name, zone: selectedZone.name, pricePaid: totalPrice, guestCount: quantity, guests: quantity, hostId: event.hostId?._id };
-      const result = await initiateRazorpayPayment(po, bd);
-      if (result.success) { toast.success('Booking confirmed! See you at the event.'); router.push('/dashboard/bookings'); }
-      else { toast.error(result.error || 'Payment failed.'); }
-    } finally { setIsProcessing(false); }
+    const params = new URLSearchParams({
+      zone: selectedZone.name,
+      zoneId: selectedZone._id,
+      qty: String(quantity),
+      price: String(selectedZone.price),
+      commission: String(commissionRate),
+    });
+    router.push('/dashboard/events/' + eventId + '/payment?' + params.toString());
   };
 
   if (isLoading) return (
@@ -227,9 +222,9 @@ export default function SeatAllocationPage() {
                   <div className="flex justify-between font-bold text-white text-base pt-2 border-t border-white/10"><span>Total</span><span className="text-violet-300">Rs {totalPrice.toLocaleString("en-IN")}</span></div>
                 </div>
               )}
-              <button id="pay-now-btn" onClick={handlePayment} disabled={!selectedZone || isProcessing}
-                className={"w-full h-14 rounded-2xl font-bold text-base flex items-center justify-center gap-2 transition-all duration-200 " + (!selectedZone || isProcessing ? "bg-white/10 text-white/30 cursor-not-allowed" : "bg-violet-600 hover:bg-violet-500 text-white shadow-lg shadow-violet-600/30 active:scale-[0.98]")}>
-                {isProcessing ? <><Loader2 className="w-5 h-5 animate-spin" /> Processing...</> : <><CreditCard className="w-5 h-5" /> {selectedZone ? "Pay Rs " + totalPrice.toLocaleString("en-IN") : "Select a zone"}</>}
+              <button id="confirm-selection-btn" onClick={handleProceedToPayment} disabled={!selectedZone}
+                className={"w-full h-14 rounded-2xl font-bold text-base flex items-center justify-center gap-2 transition-all duration-200 " + (!selectedZone ? "bg-white/10 text-white/30 cursor-not-allowed" : "bg-violet-600 hover:bg-violet-500 text-white shadow-lg shadow-violet-600/30 active:scale-[0.98]")}>
+                <ArrowRight className="w-5 h-5" /> {selectedZone ? "Confirm — Rs " + totalPrice.toLocaleString("en-IN") : "Select a zone"}
               </button>
               <p className="flex items-center justify-center gap-1.5 text-xs text-white/20"><Shield className="w-3.5 h-3.5" />Secured by Razorpay</p>
             </div>
