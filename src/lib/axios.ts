@@ -3,8 +3,8 @@ import { toast } from 'sonner';
 
 // Create a custom axios instance
 const api = axios.create({
-  // Use local API proxy to bypass CORS and WAF rules
-  baseURL: process.env.NODE_ENV === 'development' ? '/api1' : (process.env.NEXT_PUBLIC_API_URL || 'https://stayin.in/api2'),
+  // Use Next.js API proxy to bypass CORS and WAF rules in both dev and prod
+  baseURL: '/api1',
   headers: {
     'Content-Type': 'application/json',
     'Cache-Control': 'no-cache, no-store, must-revalidate',
