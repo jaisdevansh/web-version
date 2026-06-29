@@ -50,7 +50,7 @@ export default function DashboardPage() {
         queryKey: ['myBookings'],
         queryFn: async () => {
             const res = await axiosInstance.get('/user/bookings');
-            return res.data.data;
+            return res.data.data?.bookings || [];
         },
         enabled: mounted && isAuthenticated,
     });

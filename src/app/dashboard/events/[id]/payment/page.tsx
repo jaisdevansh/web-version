@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import {
   Loader2, ChevronLeft, CreditCard, Shield, CheckCircle2,
-  Calendar, MapPin, Users, Ticket, Lock, Sparkles, Armchair
+  Calendar, MapPin, Users, Ticket, Lock, Sparkles, Armchair, Zap
 } from 'lucide-react';
 import { toast } from 'sonner';
 import axiosInstance from '@/lib/axios';
@@ -242,82 +242,104 @@ function PaymentPageInner() {
           </div>
 
           {/* RIGHT: Payment summary */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 space-y-4">
+            
+            {/* Promo Code Card */}
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }}
-              className="sticky top-24 rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden">
+              className="rounded-2xl border border-white/5 bg-[#111116] p-2 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3 flex-1 pl-3">
+                <Zap className="w-4 h-4 text-white/30" />
+                <input 
+                  type="text" 
+                  placeholder="ENTER PROMO CODE" 
+                  className="bg-transparent border-none outline-none text-xs font-semibold tracking-wider text-white placeholder-white/30 uppercase w-full"
+                />
+              </div>
+              <button className="px-5 py-2.5 rounded-xl bg-[#1D172E] text-[#8B5CF6] text-xs font-bold tracking-wider hover:bg-[#251D3A] transition-colors">
+                APPLY
+              </button>
+            </motion.div>
 
-              <div className="bg-gradient-to-br from-violet-600/20 to-purple-900/20 border-b border-violet-500/20 px-6 py-5">
-                <p className="text-xs text-violet-300/60 uppercase tracking-wider font-semibold mb-1">Payment Summary</p>
-                <p className="text-3xl font-black text-white">{isFree ? 'FREE' : 'Rs ' + totalPrice.toLocaleString('en-IN')}</p>
-                {!isFree && <p className="text-xs text-white/30 mt-1">All taxes & fees included</p>}
+            {/* Payment Summary Card */}
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15 }}
+              className="rounded-3xl border border-white/5 bg-[#111116] p-6 space-y-5">
+              
+              <div className="flex items-center gap-3 text-white">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#6338F1]">
+                  <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/>
+                  <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/>
+                  <path d="M12 17.5v-11"/>
+                </svg>
+                <h3 className="text-base font-semibold tracking-wide">Payment Summary</h3>
               </div>
 
-              <div className="px-6 py-5 space-y-5">
-
-                {/* Breakdown */}
-                {!isFree && (
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between text-white/50">
-                      <span>{zoneName} x{quantity}</span>
-                      <span>Rs {basePrice.toLocaleString('en-IN')}</span>
-                    </div>
-                    <div className="flex justify-between text-white/50">
-                      <span>Platform Fee ({commissionRate}%)</span>
-                      <span>Rs {platformFee.toLocaleString('en-IN')}</span>
-                    </div>
-                    <div className="flex justify-between font-bold text-white pt-2 border-t border-white/10 text-base">
-                      <span>Total Payable</span>
-                      <span className="text-violet-300">Rs {totalPrice.toLocaleString('en-IN')}</span>
-                    </div>
-                  </div>
-                )}
-
-                {/* Payer info */}
-                {user && (
-                  <div className="rounded-xl bg-white/[0.04] border border-white/10 px-4 py-3 text-sm">
-                    <p className="text-xs text-white/30 mb-1">Booking for</p>
-                    <p className="font-semibold text-white">{user.name || 'Guest'}</p>
-                    {user.email && <p className="text-xs text-white/40">{user.email}</p>}
-                  </div>
-                )}
-
-                {/* Pay button */}
-                <button
-                  id="razorpay-pay-btn"
-                  onClick={handlePay}
-                  disabled={isProcessing || !event}
-                  className={"w-full h-16 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 transition-all duration-200 " + (isProcessing || !event ? "bg-white/10 text-white/30 cursor-not-allowed" : isFree ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-xl shadow-emerald-600/30 active:scale-[0.98]" : "bg-violet-600 hover:bg-violet-500 text-white shadow-xl shadow-violet-600/30 active:scale-[0.98]")}
-                >
-                  {isProcessing ? (
-                    <><Loader2 className="w-5 h-5 animate-spin" /> Processing...</>
-                  ) : isFree ? (
-                    <><CheckCircle2 className="w-5 h-5" /> Confirm Free Booking</>
-                  ) : (
-                    <><CreditCard className="w-5 h-5" /> Pay with Razorpay</>
-                  )}
-                </button>
-
-                {/* Trust signals */}
-                <div className="space-y-2">
-                  <p className="flex items-center justify-center gap-1.5 text-xs text-white/20">
-                    <Lock className="w-3 h-3" />256-bit SSL encryption
-                  </p>
-                  {!isFree && (
-                    <p className="flex items-center justify-center gap-1.5 text-xs text-white/20">
-                      <Shield className="w-3 h-3" />Powered by Razorpay · RBI compliant
-                    </p>
-                  )}
+              <div className="space-y-4 text-sm pt-2">
+                <div className="flex justify-between items-center text-white/50">
+                  <span>{zoneName} ({quantity} Guest{quantity > 1 ? 's' : ''})</span>
+                  <span className="text-white font-medium">₹{basePrice.toLocaleString('en-IN')}</span>
                 </div>
-
-                {/* Razorpay logo row */}
-                {!isFree && (
-                  <div className="flex items-center justify-center gap-2 pt-1">
-                    <span className="text-xs text-white/20">Accepted:</span>
-                    <span className="text-xs text-white/30 font-semibold">UPI · Cards · Net Banking · Wallets</span>
+                {seatIds.length > 0 && (
+                  <div className="flex justify-between items-center text-white/50">
+                    <span>Seats: {seatIds.join(', ')}</span>
+                    <span className="text-white font-medium">Reserved</span>
                   </div>
                 )}
+                {!isFree && (
+                  <div className="flex justify-between items-center text-white/50">
+                    <span>Platform Fee</span>
+                    <span className="text-white font-medium">₹{platformFee.toLocaleString('en-IN')}</span>
+                  </div>
+                )}
+                
+                <div className="flex justify-between items-center pt-4 border-t border-white/5">
+                  <span className="text-white/50">Total Payable</span>
+                  <span className="text-xl font-bold text-white">₹{totalPrice.toLocaleString('en-IN')}</span>
+                </div>
               </div>
             </motion.div>
+
+            {/* Payer info */}
+            {user && (
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
+                className="rounded-3xl border border-white/5 bg-[#111116] px-6 py-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-white/40 mb-1">Booking for</p>
+                  <p className="font-semibold text-white text-sm">{user.name || 'Guest'}</p>
+                </div>
+                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+                  <Users className="w-5 h-5 text-white/50" />
+                </div>
+              </motion.div>
+            )}
+
+            {/* Pay button */}
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 }}
+              className="pt-6 space-y-4">
+              <button
+                id="razorpay-pay-btn"
+                onClick={handlePay}
+                disabled={isProcessing || !event}
+                className={"w-full h-14 rounded-2xl font-bold text-[15px] flex items-center justify-center gap-2 transition-all duration-200 " + 
+                  (isProcessing || !event ? "bg-white/10 text-white/30 cursor-not-allowed" : 
+                  isFree ? "bg-emerald-600 hover:bg-emerald-500 text-white active:scale-[0.98]" : 
+                  "bg-[#6338F1] hover:bg-[#5328D1] text-white shadow-lg shadow-[#6338F1]/20 active:scale-[0.98]")}
+              >
+                {isProcessing ? (
+                  <><Loader2 className="w-5 h-5 animate-spin" /> Processing...</>
+                ) : isFree ? (
+                  <><CheckCircle2 className="w-5 h-5" /> Confirm Free Booking</>
+                ) : (
+                  <>Pay with Razorpay <Lock className="w-3.5 h-3.5 ml-1 opacity-70" /></>
+                )}
+              </button>
+              
+              {!isFree && (
+                <p className="text-center text-[10px] text-white/30 font-semibold tracking-widest uppercase">
+                  100% Secure Transaction
+                </p>
+              )}
+            </motion.div>
+
           </div>
 
         </div>

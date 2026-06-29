@@ -193,9 +193,26 @@ async function handler(req: NextRequest) {
   const baseUrl = isDev ? 'http://127.0.0.1:3001' : (process.env.NEXT_PUBLIC_API_URL || 'https://party.stayin.in/api1');
   const targetUrl = `${baseUrl}${path}${search}`;
   const headers = new Headers(req.headers);
+  
+  // Remove problematic headers that cause issues with proxying
   headers.delete('host');
   headers.delete('origin');
   headers.delete('referer');
+  
+  // Ensure Authorization header is properly forwarded
+  const authHeader = req.headers.get('Authorization') || req.headers.get('authorization');
+  if (authHeader) {
+    headers.set('Authorization', authHeader);
+  }
+  
+  // Also check for token in cookies as fallback
+  const cookieHeader = req.headers.get('cookie');
+  if (cookieHeader && !authHeader) {
+    const match = cookieHeader.match(/party_auth_token=([^;]+)/);
+    if (match) {
+      headers.set('Authorization', `Bearer ${match[1]}`);
+    }
+  }
   
   const init: RequestInit = { method: req.method, headers, redirect: 'manual', cache: 'no-store' };
   if (req.method !== 'GET' && req.method !== 'HEAD') init.body = await req.arrayBuffer();
@@ -209,8 +226,24 @@ async function handler(req: NextRequest) {
     resHeaders.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
     resHeaders.set('Access-Control-Allow-Headers', '*');
     
+    // Log errors for debugging
+    if (response.status >= 400) {
+      const errorText = await response.clone().text();
+      console.error(`[API Proxy Error] ${req.method} ${path}`, {
+        status: response.status,
+        error: errorText,
+        hasAuth: !!headers.get('Authorization')
+      });
+    }
+    
     return new Response(response.body, { status: response.status, statusText: response.statusText, headers: resHeaders });
   } catch (err: any) {
+    console.error('[API Proxy] Fetch failed:', {
+      method: req.method,
+      path,
+      error: err.message,
+      hasAuth: !!headers.get('Authorization')
+    });
     return new Response(JSON.stringify({ error: 'Proxy failed', details: err.message }), { 
       status: 500,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }

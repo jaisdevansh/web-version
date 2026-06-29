@@ -31,7 +31,7 @@ export default function HistoryPage() {
     queryKey: ['myBookingsAll'],
     queryFn: async () => {
       const res = await axiosInstance.get('/user/bookings');
-      return res.data.data;
+      return res.data.data?.bookings || [];
     },
     enabled: mounted && isAuthenticated,
   });

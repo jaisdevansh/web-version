@@ -24,7 +24,7 @@ export default function MyBookingsPage() {
     return <div className="text-destructive text-center p-8">Failed to load bookings.</div>;
   }
 
-  const bookings = Array.isArray(data) ? data : [];
+  const bookings = data?.bookings || [];
 
   return (
     <div className="space-y-6">

@@ -1,10 +1,10 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, Users, Zap, CheckCircle2, Minus, Plus, ArrowRight, Shield, RefreshCw, Armchair } from 'lucide-react';
+import { ChevronLeft, Users, Zap, CheckCircle2, Minus, Plus, ArrowRight, Shield, RefreshCw, Music } from 'lucide-react';
 import { toast } from 'sonner';
 import axiosInstance from '@/lib/axios';
 
@@ -56,29 +56,17 @@ export default function SeatAllocationPage() {
     }));
   }, [event]);
 
-  // Generate a mock seat map layout based on the zone capacity
-  const seatLayout = useMemo(() => {
+  // Generate continuous seat numbers 1 to capacity
+  const seatsArray = useMemo(() => {
     if (!selectedZone) return [];
     const total = selectedZone.capacity;
-    const cols = 10;
-    const rows = Math.ceil(total / cols);
-    const layout = [];
-    let seatIndex = 1;
-    for (let r = 0; r < rows; r++) {
-      const rowLabel = String.fromCharCode(65 + (r % 26)) + (r >= 26 ? Math.floor(r/26) : '');
-      const rowSeats = [];
-      for (let c = 1; c <= cols; c++) {
-        if (seatIndex > total) break;
-        const seatId = rowLabel + c;
-        // Deterministically mock some sold seats based on bookedCount
-        // (Since backend doesn't tell us WHICH specific seats are sold, we scatter them)
-        const isSold = (seatIndex % Math.max(1, Math.floor(total / Math.max(1, selectedZone.bookedCount)))) === 0 && seatIndex <= (selectedZone.bookedCount * Math.max(1, Math.floor(total / Math.max(1, selectedZone.bookedCount))));
-        rowSeats.push({ id: seatId, isSold: isSold || false });
-        seatIndex++;
-      }
-      layout.push({ row: rowLabel, seats: rowSeats });
+    const arr = [];
+    for (let i = 1; i <= total; i++) {
+      // Deterministically mock sold seats for demo based on bookedCount
+      const isSold = (i % Math.max(1, Math.floor(total / Math.max(1, selectedZone.bookedCount)))) === 0 && i <= (selectedZone.bookedCount * Math.max(1, Math.floor(total / Math.max(1, selectedZone.bookedCount))));
+      arr.push({ id: String(i), isSold: isSold || false });
     }
-    return layout;
+    return arr;
   }, [selectedZone]);
 
   useEffect(() => {
@@ -109,7 +97,7 @@ export default function SeatAllocationPage() {
 
   const handleSeatClick = (seatId: string, isSold: boolean) => {
     if (isSold) {
-      toast.error('This seat is already booked.');
+      toast.error('This table is already booked.');
       return;
     }
     setSelectedSeats(prev => {
@@ -125,7 +113,7 @@ export default function SeatAllocationPage() {
   const handleProceedToPayment = () => {
     if (!selectedZone || !event) return;
     if (selectedSeats.length !== quantity) {
-      toast.error('Please select exactly ' + quantity + ' seat' + (quantity > 1 ? 's' : '') + ' before proceeding.');
+      toast.error('Please select exactly ' + quantity + ' table/seat' + (quantity > 1 ? 's' : '') + ' before proceeding.');
       return;
     }
     const params = new URLSearchParams({
@@ -159,35 +147,245 @@ export default function SeatAllocationPage() {
 
   const fd = new Date(event.date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
 
+  // -----------------------------------------------------
+  // RENDER SEAT MAP (Match reference image exactly)
+  // -----------------------------------------------------
+  if (step === 'seats' && selectedZone) {
+    const availableSpots = selectedZone.capacity - selectedZone.bookedCount;
+    return (
+      <div className="min-h-screen bg-[#05050A] text-white font-sans pb-24 relative">
+        {/* Header */}
+        <div className="sticky top-0 z-50 bg-[#05050A]/90 backdrop-blur-xl border-b border-white/[0.06]">
+          <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <button onClick={() => setStep('zone')} className="flex items-center gap-2 text-white/60 hover:text-white transition-colors text-sm font-medium">
+              <ChevronLeft className="w-4 h-4" />Back
+            </button>
+            <div className="text-center">
+              <h1 className="text-sm font-semibold text-white truncate max-w-xs">{event.title}</h1>
+              <p className="text-[10px] text-white/50 uppercase tracking-widest font-semibold mt-0.5">STEP 2 OF 2</p>
+            </div>
+            <div className="w-8 h-8 flex items-center justify-center font-bold text-xs bg-blue-600 rounded-full text-white">
+              2
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-6xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* LEFT COLUMN */}
+          <div className="lg:col-span-2 space-y-8">
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-8">
+              
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-1">Select Your Table</h2>
+                  <p className="text-white/50 text-sm">Choose {quantity} table(s) for your group.</p>
+                </div>
+                <div className="w-12 h-12 flex items-center justify-center font-bold text-lg bg-blue-500/10 text-blue-400 rounded-full border border-blue-500/20">
+                  {selectedSeats.length}/{quantity}
+                </div>
+              </div>
+
+              {/* DJ / STAGE */}
+              <div className="w-full bg-[#111116] border border-white/5 rounded-2xl py-4 flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(255,255,255,0.02)]">
+                <Music className="w-5 h-5 text-blue-500" />
+                <span className="text-sm font-bold tracking-[0.2em] text-white/60">DJ • STAGE</span>
+              </div>
+
+              {/* Zone Subtitle */}
+              <div className="flex items-end justify-between">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
+                    <h3 className="text-xl font-bold text-white">{selectedZone.name}</h3>
+                  </div>
+                  <p className="text-sm text-white/40 ml-4 mt-1.5">Selected Range • {selectedZone.price > 0 ? "₹" + selectedZone.price.toLocaleString("en-IN") : "FREE"}</p>
+                </div>
+                <div className="text-sm font-medium text-white/40 bg-white/5 px-3 py-1.5 rounded-lg">{availableSpots} / {selectedZone.capacity} left</div>
+              </div>
+
+              {/* Seat Grid */}
+              <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-2 sm:gap-3">
+                {seatsArray.map((seat) => {
+                  const isSelected = selectedSeats.includes(seat.id);
+                  return (
+                    <button 
+                      key={seat.id} 
+                      onClick={() => handleSeatClick(seat.id, seat.isSold)} 
+                      disabled={seat.isSold}
+                      className={"aspect-square rounded-xl flex items-center justify-center text-sm font-bold transition-all " + 
+                        (seat.isSold 
+                          ? "bg-transparent border border-white/5 text-white/10 cursor-not-allowed" 
+                          : isSelected 
+                          ? "bg-blue-600 text-white border border-blue-400 scale-105 shadow-[0_0_15px_rgba(59,130,246,0.4)]" 
+                          : "bg-[#1A1A24] border border-white/5 text-white hover:border-blue-500/50 hover:bg-blue-500/10")}
+                    >
+                      {seat.id}
+                    </button>
+                  );
+                })}
+              </div>
+
+            </motion.div>
+          </div>
+
+          {/* RIGHT COLUMN */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-24 rounded-2xl border border-white/10 bg-[#0A0A12] overflow-hidden shadow-2xl">
+              <div className="bg-blue-600/10 border-b border-blue-500/20 px-6 py-5">
+                <p className="text-[10px] text-white/50 uppercase tracking-widest font-bold mb-1.5">Order Summary</p>
+                <h3 className="text-lg font-bold text-white leading-snug">{event.title}</h3>
+                <p className="text-sm text-blue-400 mt-1">{fd}</p>
+              </div>
+              
+              <div className="px-6 py-6 space-y-6">
+                
+                <div className="rounded-xl bg-blue-500/10 border border-blue-500/20 p-4">
+                  <p className="text-[10px] text-blue-400 font-bold uppercase tracking-widest mb-1">Selected Zone</p>
+                  <p className="font-bold text-lg text-white">{selectedZone.name}</p>
+                  <p className="text-sm text-white/60 mt-1">{selectedZone.price > 0 ? ("Rs " + selectedZone.price.toLocaleString("en-IN") + " x " + quantity) : "Free Entry"}</p>
+                </div>
+
+                {selectedSeats.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-[10px] text-white/50 font-bold uppercase tracking-widest">Selected Tables</p>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedSeats.map(id => (
+                        <span key={id} className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-sm font-bold">{id}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="space-y-3 text-sm border-t border-white/10 pt-6">
+                  <div className="flex justify-between text-white/60">
+                    <span>{selectedZone.name} x {quantity}</span>
+                    <span>Rs {(selectedZone.price * quantity).toLocaleString("en-IN")}</span>
+                  </div>
+                  <div className="flex justify-between text-white/60">
+                    <span>Platform Fee ({commissionRate}%)</span>
+                    <span>Rs {platformFee.toLocaleString("en-IN")}</span>
+                  </div>
+                  <div className="flex justify-between items-end pt-4 border-t border-white/10 mt-2">
+                    <div>
+                      <span className="text-white font-bold text-base block">Total</span>
+                      <span className="text-[10px] text-[#D4AF37] font-bold tracking-widest uppercase mt-0.5 block">Incl. platform fee</span>
+                    </div>
+                    <span className="text-2xl font-black text-white leading-none">Rs {totalPrice.toLocaleString("en-IN")}</span>
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <button 
+                    onClick={handleProceedToPayment} 
+                    disabled={selectedSeats.length !== quantity}
+                    className={"w-full h-14 rounded-xl font-bold text-base flex items-center justify-center gap-2 transition-all duration-200 " + 
+                      (selectedSeats.length !== quantity 
+                        ? "bg-white/5 text-white/30 cursor-not-allowed border border-white/10" 
+                        : "bg-[#7C3AED] hover:bg-[#6D28D9] text-white shadow-[0_0_20px_rgba(124,58,237,0.3)] active:scale-[0.98]")}
+                  >
+                    Complete Booking <ArrowRight className="w-5 h-5" />
+                  </button>
+                  {selectedSeats.length !== quantity && (
+                    <p className="text-center text-xs text-red-400 mt-3 font-medium">Please select {quantity - selectedSeats.length} more table(s)</p>
+                  )}
+                </div>
+                
+                <div className="flex items-center justify-center gap-1.5 text-xs text-white/30 pt-2">
+                  <Shield className="w-4 h-4" />
+                  <span>Secured by Razorpay</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    );
+  }
+
+  // -----------------------------------------------------
+  // RENDER ZONE SELECTOR (Default Step)
+  // -----------------------------------------------------
   return (
-    <div className="min-h-screen bg-[#05050A] text-white font-sans">
+    <div className="min-h-screen bg-[#05050A] text-white font-sans pb-24">
+      {/* Header */}
       <div className="sticky top-0 z-50 bg-[#05050A]/90 backdrop-blur-xl border-b border-white/[0.06]">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <button onClick={() => step === 'seats' ? setStep('zone') : router.back()} className="flex items-center gap-2 text-white/60 hover:text-white transition-colors text-sm font-medium">
-            <ChevronLeft className="w-4 h-4" />{step === 'seats' ? 'Back to Zones' : 'Back'}
+          <button onClick={() => router.back()} className="flex items-center gap-2 text-white/60 hover:text-white transition-colors text-sm font-medium">
+            <ChevronLeft className="w-4 h-4" />Back
           </button>
           <div className="text-center">
             <h1 className="text-sm font-semibold text-white truncate max-w-xs">{event.title}</h1>
-            <p className="text-xs text-white/40">{fd}</p>
+            <p className="text-[10px] text-white/50 uppercase tracking-widest font-semibold mt-0.5">STEP 1 OF 2</p>
           </div>
-          <div className="flex items-center gap-2 text-xs text-white/40">
-            <span className={"w-2 h-2 rounded-full animate-pulse " + (isFetching ? "bg-amber-400" : "bg-emerald-400")} />
-            <span className="hidden sm:block">{isFetching ? "Syncing..." : "Live"}</span>
+          <div className="w-8 h-8 flex items-center justify-center font-bold text-xs bg-blue-600 rounded-full text-white">
+            1
           </div>
         </div>
       </div>
 
       <div className="max-w-6xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-4">
+        
+        {/* LEFT COLUMN: Main Selections */}
+        <div className="lg:col-span-2 space-y-10">
           
-          {step === 'zone' && (
-            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold">1. Select Zone / Ticket</h2>
-                <div className="flex items-center gap-1.5 text-xs text-white/30">
-                  <RefreshCw className={"w-3 h-3 " + (isFetching ? "animate-spin" : "")} /><span>Updates every 5s</span>
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-10">
+            {/* Select Date & Guests Row (Desktop friendly) */}
+            <div className="flex flex-col sm:flex-row sm:items-start gap-8">
+              {/* Select Date */}
+              <section>
+                <h2 className="text-lg font-medium mb-4 text-white/80">Select Date</h2>
+                <div className="w-24 rounded-2xl border border-blue-500/50 bg-blue-500/10 flex flex-col items-center justify-center py-4 shadow-[0_0_15px_rgba(59,130,246,0.1)]">
+                  <span className="text-xs text-blue-400 font-semibold uppercase tracking-wider">{new Date(event.date).toLocaleDateString('en-GB', { weekday: 'short' })}</span>
+                  <span className="text-3xl font-black text-white my-1">{new Date(event.date).getDate()}</span>
+                  <span className="text-sm text-blue-400/80">{new Date(event.date).toLocaleDateString('en-GB', { month: 'short' })}</span>
                 </div>
+              </section>
+
+              {/* How many guests? */}
+              <section>
+                <h2 className="text-lg font-medium mb-4 text-white/80">How many guests?</h2>
+                <div className="flex items-center gap-6">
+                  <button 
+                    onClick={() => { setQuantity(q => Math.max(1, q - 1)); setSelectedSeats([]); }} 
+                    disabled={quantity <= 1} 
+                    className="w-14 h-14 rounded-full bg-[#1A1A24] flex items-center justify-center disabled:opacity-50 transition-colors hover:bg-[#2A2A36]"
+                  >
+                    <Minus className="w-6 h-6 text-white/70" />
+                  </button>
+                  <span className="text-4xl font-light w-10 text-center">{quantity}</span>
+                  <button 
+                    onClick={() => { 
+                      if (selectedZone) {
+                        const available = selectedZone.capacity - selectedZone.bookedCount;
+                        if (quantity >= available) {
+                          toast.warning("Only " + available + " spots available in selected zone.");
+                          return;
+                        }
+                      }
+                      setQuantity(q => Math.min(20, q + 1)); 
+                      setSelectedSeats([]); 
+                    }} 
+                    className="w-14 h-14 rounded-full bg-blue-600 hover:bg-blue-500 transition-colors flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.3)]"
+                  >
+                    <Plus className="w-6 h-6 text-white" />
+                  </button>
+                </div>
+              </section>
+            </div>
+
+            {/* Choose your table */}
+            <section>
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-3">
+                  <h2 className="text-xl font-bold">Choose your table</h2>
+                  <div className="flex items-center gap-1.5 text-xs text-white/30 bg-white/5 px-2.5 py-1 rounded-full">
+                    <RefreshCw className={"w-3 h-3 " + (isFetching ? "animate-spin" : "")} /><span>Updates live</span>
+                  </div>
+                </div>
+                <button className="text-sm text-blue-500 font-medium hover:text-blue-400 transition-colors">View Floor Map &rarr;</button>
               </div>
+              
               {zones.length === 0 ? (
                 <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-10 text-center text-white/40">No zones available.</div>
               ) : (
@@ -195,36 +393,49 @@ export default function SeatAllocationPage() {
                   <AnimatePresence>
                     {zones.map((zone, idx) => {
                       const available = zone.capacity - zone.bookedCount;
-                      const pct = Math.min(100, Math.round((zone.bookedCount / Math.max(zone.capacity, 1)) * 100));
                       const isFull = available <= 0;
                       const isSel = selectedZone?._id === zone._id || selectedZone?.name === zone.name;
-                      const almostFull = !isFull && available <= 5;
+                      
                       return (
-                        <motion.div key={zone._id} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.06 }}
+                        <motion.div 
+                          key={zone._id} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.06 }}
                           onClick={() => handleSelectZone(zone)}
-                          className={"relative rounded-2xl border-2 p-5 transition-all duration-200 select-none " + (isFull ? "border-white/10 bg-white/[0.02] opacity-50 cursor-not-allowed" : isSel ? "border-violet-500 bg-violet-500/10 cursor-pointer" : "border-white/10 bg-white/[0.03] hover:border-white/25 cursor-pointer")}
+                          className={"relative rounded-2xl p-5 transition-all duration-200 cursor-pointer border " + 
+                            (isFull ? "border-white/5 bg-white/[0.02] opacity-50" : 
+                            isSel ? "border-blue-500 bg-blue-500/10 shadow-[0_0_30px_rgba(59,130,246,0.15)]" : 
+                            "border-white/10 bg-[#0F0F16] hover:border-white/20")}
                         >
-                          {isSel && (<motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute top-3 right-3"><CheckCircle2 className="w-5 h-5 text-violet-400" /></motion.div>)}
-                          {isFull && !isSel && (<span className="absolute top-3 right-3 text-[10px] font-bold bg-red-500/20 text-red-400 border border-red-500/30 rounded-full px-2 py-0.5">FULL</span>)}
-                          {almostFull && !isSel && (<span className="absolute top-3 right-3 text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-full px-2 py-0.5">{available} left</span>)}
-                          <h3 className={"font-bold text-lg mb-1 " + (isFull ? "text-white/40" : "text-white")}>{zone.name}</h3>
-                          {zone.description && <p className="text-xs text-white/40 mb-3">{zone.description}</p>}
-                          {zone.perks && zone.perks.length > 0 && (
-                            <ul className="mb-3 space-y-1">
-                              {zone.perks.slice(0, 3).map((p: string, i: number) => <li key={i} className="flex items-center gap-1.5 text-xs text-white/50"><Zap className="w-3 h-3 text-violet-400 shrink-0" />{p}</li>)}
-                            </ul>
-                          )}
-                          <div className="mb-3">
-                            <div className="flex justify-between text-xs text-white/30 mb-1">
-                              <span className="flex items-center gap-1"><Users className="w-3 h-3" />{zone.bookedCount} / {zone.capacity}</span><span>{pct}%</span>
+                          {/* Card Content */}
+                          <div className="flex justify-between items-start mb-5">
+                            <div className="grid grid-cols-3 gap-1 w-6 h-6 text-emerald-400">
+                              <div className="w-1.5 h-1.5 rounded-full bg-current"></div>
+                              <div className="w-1.5 h-1.5 rounded-full bg-current"></div>
+                              <div className="w-1.5 h-1.5 rounded-full bg-current"></div>
+                              <div className="w-1.5 h-1.5 rounded-full bg-current"></div>
+                              <div className="w-1.5 h-1.5 rounded-full bg-current"></div>
+                              <div className="w-1.5 h-1.5 rounded-full bg-current"></div>
+                              <div className="w-1.5 h-1.5 rounded-full bg-current"></div>
+                              <div className="w-1.5 h-1.5 rounded-full bg-current"></div>
+                              <div className="w-1.5 h-1.5 rounded-full bg-current"></div>
                             </div>
-                            <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                              <motion.div initial={{ width: 0 }} animate={{ width: pct + "%" }} transition={{ duration: 0.6 }} className={"h-full rounded-full " + (pct >= 90 ? "bg-red-500" : pct >= 70 ? "bg-amber-500" : "bg-emerald-500")} />
-                            </div>
+                            {isSel ? (
+                              <CheckCircle2 className="w-5 h-5 text-blue-400" />
+                            ) : !isFull && (
+                              <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                            )}
                           </div>
-                          <div className={"text-2xl font-black " + (isFull ? "text-white/30" : isSel ? "text-violet-300" : "text-white")}>
-                            {zone.price > 0 ? ("Rs " + zone.price.toLocaleString("en-IN")) : "FREE"}
-                            <span className="text-xs font-normal text-white/30 ml-1">/ person</span>
+                          
+                          <h3 className="text-xl font-bold text-white mb-1.5">{zone.name}</h3>
+                          <p className="text-sm text-white/50 mb-6">{zone.description || "Standard event access"}</p>
+                          
+                          <div className="flex items-center justify-between">
+                            <div className={"text-xl font-black " + (isFull ? "text-white/30" : isSel ? "text-blue-300" : "text-white")}>
+                              {zone.price > 0 ? ("Rs " + zone.price.toLocaleString("en-IN")) : "FREE"}
+                              <span className="text-xs font-normal text-white/40 ml-1">/ person</span>
+                            </div>
+                            <div className="inline-block px-3 py-1 rounded bg-white/10 text-white/70 text-[10px] font-bold tracking-wider uppercase">
+                              {isFull ? "SOLD OUT" : `${available} LEFT`}
+                            </div>
                           </div>
                         </motion.div>
                       );
@@ -232,138 +443,75 @@ export default function SeatAllocationPage() {
                   </AnimatePresence>
                 </div>
               )}
-            </motion.div>
-          )}
-
-          {step === 'seats' && selectedZone && (
-            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold">2. Select Your Seats</h2>
-                <div className="text-sm font-semibold text-violet-400">
-                  {selectedSeats.length} / {quantity} Selected
-                </div>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-                
-                {/* Legend */}
-                <div className="flex items-center justify-center gap-6 mb-8 text-xs font-semibold uppercase tracking-wider text-white/50">
-                  <div className="flex items-center gap-2"><div className="w-5 h-5 rounded border border-white/20 bg-white/5" />Available</div>
-                  <div className="flex items-center gap-2"><div className="w-5 h-5 rounded bg-violet-600 border border-violet-500" />Selected</div>
-                  <div className="flex items-center gap-2"><div className="w-5 h-5 rounded bg-red-500/20 border border-red-500/30" />Booked</div>
-                </div>
-
-                {/* Stage Indicator */}
-                <div className="w-3/4 mx-auto h-8 border-b-2 border-white/20 rounded-[100%] shadow-[0_20px_20px_-15px_rgba(255,255,255,0.1)] flex items-end justify-center pb-2 mb-10 text-xs font-bold text-white/30 tracking-[0.2em] uppercase">STAGE / DJ</div>
-
-                {/* Seat Grid */}
-                <div className="overflow-x-auto pb-4">
-                  <div className="min-w-max flex flex-col gap-3 mx-auto items-center">
-                    {seatLayout.map((row) => (
-                      <div key={row.row} className="flex items-center gap-3">
-                        <div className="w-6 text-center text-xs font-bold text-white/30">{row.row}</div>
-                        <div className="flex gap-2">
-                          {row.seats.map(seat => {
-                            const isSelected = selectedSeats.includes(seat.id);
-                            return (
-                              <button key={seat.id} onClick={() => handleSeatClick(seat.id, seat.isSold)} disabled={seat.isSold}
-                                className={"relative w-10 h-10 rounded-lg flex items-center justify-center text-xs font-bold transition-all " + 
-                                  (seat.isSold ? "bg-red-500/10 border border-red-500/20 text-red-500/50 cursor-not-allowed" : 
-                                  isSelected ? "bg-violet-600 border border-violet-500 text-white shadow-lg shadow-violet-600/30 -translate-y-1" : 
-                                  "bg-white/[0.03] border border-white/10 text-white/60 hover:border-white/30 hover:text-white")}
-                              >
-                                {seat.isSold ? '✕' : seat.id.replace(/[A-Z]/, '')}
-                              </button>
-                            );
-                          })}
-                        </div>
-                        <div className="w-6 text-center text-xs font-bold text-white/30">{row.row}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-              </div>
-            </motion.div>
-          )}
+            </section>
+          </motion.div>
+          
         </div>
 
+        {/* RIGHT COLUMN: Order Summary Sidebar */}
         <div className="lg:col-span-1">
-          <div className="sticky top-24 rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden">
-            <div className="bg-violet-600/10 border-b border-violet-500/20 px-6 py-4">
-              <p className="text-xs text-white/40 uppercase tracking-wider font-semibold mb-1">Order Summary</p>
-              <h3 className="font-bold text-white truncate">{event.title}</h3>
-              <p className="text-xs text-white/40 mt-0.5">{fd}</p>
+          <div className="sticky top-24 rounded-2xl border border-white/10 bg-[#0A0A12] overflow-hidden shadow-2xl">
+            <div className="bg-blue-600/10 border-b border-blue-500/20 px-6 py-5">
+              <p className="text-[10px] text-white/50 uppercase tracking-widest font-bold mb-1.5">Order Summary</p>
+              <h3 className="text-lg font-bold text-white leading-snug">{event.title}</h3>
+              <p className="text-sm text-blue-400 mt-1">{fd}</p>
             </div>
-            <div className="px-6 py-5 space-y-6">
+            
+            <div className="px-6 py-6 space-y-6">
               
               {selectedZone ? (
-                <div className="rounded-xl bg-violet-500/10 border border-violet-500/20 px-4 py-3">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="text-xs text-violet-400 font-semibold mb-0.5 uppercase tracking-wider">Selected Zone</p>
-                      <p className="font-bold text-white">{selectedZone.name}</p>
-                    </div>
-                    {step === 'seats' && <button onClick={() => setStep('zone')} className="text-xs font-semibold text-violet-400 hover:text-violet-300 underline">Change</button>}
-                  </div>
-                  <p className="text-sm text-white/50 mt-1">{selectedZone.price > 0 ? ("Rs " + selectedZone.price.toLocaleString("en-IN") + " x " + quantity) : "Free Entry"}</p>
+                <div className="rounded-xl bg-blue-500/10 border border-blue-500/20 p-4">
+                  <p className="text-[10px] text-blue-400 font-bold uppercase tracking-widest mb-1">Selected Zone</p>
+                  <p className="font-bold text-lg text-white">{selectedZone.name}</p>
+                  <p className="text-sm text-white/60 mt-1">{selectedZone.price > 0 ? ("Rs " + selectedZone.price.toLocaleString("en-IN") + " x " + quantity) : "Free Entry"}</p>
                 </div>
               ) : (
-                <div className="rounded-xl bg-white/[0.03] border border-white/10 px-4 py-4 text-center">
-                  <p className="text-sm text-white/30">Select a zone to continue</p>
+                <div className="rounded-xl bg-white/[0.03] border border-white/5 p-6 text-center border-dashed">
+                  <p className="text-sm text-white/40">Select a zone to continue</p>
                 </div>
               )}
 
               {selectedZone && (
-                <div>
-                  <p className="text-xs text-white/40 uppercase tracking-wider font-semibold mb-3">Guests</p>
-                  <div className="flex items-center gap-4">
-                    <button onClick={() => { setQuantity(q => Math.max(1, q - 1)); setSelectedSeats([]); }} disabled={quantity <= 1} className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-violet-500 hover:text-violet-400 transition disabled:opacity-30 disabled:cursor-not-allowed"><Minus className="w-4 h-4" /></button>
-                    <span className="text-3xl font-light w-10 text-center">{quantity}</span>
-                    <button onClick={() => { const a = selectedZone.capacity - selectedZone.bookedCount; if (quantity >= a) { toast.warning("Only " + a + " spots available."); return; } setQuantity(q => Math.min(20, q + 1)); setSelectedSeats([]); }} className="w-10 h-10 rounded-full border border-violet-500 text-violet-400 flex items-center justify-center hover:bg-violet-500 hover:text-white transition"><Plus className="w-4 h-4" /></button>
+                <div className="space-y-3 text-sm border-t border-white/10 pt-6">
+                  <div className="flex justify-between text-white/60">
+                    <span>{selectedZone.name} x {quantity}</span>
+                    <span>Rs {(selectedZone.price * quantity).toLocaleString("en-IN")}</span>
                   </div>
-                  <p className="text-xs text-white/30 mt-2">{selectedZone.capacity - selectedZone.bookedCount} spots remaining</p>
-                </div>
-              )}
-
-              {selectedZone && step === 'seats' && (
-                <div className="rounded-xl bg-white/[0.04] border border-white/10 p-4">
-                  <p className="text-xs text-white/40 uppercase tracking-wider font-semibold mb-2">Seat Numbers</p>
-                  {selectedSeats.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {selectedSeats.map(id => (
-                        <div key={id} className="bg-violet-600 text-white text-xs font-bold px-2.5 py-1 rounded-md">{id}</div>
-                      ))}
+                  <div className="flex justify-between text-white/60">
+                    <span>Platform Fee ({commissionRate}%)</span>
+                    <span>Rs {platformFee.toLocaleString("en-IN")}</span>
+                  </div>
+                  <div className="flex justify-between items-end pt-4 border-t border-white/10 mt-2">
+                    <div>
+                      <span className="text-white font-bold text-base block">Total</span>
+                      <span className="text-[10px] text-[#D4AF37] font-bold tracking-widest uppercase mt-0.5 block">Incl. platform fee</span>
                     </div>
-                  ) : (
-                    <p className="text-sm text-white/30">Please select {quantity} seat{quantity > 1 ? 's' : ''} on the map.</p>
-                  )}
+                    <span className="text-2xl font-black text-white leading-none">Rs {totalPrice.toLocaleString("en-IN")}</span>
+                  </div>
                 </div>
               )}
 
-              {selectedZone && (
-                <div className="space-y-2 text-sm border-t border-white/10 pt-4">
-                  <div className="flex justify-between text-white/50"><span>{selectedZone.name} x {quantity}</span><span>Rs {(selectedZone.price * quantity).toLocaleString("en-IN")}</span></div>
-                  <div className="flex justify-between text-white/50"><span>Platform Fee ({commissionRate}%)</span><span>Rs {platformFee.toLocaleString("en-IN")}</span></div>
-                  <div className="flex justify-between font-bold text-white text-base pt-2 border-t border-white/10"><span>Total</span><span className="text-violet-300">Rs {totalPrice.toLocaleString("en-IN")}</span></div>
-                </div>
-              )}
-
-              {step === 'zone' ? (
-                <button id="choose-seats-btn" onClick={() => setStep('seats')} disabled={!selectedZone}
-                  className={"w-full h-14 rounded-2xl font-bold text-base flex items-center justify-center gap-2 transition-all duration-200 " + (!selectedZone ? "bg-white/10 text-white/30 cursor-not-allowed" : "bg-violet-600 hover:bg-violet-500 text-white shadow-lg shadow-violet-600/30 active:scale-[0.98]")}>
+              <div className="pt-2">
+                <button 
+                  onClick={() => setStep('seats')} 
+                  disabled={!selectedZone}
+                  className={"w-full h-14 rounded-xl font-bold text-base flex items-center justify-center gap-2 transition-all duration-200 " + 
+                    (!selectedZone 
+                      ? "bg-white/5 text-white/30 cursor-not-allowed border border-white/10" 
+                      : "bg-[#7C3AED] hover:bg-[#6D28D9] text-white shadow-[0_0_20px_rgba(124,58,237,0.3)] active:scale-[0.98]")}
+                >
                   Choose Seats <ArrowRight className="w-5 h-5" />
                 </button>
-              ) : (
-                <button id="confirm-selection-btn" onClick={handleProceedToPayment} disabled={selectedSeats.length !== quantity}
-                  className={"w-full h-14 rounded-2xl font-bold text-base flex items-center justify-center gap-2 transition-all duration-200 " + (selectedSeats.length !== quantity ? "bg-white/10 text-white/30 cursor-not-allowed" : "bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/30 active:scale-[0.98]")}>
-                  Proceed to Payment <ArrowRight className="w-5 h-5" />
-                </button>
-              )}
+              </div>
               
-              <p className="flex items-center justify-center gap-1.5 text-xs text-white/20"><Shield className="w-3.5 h-3.5" />Secured by Razorpay</p>
+              <div className="flex items-center justify-center gap-1.5 text-xs text-white/30 pt-2">
+                <Shield className="w-4 h-4" />
+                <span>Secured by Razorpay</span>
+              </div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );
