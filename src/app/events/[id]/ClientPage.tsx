@@ -144,17 +144,8 @@ export default function EventDetailsPage() {
       return;
     }
 
-    const selectedTicketNames = event?.tickets
-      ?.filter((t: any) => (ticketQuantities[t.id] || 0) > 0)
-      .map((t: any) => `${t.name} x${ticketQuantities[t.id]}`)
-      .join(', ') || 'General Admission';
-
-    bookEventMutation.mutate({
-      eventId: event?.id,
-      ticketType: selectedTicketNames,
-      totalAmount: totalPrice,
-      guestCount: totalTickets
-    });
+    // Navigate to real-time seat allocation page
+    router.push(`/dashboard/events/${event?.id}/seats`);
   };
 
   return (
