@@ -227,8 +227,7 @@ export default function WelcomeScreen() {
         queryFn: async () => {
             const res = await axiosInstance.get('/user/events?limit=20');
             return res.data?.data || [];
-        },
-        enabled: typeof window !== 'undefined',
+        }
     });
 
     const activeEvents = useMemo(() => {
