@@ -68,7 +68,11 @@ export default function EventDetailsPage() {
       images: fetchedEvent.images?.length > 0 ? fetchedEvent.images : [fetchedEvent.coverImage || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop'],
       about: fetchedEvent.description || 'Join us for an amazing event.',
       highlights: fetchedEvent.houseRules?.length > 0 
-        ? fetchedEvent.houseRules.map((rule: string) => ({ title: 'House Rule', desc: rule })) 
+        ? fetchedEvent.houseRules.map((rule: any) => {
+            // houseRules can be a plain string OR an object {title, detail, icon, _id}
+            if (typeof rule === 'string') return { title: 'House Rule', desc: rule };
+            return { title: rule.title || 'House Rule', desc: rule.detail || rule.desc || rule.description || '' };
+          })
         : [{ title: "What you'll experience", desc: 'An amazing night with great music and vibes.' }],
       tickets: uiTickets
     };
