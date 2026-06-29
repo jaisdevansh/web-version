@@ -415,7 +415,17 @@ export default function WelcomeScreen() {
                     </div>
 
                     {/* Events Grid */}
-                    {allGridEvents.length > 0 ? (
+                    {isLoading ? (
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6 gap-y-6 sm:gap-y-10 mt-2">
+                            {Array.from({ length: 10 }).map((_, i) => (
+                                <div key={i} className="group block">
+                                    <div className="relative w-full aspect-[3/4] rounded-xl sm:rounded-2xl overflow-hidden bg-white/5 mb-2 sm:mb-4 animate-pulse"></div>
+                                    <div className="h-4 sm:h-5 bg-white/5 rounded-md w-3/4 mb-1 sm:mb-2 animate-pulse"></div>
+                                    <div className="h-3 sm:h-4 bg-white/5 rounded-md w-1/2 animate-pulse"></div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : allGridEvents.length > 0 ? (
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6 gap-y-6 sm:gap-y-10 mt-2">
                             {allGridEvents.map((ev: any) => (
                                 <Link href={`/events/${ev.id}`} key={ev.id} className="group block cursor-pointer">
