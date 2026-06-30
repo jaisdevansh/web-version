@@ -16,6 +16,7 @@ export default function WriteReviewPage() {
   const [isAnon, setIsAnon] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [existingReviewId, setExistingReviewId] = useState<string | null>(null);
+  const [feedbackTags, setFeedbackTags] = useState<string[]>([]);
   
   const [overallRating, setOverallRating] = useState(0);
   const [hoverOverall, setHoverOverall] = useState(0);
@@ -59,6 +60,9 @@ export default function WriteReviewPage() {
             setMusicRating(review.scores?.music || 0);
             setOverallRating(Math.round(review.avgScore || 0));
             setIsAnon(Boolean(review.isAnonymous));
+            if (review.feedback) {
+              setFeedbackTags(review.feedback.split(', ').filter(Boolean));
+            }
           }
         } catch (error) {
           console.error("Failed to fetch existing review", error);
@@ -67,6 +71,12 @@ export default function WriteReviewPage() {
     };
     fetchExistingReview();
   }, [mounted, isAuthenticated, reviewingEvent.eventId]);
+
+  const toggleFeedbackTag = (tag: string) => {
+    setFeedbackTags(prev => 
+      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+    );
+  };
 
   const handleSubmit = async () => {
     if (!vibeRating || !serviceRating || !musicRating) {
@@ -88,6 +98,7 @@ export default function WriteReviewPage() {
           vibe: vibeRating,
           service: serviceRating,
           music: musicRating,
+          feedback: feedbackTags.join(', '),
           isAnonymous: isAnon
         });
         if (res.data?.success) {
@@ -101,6 +112,7 @@ export default function WriteReviewPage() {
           vibe: vibeRating,
           service: serviceRating,
           music: musicRating,
+          feedback: feedbackTags.join(', '),
           isAnonymous: isAnon
         });
         if (res.data?.success) {
@@ -266,6 +278,31 @@ export default function WriteReviewPage() {
                       </div>
                     </div>
 
+                  </div>
+                </div>
+
+                {/* What Stood Out */}
+                <div className="mb-8">
+                  <h3 className="text-[#a89b88] text-xs sm:text-sm font-bold tracking-[0.2em] mb-6 uppercase text-center font-serif">What Stood Out?</h3>
+                  <div className="flex flex-wrap justify-center gap-4">
+                    <button 
+                      onClick={() => toggleFeedbackTag("Fire Night")}
+                      className={`flex items-center px-5 py-3 border rounded-2xl text-base font-medium transition-all transform hover:-translate-y-1 ${feedbackTags.includes("Fire Night") ? 'bg-orange-500/20 border-orange-500/50 text-orange-400' : 'bg-[#12161f] border-white/5 text-white/80 hover:bg-white/10 hover:border-white/20'}`}
+                    >
+                      <span className="mr-2 text-orange-500">🔥</span> Fire Night
+                    </button>
+                    <button 
+                      onClick={() => toggleFeedbackTag("Banging Music")}
+                      className={`flex items-center px-5 py-3 border rounded-2xl text-base font-medium transition-all transform hover:-translate-y-1 ${feedbackTags.includes("Banging Music") ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : 'bg-[#12161f] border-white/5 text-white/80 hover:bg-white/10 hover:border-white/20'}`}
+                    >
+                      <Music className={`w-5 h-5 mr-2 ${feedbackTags.includes("Banging Music") ? 'text-blue-400' : 'text-blue-400'}`} /> Banging Music
+                    </button>
+                    <button 
+                      onClick={() => toggleFeedbackTag("Great Crowd")}
+                      className={`flex items-center px-5 py-3 border rounded-2xl text-base font-medium transition-all transform hover:-translate-y-1 ${feedbackTags.includes("Great Crowd") ? 'bg-yellow-500/20 border-yellow-500/50 text-yellow-400' : 'bg-[#12161f] border-white/5 text-white/80 hover:bg-white/10 hover:border-white/20'}`}
+                    >
+                      <Sparkles className={`w-5 h-5 mr-2 ${feedbackTags.includes("Great Crowd") ? 'text-yellow-400' : 'text-yellow-400'}`} /> Great Crowd
+                    </button>
                   </div>
                 </div>
 

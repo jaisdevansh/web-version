@@ -17,6 +17,13 @@ export default function HistoryPage() {
   const [reviewingEvent, setReviewingEvent] = useState<any>(null);
   const [isAnon, setIsAnon] = useState(true);
 
+  // Review states
+  const [vibe, setVibe] = useState(0);
+  const [service, setService] = useState(0);
+  const [music, setMusic] = useState(0);
+  const [feedbackTags, setFeedbackTags] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -44,6 +51,44 @@ export default function HistoryPage() {
   const pastBookings = bookings.filter((b: any) => 
     b.status === 'completed' || b.status === 'past' || b.status === 'cancelled'
   );
+
+  const toggleFeedbackTag = (tag: string) => {
+    setFeedbackTags(prev => 
+      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+    );
+  };
+
+  const handleSubmitReview = async () => {
+    if (!reviewingEvent) return;
+    if (vibe === 0 && service === 0 && music === 0) {
+      import('sonner').then(m => m.toast.error('Please rate at least one category.'));
+      return;
+    }
+    
+    setIsSubmitting(true);
+    try {
+      await axiosInstance.post('/user/reviews', {
+        eventId: reviewingEvent._id,
+        hostId: reviewingEvent.hostId?._id || reviewingEvent.hostId,
+        vibe: vibe || 1,
+        service: service || 1,
+        music: music || 1,
+        feedback: feedbackTags.join(', '),
+        isAnonymous: isAnon
+      });
+      import('sonner').then(m => m.toast.success('Review submitted successfully!'));
+      setReviewingEvent(null);
+      // Reset state
+      setVibe(0);
+      setService(0);
+      setMusic(0);
+      setFeedbackTags([]);
+    } catch (err: any) {
+      import('sonner').then(m => m.toast.error(err.response?.data?.message || 'Failed to submit review'));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="relative min-h-full">
@@ -122,7 +167,10 @@ export default function HistoryPage() {
                 </div>
 
                 <button 
-                  onClick={() => router.push(`/dashboard/review?title=${encodeURIComponent(booking.eventId?.title || 'General Access')}&image=${encodeURIComponent(booking.eventId?.coverImage || '')}&eventId=${booking.eventId?._id || ''}`)}
+                  onClick={() => {
+                    setReviewingEvent(booking.eventId);
+                    setVibe(0); setService(0); setMusic(0); setFeedbackTags([]);
+                  }}
                   className="w-full mt-auto py-3.5 bg-[#2e1a47] hover:bg-[#3b2359] text-[#d8b4fe] rounded-xl font-semibold text-sm transition-colors border border-purple-500/20"
                 >
                   Write a Review
@@ -211,7 +259,11 @@ export default function HistoryPage() {
                       </div>
                       <div className="flex justify-between max-w-sm mx-auto">
                         {[1, 2, 3, 4, 5].map((circle) => (
-                          <div key={circle} className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white/10 cursor-pointer hover:bg-white/10 hover:border-white/30 transition-all transform hover:scale-110" />
+                          <div 
+                            key={circle} 
+                            onClick={() => setVibe(circle)}
+                            className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 cursor-pointer transition-all transform hover:scale-110 ${vibe >= circle ? 'bg-yellow-400 border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.5)]' : 'border-white/10 hover:bg-white/10 hover:border-white/30'}`} 
+                          />
                         ))}
                       </div>
                     </div>
@@ -228,7 +280,11 @@ export default function HistoryPage() {
                       </div>
                       <div className="flex justify-between max-w-sm mx-auto">
                         {[1, 2, 3, 4, 5].map((circle) => (
-                          <div key={circle} className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white/10 cursor-pointer hover:bg-white/10 hover:border-white/30 transition-all transform hover:scale-110" />
+                          <div 
+                            key={circle} 
+                            onClick={() => setService(circle)}
+                            className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 cursor-pointer transition-all transform hover:scale-110 ${service >= circle ? 'bg-yellow-400 border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.5)]' : 'border-white/10 hover:bg-white/10 hover:border-white/30'}`} 
+                          />
                         ))}
                       </div>
                     </div>
@@ -245,7 +301,11 @@ export default function HistoryPage() {
                       </div>
                       <div className="flex justify-between max-w-sm mx-auto">
                         {[1, 2, 3, 4, 5].map((circle) => (
-                          <div key={circle} className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white/10 cursor-pointer hover:bg-white/10 hover:border-white/30 transition-all transform hover:scale-110" />
+                          <div 
+                            key={circle} 
+                            onClick={() => setMusic(circle)}
+                            className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 cursor-pointer transition-all transform hover:scale-110 ${music >= circle ? 'bg-yellow-400 border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.5)]' : 'border-white/10 hover:bg-white/10 hover:border-white/30'}`} 
+                          />
                         ))}
                       </div>
                     </div>
@@ -257,14 +317,23 @@ export default function HistoryPage() {
                 <div className="mb-8">
                   <h3 className="text-white/40 text-sm font-bold tracking-[0.2em] mb-6 uppercase text-center">What Stood Out?</h3>
                   <div className="flex flex-wrap justify-center gap-4">
-                    <button className="flex items-center px-5 py-3 bg-[#12161f] border border-white/5 hover:bg-white/10 hover:border-white/20 rounded-2xl text-white/80 text-base font-medium transition-all transform hover:-translate-y-1">
-                      <Flame className="w-5 h-5 mr-2 text-orange-500" /> Fire Night
+                    <button 
+                      onClick={() => toggleFeedbackTag("Fire Night")}
+                      className={`flex items-center px-5 py-3 border rounded-2xl text-base font-medium transition-all transform hover:-translate-y-1 ${feedbackTags.includes("Fire Night") ? 'bg-orange-500/20 border-orange-500/50 text-orange-400' : 'bg-[#12161f] border-white/5 text-white/80 hover:bg-white/10 hover:border-white/20'}`}
+                    >
+                      <Flame className={`w-5 h-5 mr-2 ${feedbackTags.includes("Fire Night") ? 'text-orange-400' : 'text-orange-500'}`} /> Fire Night
                     </button>
-                    <button className="flex items-center px-5 py-3 bg-[#12161f] border border-white/5 hover:bg-white/10 hover:border-white/20 rounded-2xl text-white/80 text-base font-medium transition-all transform hover:-translate-y-1">
-                      <Music className="w-5 h-5 mr-2 text-blue-400" /> Banging Music
+                    <button 
+                      onClick={() => toggleFeedbackTag("Banging Music")}
+                      className={`flex items-center px-5 py-3 border rounded-2xl text-base font-medium transition-all transform hover:-translate-y-1 ${feedbackTags.includes("Banging Music") ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : 'bg-[#12161f] border-white/5 text-white/80 hover:bg-white/10 hover:border-white/20'}`}
+                    >
+                      <Music className={`w-5 h-5 mr-2 ${feedbackTags.includes("Banging Music") ? 'text-blue-400' : 'text-blue-400'}`} /> Banging Music
                     </button>
-                    <button className="flex items-center px-5 py-3 bg-[#12161f] border border-white/5 hover:bg-white/10 hover:border-white/20 rounded-2xl text-white/80 text-base font-medium transition-all transform hover:-translate-y-1">
-                      <Sparkles className="w-5 h-5 mr-2 text-yellow-400" /> Great Crowd
+                    <button 
+                      onClick={() => toggleFeedbackTag("Great Crowd")}
+                      className={`flex items-center px-5 py-3 border rounded-2xl text-base font-medium transition-all transform hover:-translate-y-1 ${feedbackTags.includes("Great Crowd") ? 'bg-yellow-500/20 border-yellow-500/50 text-yellow-400' : 'bg-[#12161f] border-white/5 text-white/80 hover:bg-white/10 hover:border-white/20'}`}
+                    >
+                      <Sparkles className={`w-5 h-5 mr-2 ${feedbackTags.includes("Great Crowd") ? 'text-yellow-400' : 'text-yellow-400'}`} /> Great Crowd
                     </button>
                   </div>
                 </div>
@@ -274,10 +343,11 @@ export default function HistoryPage() {
               {/* Sticky Footer */}
               <div className="p-8 border-t border-white/5 bg-[#080b12]/90 backdrop-blur-xl shrink-0">
                 <button 
-                  className="w-full py-5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl font-bold text-lg shadow-[0_0_40px_rgba(59,130,246,0.3)] transition-all transform hover:scale-[1.02]"
-                  onClick={() => setReviewingEvent(null)}
+                  disabled={isSubmitting}
+                  className={`w-full py-5 rounded-2xl font-bold text-lg transition-all transform hover:scale-[1.02] ${isSubmitting ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-[0_0_40px_rgba(59,130,246,0.3)]'}`}
+                  onClick={handleSubmitReview}
                 >
-                  Submit Elite Review
+                  {isSubmitting ? <Loader2 className="w-6 h-6 animate-spin mx-auto" /> : 'Submit Elite Review'}
                 </button>
               </div>
 
