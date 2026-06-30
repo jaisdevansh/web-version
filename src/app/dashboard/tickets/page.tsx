@@ -42,8 +42,9 @@ export default function TicketsPage() {
   const bookings = Array.isArray(bookingsData) ? bookingsData : [];
   
   const filteredBookings = bookings.filter((b: any) => {
-    if (activeTab === "Upcoming") return b.status === 'upcoming' || b.status === 'checked-in';
-    if (activeTab === "Past") return b.status === 'completed' || b.status === 'past' || b.status === 'cancelled';
+    const status = b.status?.toLowerCase();
+    if (activeTab === "Upcoming") return ['upcoming', 'checked-in', 'approved', 'confirmed'].includes(status);
+    if (activeTab === "Past") return ['completed', 'past', 'cancelled'].includes(status);
     return true; // My Orders
   });
 
@@ -122,11 +123,11 @@ export default function TicketsPage() {
               >
                 <div className="flex justify-between items-center mb-6">
                   <span className={`text-[10px] font-bold tracking-widest px-3 py-1.5 rounded-md uppercase ${
-                    booking.status === 'upcoming' ? 'bg-[#064e3b]/30 text-[#34d399]' : 
-                    booking.status === 'completed' ? 'bg-blue-900/30 text-blue-400' :
+                    ['upcoming', 'checked-in', 'approved', 'confirmed'].includes(booking.status?.toLowerCase()) ? 'bg-[#064e3b]/30 text-[#34d399]' : 
+                    ['completed', 'past'].includes(booking.status?.toLowerCase()) ? 'bg-blue-900/30 text-blue-400' :
                     'bg-red-900/30 text-red-400'
                   }`}>
-                    {booking.status === 'upcoming' ? 'Approved' : booking.status}
+                    {['upcoming', 'checked-in', 'approved', 'confirmed'].includes(booking.status?.toLowerCase()) ? 'Approved' : booking.status}
                   </span>
                   <span className="text-white/30 text-xs font-mono">#{booking.ticketNumber?.substring(0,8) || booking._id.substring(0,8).toUpperCase()}</span>
                 </div>

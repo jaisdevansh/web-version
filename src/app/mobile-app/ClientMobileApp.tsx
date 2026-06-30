@@ -58,8 +58,8 @@ export default function DashboardPage() {
     if (!mounted || !isAuthenticated) return null;
 
     const bookings = Array.isArray(bookingsData) ? bookingsData : [];
-    const upcomingBookings = bookings.filter((b: any) => b.status === 'upcoming' || b.status === 'checked-in');
-    const pastBookings = bookings.filter((b: any) => b.status === 'completed' || b.status === 'past');
+    const upcomingBookings = bookings.filter((b: any) => ['upcoming', 'checked-in', 'approved', 'confirmed'].includes(b.status?.toLowerCase()));
+    const pastBookings = bookings.filter((b: any) => ['completed', 'past'].includes(b.status?.toLowerCase()));
 
     const renderHomeTab = () => {
         const filters = ["All", "Delhi", "Mumbai", "Bengaluru", "Goa", "Pune"];

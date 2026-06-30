@@ -48,12 +48,12 @@ export default function MyBookingsPage() {
             <Card key={booking._id} className="bg-card hover:border-primary/50 transition-colors flex flex-col overflow-hidden relative">
               <div className="absolute top-4 right-4 z-10">
                 <span className={`px-2 py-1 text-xs font-bold rounded uppercase tracking-wider ${
-                  booking.status === 'upcoming' ? 'bg-primary/20 text-primary' :
+                  ['upcoming', 'approved', 'confirmed'].includes(booking.status?.toLowerCase()) ? 'bg-primary/20 text-primary' :
                   booking.status === 'checked-in' ? 'bg-green-500/20 text-green-500' :
                   booking.status === 'completed' ? 'bg-secondary text-muted-foreground' :
                   'bg-destructive/20 text-destructive'
                 }`}>
-                  {booking.status}
+                  {['upcoming', 'approved', 'confirmed'].includes(booking.status?.toLowerCase()) ? 'Approved' : booking.status}
                 </span>
               </div>
               <div className="h-32 w-full bg-muted relative">
@@ -89,7 +89,7 @@ export default function MyBookingsPage() {
                   <div className="font-bold text-lg">
                     ₹{booking.pricePaid}
                   </div>
-                  {(booking.status === 'upcoming' || booking.status === 'checked-in') && (
+                  {['upcoming', 'approved', 'confirmed', 'checked-in'].includes(booking.status?.toLowerCase()) && (
                     <Link href={`/events/live/${booking.eventId?._id}`}>
                       <Button variant="ghost" size="sm" className="text-primary hover:text-primary/90 hover:bg-primary/10">
                         Live Hub <ChevronRight className="w-4 h-4 ml-1" />
