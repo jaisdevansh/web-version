@@ -281,7 +281,7 @@ export default function SeatAllocationPage() {
                     className={"w-full h-14 rounded-xl font-bold text-base flex items-center justify-center gap-2 transition-all duration-200 " + 
                       (selectedSeats.length !== quantity 
                         ? "bg-white/5 text-white/30 cursor-not-allowed border border-white/10" 
-                        : "bg-[#7C3AED] hover:bg-[#6D28D9] text-white shadow-[0_0_20px_rgba(124,58,237,0.3)] active:scale-[0.98]")}
+                        : "bg-blue-600 hover:bg-blue-700 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)] active:scale-[0.98]")}
                   >
                     Complete Booking <ArrowRight className="w-5 h-5" />
                   </button>
@@ -498,7 +498,7 @@ export default function SeatAllocationPage() {
                   className={"w-full h-14 rounded-xl font-bold text-base flex items-center justify-center gap-2 transition-all duration-200 " + 
                     (!selectedZone 
                       ? "bg-white/5 text-white/30 cursor-not-allowed border border-white/10" 
-                      : "bg-[#7C3AED] hover:bg-[#6D28D9] text-white shadow-[0_0_20px_rgba(124,58,237,0.3)] active:scale-[0.98]")}
+                      : "bg-blue-600 hover:bg-blue-700 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)] active:scale-[0.98]")}
                 >
                   Choose Seats <ArrowRight className="w-5 h-5" />
                 </button>

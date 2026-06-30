@@ -60,10 +60,20 @@ export const initiateRazorpayPayment = async (
     }
 
     const order = orderRes.data.data;
+    
+    // Debugging: Let's see exactly what the backend is returning
+    console.log("Backend Order Response:", orderRes.data);
+    
+    // Sometimes backend sends it as keyId instead of key_id, let's check both
+    const finalKey = orderRes.data.key_id || orderRes.data.keyId || orderRes.data.data?.key_id || RAZORPAY_KEY_ID;
+    if (!finalKey) {
+      console.error("Razorpay key is missing! Please set NEXT_PUBLIC_RAZORPAY_KEY_ID in .env");
+      return { success: false, error: 'Payment gateway configuration is missing on the client. (Razorpay Key ID not found)' };
+    }
 
     return new Promise((resolve) => {
       const options = {
-        key: orderRes.data.key_id || RAZORPAY_KEY_ID,
+        key: finalKey,
         amount: order.amount,
         currency: 'INR',
         name: 'Entry Club',

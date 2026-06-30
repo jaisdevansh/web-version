@@ -1,94 +1,16 @@
-'use client';
+const fs = require('fs');
 
-import React, { useState, useRef, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Calendar, Clock, ChevronRight, ChevronLeft, Minus, Plus, Diamond, Sparkles, Play, Square, Ticket, Users, Zap, CheckCircle2, ArrowRight, Shield, RefreshCw, Music } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import Image from 'next/image';
-import dynamic from 'next/dynamic';
+const path = 'src/app/events/[id]/ClientPage.tsx';
+let code = fs.readFileSync(path, 'utf8');
 
-const LoginModal = dynamic(() => import('@/components/shared/LoginModal').then(mod => mod.LoginModal), { ssr: false });
-import { useAuthStore } from '@/store/useAuthStore';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import axiosInstance from '@/lib/axios';
-import { toast } from 'sonner';
+// 1. Update imports
+code = code.replace(
+  "import { MapPin, Calendar, Clock, ChevronRight, Minus, Plus, Diamond, Sparkles, Play, Square, Ticket } from 'lucide-react';",
+  "import { MapPin, Calendar, Clock, ChevronRight, Minus, Plus, Diamond, Sparkles, Play, Square, Ticket, Users, Zap, CheckCircle2, ArrowRight, Shield, RefreshCw, Music } from 'lucide-react';"
+);
 
-export default function EventDetailsPage() {
-  const params = useParams();
-  const router = useRouter();
-  const eventId = params.id as string;
-  
-  const { data: fetchedEvent, isLoading } = useQuery({
-    queryKey: ['eventFull', eventId],
-    queryFn: async () => {
-      const res = await axiosInstance.get(`/user/events/${eventId}/full`);
-      return res.data?.data || null;
-    },
-    staleTime: 60000,
-  });
-
-  const event = React.useMemo(() => {
-    if (!fetchedEvent) return null;
-    
-    // Combine tickets and floors into one array for the UI selection
-    const rawTickets = fetchedEvent.tickets || [];
-    const rawFloors = fetchedEvent.floors || [];
-    
-    const uiTickets = [
-      ...rawTickets.map((t: any) => ({
-        id: t._id || t.id || Math.random().toString(),
-        name: t.name || t.type || 'Ticket',
-        price: t.price || 0,
-        desc: t.description ? [t.description] : ['General Admission']
-      })),
-      ...rawFloors.map((f: any) => ({
-        id: f._id || f.id || Math.random().toString(),
-        name: f.name || f.type || 'Table',
-        price: f.price || 0,
-        desc: ['Reserved Table', `Capacity: ${f.capacity || 4}`]
-      }))
-    ];
-
-    let minPrice = 0;
-    if (uiTickets.length > 0) {
-        const prices = uiTickets.map(t => t.price).filter(p => p > 0);
-        minPrice = prices.length > 0 ? Math.min(...prices) : 0;
-    }
-
-    return {
-      id: fetchedEvent._id,
-      title: fetchedEvent.title,
-      date: new Date(fetchedEvent.date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }),
-      time: fetchedEvent.startTime,
-      endTime: fetchedEvent.endTime || 'TBA',
-      ticketsLive: fetchedEvent.bookingOpenDate ? new Date(fetchedEvent.bookingOpenDate).toLocaleDateString('en-GB', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Available Now',
-      location: fetchedEvent.locationData?.address || fetchedEvent.venueName || 'Secret Location',
-      distance: '',
-      price: minPrice > 0 ? `₹${minPrice}` : 'Free',
-      image: fetchedEvent.coverImage || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop',
-      images: fetchedEvent.images?.length > 0 ? fetchedEvent.images : [fetchedEvent.coverImage || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop'],
-      about: fetchedEvent.description || 'Join us for an amazing event.',
-      hostName: fetchedEvent.hostId?.name || (fetchedEvent.hostId?.firstName ? `${fetchedEvent.hostId.firstName} ${fetchedEvent.hostId.lastName || ''}`.trim() : 'Event Organizer'),
-      hostImage: fetchedEvent.hostId?.profileImage || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop',
-      highlights: fetchedEvent.houseRules?.length > 0 
-        ? fetchedEvent.houseRules.map((rule: any) => {
-            // houseRules can be a plain string OR an object {title, detail, icon, _id}
-            if (typeof rule === 'string') return { title: 'House Rule', desc: rule };
-            return { title: rule.title || 'House Rule', desc: rule.detail || rule.desc || rule.description || '' };
-          })
-        : [{ title: "What you'll experience", desc: 'An amazing night with great music and vibes.' }],
-      tickets: uiTickets
-    };
-  }, [fetchedEvent]);
-  
-  const { isAuthenticated } = useAuthStore();
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [selectedZone, setSelectedZone] = useState<any | null>(null);
-  const [quantity, setQuantity] = useState(1);
-  const [step, setStep] = useState<'zone' | 'seats'>('zone');
-  const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
-
+// 2. Add zones and seatsArray to React.useMemo
+const zonesSeatsCode = `
   const zones = React.useMemo(() => {
     if (!fetchedEvent) return [];
     const floors = fetchedEvent.floors || [];
@@ -116,61 +38,24 @@ export default function EventDetailsPage() {
     }
     return arr;
   }, [selectedZone]);
+`;
 
-  
-  const eventImages = React.useMemo(() => event?.images || [event?.image], [event?.images, event?.image]);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+// 3. Replace state and add handlers
+const oldStateCode = `  const [ticketQuantities, setTicketQuantities] = useState<Record<string, number>>({});`;
+const newStateCode = `  const [selectedZone, setSelectedZone] = useState<any | null>(null);
+  const [quantity, setQuantity] = useState(1);
+  const [step, setStep] = useState<'zone' | 'seats'>('zone');
+  const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+` + zonesSeatsCode;
 
-  useEffect(() => {
-    if (!eventImages || eventImages.length <= 1) return;
-    const timer = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % eventImages.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [eventImages]);
+code = code.replace(oldStateCode, newStateCode);
 
-  const ticketsRef = useRef<HTMLDivElement>(null);
-
-  const bookEventMutation = useMutation({
-    mutationFn: async (payload: any) => {
-      // For REAL events, connect to the actual backend API
-      const res = await axiosInstance.post('/user/events/book', payload);
-      return res.data;
-    },
-    onSuccess: () => {
-      toast.success('Successfully booked tickets!');
-      router.push('/dashboard/tickets');
-    },
-    onError: (err: any) => {
-      console.error(err);
-      toast.error(err.response?.data?.message || 'Failed to book event.');
-    }
-  });
-
-  const handleSelectZone = React.useCallback((zone: any) => {
+// 4. Replace methods
+const oldMethodsRegex = /const handleQuantityChange = [\s\S]*?router\.push\(\`\/dashboard\/events\/\$\{event\?\.id\}\/seats\`\);\n  };/;
+const newMethodsCode = `  const handleSelectZone = React.useCallback((zone: any) => {
     if (zone.capacity - zone.bookedCount <= 0) return;
     setSelectedZone(zone); setQuantity(1); setSelectedSeats([]); setStep('zone');
   }, []);
-
-  if (isLoading) {
-    return <div className="min-h-screen flex flex-col items-center justify-center bg-[#050505] text-white">
-      <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-      <h1 className="text-xl font-medium text-white/60">Loading Event Details...</h1>
-    </div>;
-  }
-
-  if (!event) {
-    return <div className="min-h-screen flex flex-col items-center justify-center bg-[#050505] text-white">
-      <h1 className="text-2xl font-bold">Event not found</h1>
-      <Button onClick={() => router.push('/')} className="mt-4">Go Home</Button>
-    </div>;
-  }
-
-  const scrollToTickets = () => {
-    ticketsRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-
 
   const handleSeatClick = (seatId: string, isSold: boolean) => {
     if (isSold) {
@@ -211,215 +96,14 @@ export default function EventDetailsPage() {
       seats: selectedSeats.join(','),
     });
     router.push('/dashboard/events/' + eventId + '/payment?' + params.toString());
-  };
+  };`;
 
-  return (
-    <div className="min-h-screen bg-[#050505] text-white pb-20 font-sans">
-      {/* Header Banner */}
-      <div className="w-full max-w-6xl mx-auto pt-24 md:pt-28 px-4 md:px-8">
-        <div className="mb-6">
-          <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white mb-2">{event.title}</h1>
-          <div className="flex flex-wrap items-center text-sm md:text-base font-semibold text-blue-400 space-x-2">
-            <span>{event.date}</span>
-            <span className="text-white/20">|</span>
-            <span className="text-white/60">{event.location.split(' | ')[0]}</span>
-          </div>
-        </div>
+code = code.replace(oldMethodsRegex, newMethodsCode);
 
-        <div className="w-full aspect-[21/9] md:aspect-[3/1] relative rounded-3xl overflow-hidden shadow-2xl bg-black group">
-          <div className="absolute inset-0 z-0">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentImageIndex}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1.5, ease: "easeInOut" }}
-                className="absolute inset-0 z-0"
-              >
-                {/* Edge Blur Background */}
-                <Image 
-                  src={eventImages[currentImageIndex] || ''}
-                  alt="Background Blur"
-                  fill
-                  priority
-                  className="object-cover opacity-40 blur-xl scale-110"
-                />
-                {/* Main Poster */}
-                <Image 
-                  src={eventImages[currentImageIndex] || ''} 
-                  alt={event.title} 
-                  fill
-                  priority
-                  className="object-cover md:object-contain drop-shadow-2xl z-10" 
-                />
-              </motion.div>
-            </AnimatePresence>
-          </div>
+// 5. Replace Tickets Section with new layout
+const oldTicketsSectionRegex = /\{\/\* Tickets Section \*\/\}(.|\n)*?\{\/\* Bottom Floating Bar for Checkout \*\/\}/m;
 
-          {/* Dots Indicator */}
-          {eventImages.length > 1 && (
-            <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-20">
-              {eventImages.map((_: string, idx: number) => (
-                <div 
-                  key={idx} 
-                  className={`h-1.5 rounded-full transition-all duration-500 ${idx === currentImageIndex ? 'w-8 bg-white' : 'w-2 bg-white/40'}`} 
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Main Content Grid */}
-      <div className="w-full max-w-6xl mx-auto px-4 md:px-8 py-12 grid grid-cols-1 lg:grid-cols-3 gap-12">
-        
-        {/* Left Column: Details */}
-        <div className="lg:col-span-2 space-y-12">
-          {/* Host Section */}
-          <section className="space-y-4">
-            <h2 className="text-2xl font-bold text-white">Hosted By</h2>
-            <div className="flex items-center space-x-4 bg-[#111111] border border-white/10 rounded-2xl p-5 shadow-xl">
-              <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-blue-500/30 shrink-0">
-                <Image src={event.hostImage} alt={event.hostName} fill className="object-cover" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-bold text-lg text-white">{event.hostName}</h3>
-                <p className="text-sm text-white/50">Event Organizer</p>
-              </div>
-              <Button variant="outline" className="hidden sm:flex rounded-xl border-white/10 hover:bg-white/5 text-white">
-                Follow
-              </Button>
-            </div>
-          </section>
-
-          {/* About Section */}
-          <section className="space-y-4">
-            <h2 className="text-2xl font-bold text-white">About</h2>
-            <div className="text-white/60 leading-relaxed font-light">
-              <p className="mb-4 text-white/80 font-medium">Join us for {event.title}</p>
-              <p>{event.about}</p>
-            </div>
-            <button className="text-blue-400 font-bold text-sm hover:underline mt-2">Read more</button>
-          </section>
-
-          {/* Event Info Grid (Real Data) */}
-          <section className="space-y-4 pt-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-[#111111] border border-white/10 rounded-2xl p-5 shadow-xl flex flex-col justify-center">
-                <div className="flex items-center space-x-2 text-white/40 mb-2 text-[10px] tracking-widest font-bold uppercase">
-                  <Calendar className="w-4 h-4 text-purple-400" />
-                  <span>Event Date</span>
-                </div>
-                <div className="text-white font-bold text-lg">
-                  {event.date}
-                </div>
-              </div>
-              
-              <div className="bg-[#111111] border border-white/10 rounded-2xl p-5 shadow-xl flex flex-col justify-center">
-                <div className="flex items-center space-x-2 text-white/40 mb-2 text-[10px] tracking-widest font-bold uppercase">
-                  <div className="w-5 h-5 rounded-md bg-emerald-500/20 flex items-center justify-center">
-                    <Play className="w-2.5 h-2.5 text-emerald-500 fill-emerald-500 ml-0.5" />
-                  </div>
-                  <span>Starts</span>
-                </div>
-                <div className="text-white font-bold text-lg">
-                  {event.time}
-                </div>
-              </div>
-
-              <div className="bg-[#111111] border border-white/10 rounded-2xl p-5 shadow-xl flex flex-col justify-center">
-                <div className="flex items-center space-x-2 text-white/40 mb-2 text-[10px] tracking-widest font-bold uppercase">
-                  <div className="w-5 h-5 rounded-md bg-red-500/20 flex items-center justify-center">
-                    <Square className="w-2.5 h-2.5 text-red-500 fill-red-500" />
-                  </div>
-                  <span>Ends</span>
-                </div>
-                <div className="text-white font-bold text-lg">
-                  {event.endTime}
-                </div>
-              </div>
-
-              <div className="bg-[#111111] border border-white/10 rounded-2xl p-5 shadow-xl flex flex-col justify-center">
-                <div className="flex items-center space-x-2 text-white/40 mb-2 text-[10px] tracking-widest font-bold uppercase">
-                  <div className="w-5 h-5 rounded-md bg-emerald-500/20 flex items-center justify-center">
-                    <Ticket className="w-3 h-3 text-emerald-500" />
-                  </div>
-                  <span>Tickets Live Since</span>
-                </div>
-                <div className="text-white font-bold text-sm md:text-base">
-                  {event.ticketsLive}
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Highlights Section */}
-          <section className="space-y-4 pt-4">
-            <h2 className="text-2xl font-bold text-white">Highlights</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {event.highlights.map((hi: { title: string; desc: string }, i: number) => (
-                <div key={i} className="border border-white/10 rounded-2xl p-5 bg-[#111111] shadow-xl hover:bg-white/5 transition-all">
-                  <div className="flex items-center space-x-2 mb-2">
-                    {i === 0 ? <Diamond className="w-5 h-5 text-blue-400" /> : <Sparkles className="w-5 h-5 text-blue-400" />}
-                    <h3 className="font-bold text-white">{hi.title}</h3>
-                  </div>
-                  <p className="text-white/50 text-sm leading-relaxed font-light">{hi.desc}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-        </div>
-
-        {/* Right Column: Sticky Sidebar */}
-        <div className="lg:col-span-1 relative">
-          <div className="sticky top-28 bg-[#111111] border border-white/10 shadow-2xl rounded-3xl p-6 space-y-6">
-            
-            <div className="space-y-4">
-              <div 
-                className="flex items-start space-x-4 cursor-pointer group hover:bg-white/[0.03] p-3 -m-3 rounded-2xl transition-all"
-                onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`, '_blank')}
-                title="View on Google Maps"
-              >
-                <div className="p-2 bg-white/5 rounded-full shrink-0 border border-white/10 group-hover:bg-blue-600/20 group-hover:border-blue-500/30 transition-all">
-                  <MapPin className="w-5 h-5 text-white/60 group-hover:text-blue-400 transition-colors" />
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-bold text-white group-hover:text-blue-400 transition-colors">{event.location.split(' | ')[0]}</h4>
-                  <p className="text-sm text-white/50">{event.location.split(' | ')[1] || event.distance}</p>
-                </div>
-                <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-blue-400 ml-auto mt-1 transition-colors group-hover:translate-x-1" />
-              </div>
-
-              <div className="h-px w-full bg-white/10" />
-
-              <div className="flex items-start space-x-4">
-                <div className="p-2 bg-white/5 rounded-full shrink-0 border border-white/10">
-                  <Calendar className="w-5 h-5 text-white/60" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-white">Gates open at {event.time || 'TBA'}</h4>
-                  <p className="text-sm text-blue-400 hover:underline cursor-pointer">View full schedule & timeline</p>
-                </div>
-                <ChevronRight className="w-4 h-4 text-white/20 ml-auto mt-1" />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-4">
-              <div className="text-2xl font-black text-white">
-                {event.price} <span className="text-sm font-medium text-white/40 line-through tracking-normal ml-1"></span>
-                <span className="text-sm font-medium text-white/40 block -mt-1">{event.price !== 'Free' ? 'onwards' : ''}</span>
-              </div>
-              <Button onClick={scrollToTickets} className="h-12 px-8 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg">
-                Book Tickets
-              </Button>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      {/* Zone / Seat Selection Section */}
+const newTicketsJSX = `{/* Zone / Seat Selection Section */}
       <div ref={ticketsRef} className="w-full bg-[#0A0A0A] border-t border-white/10 pt-16 pb-32 mt-10">
         <div className="max-w-6xl mx-auto px-4 md:px-8">
           
@@ -531,7 +215,7 @@ export default function EventDetailsPage() {
                                     <span className="text-xs font-normal text-white/40 ml-1">/ person</span>
                                   </div>
                                   <div className="inline-block px-3 py-1 rounded bg-white/10 text-white/70 text-[10px] font-bold tracking-wider uppercase">
-                                    {isFull ? "SOLD OUT" : `${available} LEFT`}
+                                    {isFull ? "SOLD OUT" : \`\${available} LEFT\`}
                                   </div>
                                 </div>
                               </motion.div>
@@ -721,7 +405,7 @@ export default function EventDetailsPage() {
                         className={"w-full h-14 rounded-xl font-bold text-base flex items-center justify-center gap-2 transition-all duration-200 " + 
                           (selectedSeats.length !== quantity 
                             ? "bg-white/5 text-white/30 cursor-not-allowed border border-white/10" 
-                            : "bg-blue-600 hover:bg-blue-700 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)] active:scale-[0.98]")}
+                            : "bg-[#7C3AED] hover:bg-[#6D28D9] text-white shadow-[0_0_20px_rgba(124,58,237,0.3)] active:scale-[0.98]")}
                       >
                         Complete Booking <ArrowRight className="w-5 h-5" />
                       </button>
@@ -742,16 +426,13 @@ export default function EventDetailsPage() {
 
         </div>
       </div>
-      {/* Bottom Floating Bar for Checkout */}
-      <AnimatePresence>
-        
-      </AnimatePresence>
+      {/* Bottom Floating Bar for Checkout */}`;
 
-      <LoginModal 
-        isOpen={isLoginModalOpen} 
-        onClose={() => setIsLoginModalOpen(false)} 
-        onSuccess={() => toast.success(`Logged in successfully! Added ${quantity} tickets to booking.`)}
-      />
-    </div>
-  );
-}
+code = code.replace(oldTicketsSectionRegex, newTicketsJSX);
+
+// Also remove old Floating Bar
+const floatingBarRegex = /\{totalTickets > 0 && \(\s*<motion\.div(.|\n)*?<\/motion\.div>\s*\)\}/m;
+code = code.replace(floatingBarRegex, '');
+
+fs.writeFileSync(path, code);
+console.log('Successfully updated ClientPage.tsx');

@@ -219,9 +219,7 @@ HeroCarousel.displayName = 'HeroCarousel';
 export default function WelcomeScreen() {
     const [isMounted, setIsMounted] = useState(false);
 
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
+    // UseEffect moved below requestLocation
 
     const { data: fetchedEvents, isLoading } = useQuery({
         queryKey: ['publicEvents'],
@@ -283,6 +281,19 @@ export default function WelcomeScreen() {
             setIsLocating(false);
         }
     }, [setLocation]);
+
+    useEffect(() => {
+        setIsMounted(true);
+        // Request location on first load if not already requested
+        const hasRequestedLocation = sessionStorage.getItem('locationRequested');
+        if (!hasRequestedLocation) {
+            sessionStorage.setItem('locationRequested', 'true');
+            // Small delay to ensure smooth loading before prompting
+            setTimeout(() => {
+                requestLocation();
+            }, 1000);
+        }
+    }, [requestLocation]);
 
     const allGridEvents = useMemo(() => {
         if (!activeEvents || activeEvents.length === 0) return [];

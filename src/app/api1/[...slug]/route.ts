@@ -189,8 +189,7 @@ async function handler(req: NextRequest) {
     }
   }
 
-  const isDev = process.env.NODE_ENV === 'development';
-  const baseUrl = isDev ? 'http://127.0.0.1:3001' : (process.env.NEXT_PUBLIC_API_URL || 'https://party.stayin.in/api1');
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://party.stayin.in/api1';
   const targetUrl = `${baseUrl}${path}${search}`;
   const headers = new Headers(req.headers);
   
@@ -213,6 +212,10 @@ async function handler(req: NextRequest) {
       headers.set('Authorization', `Bearer ${match[1]}`);
     }
   }
+  
+  // CRITICAL: Delete cookie header so backend doesn't read a stale `accessToken` cookie
+  // and ignore our valid Authorization header.
+  headers.delete('cookie');
   
   const init: RequestInit = { method: req.method, headers, redirect: 'manual', cache: 'no-store' };
   if (req.method !== 'GET' && req.method !== 'HEAD') init.body = await req.arrayBuffer();
