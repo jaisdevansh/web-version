@@ -64,7 +64,7 @@ export default function AllEventsList() {
                     description: 'Please enable location access in your browser settings to use distance filters.',
                     action: {
                         label: 'Retry',
-                        onClick: () => handleGetLocation()
+                        onClick: () => requestLocation()
                     }
                 });
                 setIsLocating(false);

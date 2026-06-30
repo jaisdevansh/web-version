@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import axiosInstance from '@/lib/axios';
-import { initiateRazorpayPayment } from '@/services/razorpay';
+import { initiateRazorpayPayment, loadRazorpayScript } from '@/services/razorpay';
 import type { PaymentOptions, BookingData } from '@/services/razorpay';
 import { useAuthStore } from '@/store/useAuthStore';
 

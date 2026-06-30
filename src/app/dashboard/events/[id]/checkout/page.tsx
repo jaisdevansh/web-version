@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
-import { initiateRazorpayPayment, PaymentOptions, BookingData } from '@/services/razorpay';
+import { initiateRazorpayPayment, loadRazorpayScript, PaymentOptions, BookingData } from '@/services/razorpay';
 import { Loader2, Plus, Minus, CreditCard, Ticket } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -29,6 +29,9 @@ export default function CheckoutPage() {
   });
 
   useEffect(() => {
+    // Preload Razorpay script to make payment process faster
+    loadRazorpayScript();
+    
     if (event?.tickets?.length > 0 && !selectedTicket) {
       setSelectedTicket(event.tickets[0]);
     } else if (event?.floors?.length > 0 && !selectedTicket) {

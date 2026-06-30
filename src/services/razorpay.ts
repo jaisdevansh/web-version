@@ -24,7 +24,7 @@ export interface BookingData {
   hostId?: string;
 }
 
-const loadRazorpayScript = () => {
+export const loadRazorpayScript = () => {
   return new Promise((resolve) => {
     if ((window as any).Razorpay) {
       resolve(true);
