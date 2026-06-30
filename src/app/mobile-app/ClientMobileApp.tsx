@@ -204,7 +204,7 @@ export default function DashboardPage() {
                             </div>
                             
                             <div className="flex justify-between items-center pt-4 border-t border-white/5">
-                                <p className="text-white/80 font-medium text-[15px]">Price: <span className="font-bold">₹{booking.totalAmount || 0}</span></p>
+                                <p className="text-white/80 font-medium text-[15px]">Price: <span className="font-bold">₹{booking.pricePaid || 0}</span></p>
                                 <button className="text-[#3b82f6] text-[14px] font-medium flex items-center">
                                     View Details <ArrowRight className="w-4 h-4 ml-1" />
                                 </button>
@@ -239,7 +239,7 @@ export default function DashboardPage() {
                             </div>
                             
                             <div className="flex justify-between items-center pt-4 border-t border-white/5 mb-4">
-                                <p className="text-white/80 font-medium text-[15px]">Price: <span className="font-bold">₹{booking.totalAmount || 0}</span></p>
+                                <p className="text-white/80 font-medium text-[15px]">Price: <span className="font-bold">₹{booking.pricePaid || 0}</span></p>
                                 <button className="text-[#3b82f6] text-[14px] font-medium flex items-center">
                                     View Details <ArrowRight className="w-4 h-4 ml-1" />
                                 </button>
