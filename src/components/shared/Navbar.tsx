@@ -183,7 +183,7 @@ export default function Navbar() {
         <div className="flex items-center justify-end md:w-[30%] shrink-0 gap-2 md:gap-4">
           {/* Location Selector */}
           {mounted && (
-            <div className="relative hidden sm:block" ref={dropdownRef}>
+            <div className="relative hidden md:block" ref={dropdownRef}>
               <Button 
                 variant="ghost" 
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
