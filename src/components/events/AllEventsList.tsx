@@ -60,7 +60,13 @@ export default function AllEventsList() {
                 setIsLocating(false);
             }, (error) => {
                 console.error("Error getting location:", error);
-                toast.error('Please enable location access to use distance filters.');
+                toast.error('Location Access Denied', {
+                    description: 'Please enable location access in your browser settings to use distance filters.',
+                    action: {
+                        label: 'Retry',
+                        onClick: () => handleGetLocation()
+                    }
+                });
                 setIsLocating(false);
             });
         } else {
