@@ -151,7 +151,7 @@ export default function TicketsPage() {
                 
                 <div className="flex justify-between items-center pt-5 border-t border-white/5 mb-6">
                   <p className="text-white/80 font-medium text-base">Price: <span className="font-bold">₹{booking.pricePaid || 0}</span></p>
-                  <button className="text-[#3b82f6] text-sm font-medium flex items-center hover:text-blue-400 transition-colors">
+                  <button onClick={() => router.push(`/dashboard/bookings/${booking._id}`)} className="text-[#3b82f6] text-sm font-medium flex items-center hover:text-blue-400 transition-colors">
                     View Details <ArrowRight className="w-4 h-4 ml-1.5" />
                   </button>
                 </div>
