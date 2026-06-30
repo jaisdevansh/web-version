@@ -102,8 +102,12 @@ export default function ProfilePage() {
   let profileImageUrl = user?.profileImage || profile?.profileImage || defaultImage;
   
   // Note: mobile handles base64 format differently, we mock it closely here
-  if (profileImageUrl && !profileImageUrl.startsWith('http') && !profileImageUrl.startsWith('data:')) {
-    profileImageUrl = `data:image/jpeg;base64,${profileImageUrl}`;
+  if (profileImageUrl && !profileImageUrl.startsWith('http') && !profileImageUrl.startsWith('//') && !profileImageUrl.startsWith('data:')) {
+    if (profileImageUrl.includes('googleusercontent.com')) {
+      profileImageUrl = `https://${profileImageUrl}`;
+    } else {
+      profileImageUrl = `data:image/jpeg;base64,${profileImageUrl}`;
+    }
   }
 
   return (

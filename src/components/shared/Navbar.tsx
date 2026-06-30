@@ -235,7 +235,7 @@ export default function Navbar() {
                   <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:text-white rounded-full w-8 h-8 md:w-10 md:h-10 bg-white/5 border border-white/10 overflow-hidden p-0 relative">
                     {user?.profileImage ? (
                       <img 
-                        src={user.profileImage.startsWith('http') || user.profileImage.startsWith('data:') ? user.profileImage : `data:image/jpeg;base64,${user.profileImage}`} 
+                        src={user.profileImage.startsWith('http') || user.profileImage.startsWith('//') || user.profileImage.includes('googleusercontent') ? (user.profileImage.startsWith('http') || user.profileImage.startsWith('//') ? user.profileImage : `https://${user.profileImage}`) : user.profileImage.startsWith('data:') ? user.profileImage : `data:image/jpeg;base64,${user.profileImage}`} 
                         alt="Profile" 
                         className="w-full h-full object-cover"
                         referrerPolicy="no-referrer"
