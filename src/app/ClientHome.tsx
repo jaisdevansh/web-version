@@ -273,7 +273,7 @@ export default function WelcomeScreen() {
                 setIsLocating(false);
             }, (error) => {
                 console.error("Error getting location:", error);
-                toast.error('Location Access Denied', {
+                toast.info('Location Access Denied', {
                     description: 'Please enable location access in your browser settings to use distance filters.',
                     action: {
                         label: 'Retry',
@@ -283,7 +283,7 @@ export default function WelcomeScreen() {
                 setIsLocating(false);
             });
         } else {
-            toast.error('Geolocation is not supported by your browser.');
+            toast.info('Geolocation is not supported by your browser.');
             setIsLocating(false);
         }
     }, [setLocation]);
