@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     const options = {
       amount: Math.round(amountNum * 100), // convert to paise
       currency,
-      receipt: receipt || `rcpt_${Date.now()}`.substring(0, 40),
+      receipt: (receipt || `rcpt_${Date.now()}`).substring(0, 40),
     };
 
     const order = await razorpay.orders.create(options);
