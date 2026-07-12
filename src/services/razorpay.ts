@@ -86,26 +86,21 @@ export const initiateRazorpayPayment = async (
         order_id: order.id,
         handler: async function (response: any) {
           try {
-            // 3. Verify payment on Next.js backend
-            const verifyRes = await fetch('/api/payments/verify-payment', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                bookingData: {
-                  ...bookingData,
-                  pricePaid: paymentOptions.amount,
-                },
-              })
+            // 3. Verify payment on backend to trigger booking storage
+            const verifyRes = await axiosInstance.post('/api/v1/payments/verify-payment', {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              bookingData: {
+                ...bookingData,
+                pricePaid: paymentOptions.amount,
+              },
             });
-            const verifyData = await verifyRes.json();
 
-            if (verifyData.success) {
-              resolve({ success: true, booking: verifyData.data });
+            if (verifyRes.data.success) {
+              resolve({ success: true, booking: verifyRes.data.data });
             } else {
-              resolve({ success: false, error: verifyData.message || 'Verification failed' });
+              resolve({ success: false, error: verifyRes.data.message || 'Verification failed' });
             }
           } catch (err: any) {
             resolve({ success: false, error: err.response?.data?.message || 'Verification failed' });
