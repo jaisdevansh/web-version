@@ -48,24 +48,28 @@ export const initiateRazorpayPayment = async (
       return { success: false, error: 'Razorpay SDK failed to load. Are you offline?' };
     }
 
-    // 1. Create order on backend
-    const orderRes = await axiosInstance.post('/api/v1/payments/create-order', {
-      amount: paymentOptions.amount,
-      currency: 'INR',
-      receipt: paymentOptions.receipt,
+    // 1. Create order on Next.js backend
+    const orderRes = await fetch('/api/payments/create-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: paymentOptions.amount,
+        currency: 'INR',
+        receipt: paymentOptions.receipt,
+      })
     });
+    const orderData = await orderRes.json();
 
-    if (!orderRes.data.success) {
-      return { success: false, error: orderRes.data.message || 'Failed to create order' };
+    if (!orderData.success) {
+      return { success: false, error: orderData.message || 'Failed to create order' };
     }
 
-    const order = orderRes.data.data;
+    const order = orderData.data;
     
     // Debugging: Let's see exactly what the backend is returning
-    console.log("Backend Order Response:", orderRes.data);
+    console.log("Next.js API Order Response:", orderData);
     
-    // Sometimes backend sends it as keyId instead of key_id, let's check both
-    const finalKey = orderRes.data.key_id || orderRes.data.keyId || orderRes.data.data?.key_id || RAZORPAY_KEY_ID;
+    const finalKey = orderData.key_id || RAZORPAY_KEY_ID;
     if (!finalKey) {
       console.error("Razorpay key is missing! Please set NEXT_PUBLIC_RAZORPAY_KEY_ID in .env");
       return { success: false, error: 'Payment gateway configuration is missing on the client. (Razorpay Key ID not found)' };
@@ -82,21 +86,26 @@ export const initiateRazorpayPayment = async (
         order_id: order.id,
         handler: async function (response: any) {
           try {
-            // 3. Verify payment on backend
-            const verifyRes = await axiosInstance.post('/api/v1/payments/verify-payment', {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              bookingData: {
-                ...bookingData,
-                pricePaid: paymentOptions.amount,
-              },
+            // 3. Verify payment on Next.js backend
+            const verifyRes = await fetch('/api/payments/verify-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                bookingData: {
+                  ...bookingData,
+                  pricePaid: paymentOptions.amount,
+                },
+              })
             });
+            const verifyData = await verifyRes.json();
 
-            if (verifyRes.data.success) {
-              resolve({ success: true, booking: verifyRes.data.data });
+            if (verifyData.success) {
+              resolve({ success: true, booking: verifyData.data });
             } else {
-              resolve({ success: false, error: verifyRes.data.message || 'Verification failed' });
+              resolve({ success: false, error: verifyData.message || 'Verification failed' });
             }
           } catch (err: any) {
             resolve({ success: false, error: err.response?.data?.message || 'Verification failed' });
@@ -110,6 +119,11 @@ export const initiateRazorpayPayment = async (
         notes: paymentOptions.notes || {},
         theme: {
           color: '#7c4dff', // Deep Maroon/Primary color equivalent
+        },
+        modal: {
+          ondismiss: function () {
+            resolve({ success: false, error: 'Payment cancelled by user' });
+          },
         },
       };
 
