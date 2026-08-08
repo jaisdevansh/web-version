@@ -95,36 +95,36 @@ const HeroCarousel = memo(({ heroEvents }: { heroEvents: any[] }) => {
                         {/* Left: Poster */}
                         <div className="w-full lg:w-[60%] flex justify-center lg:justify-end">
                             <AnimatePresence mode="wait">
-                                <motion.div
-                                    key={currentIndex}
-                                    initial={{ opacity: 0, scale: 0.95, x: -20 }}
-                                    animate={{ opacity: 1, scale: 1, x: 0 }}
-                                    exit={{ opacity: 0, scale: 0.95, x: 20 }}
-                                    transition={{ duration: 0.5 }}
-                                    className="w-full max-w-[400px] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[750px] aspect-[16/9] md:aspect-[3/2] lg:aspect-[16/9] rounded-3xl overflow-hidden shadow-2xl relative bg-[#111] flex items-center justify-center cursor-pointer group hover:scale-[1.02] transition-transform duration-300"
-                                >
-                                    <Link href={`/events/${event.id}`} className="absolute inset-0 z-20">
-                                        <span className="sr-only">View event details</span>
-                                    </Link>
-                                    <AnimatePresence>
-                                        <motion.div
-                                            key={safeInnerImageIndex}
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={{ opacity: 0 }}
-                                            transition={{ duration: 0.5 }}
-                                            className="absolute inset-0 w-full h-full"
-                                        >
-                                            <Image
-                                                src={eventImages[safeInnerImageIndex]}
-                                                alt={event.title}
-                                                fill
-                                                priority
-                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                                className="object-cover"
-                                            />
-                                        </motion.div>
-                                    </AnimatePresence>
+                                    <motion.div
+                                        key={currentIndex}
+                                        initial={{ opacity: 0, scale: 0.95, x: -20 }}
+                                        animate={{ opacity: 1, scale: 1, x: 0 }}
+                                        exit={{ opacity: 0, scale: 0.95, x: 20 }}
+                                        transition={{ duration: 0.5 }}
+                                        className="w-full max-w-[320px] sm:max-w-[380px] md:max-w-[420px] lg:max-w-[480px] aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl relative bg-[#111] flex items-center justify-center cursor-pointer group hover:scale-[1.02] transition-transform duration-300"
+                                    >
+                                        <Link href={`/events/${event.id}`} className="absolute inset-0 z-20">
+                                            <span className="sr-only">View event details</span>
+                                        </Link>
+                                        <AnimatePresence>
+                                            <motion.div
+                                                key={safeInnerImageIndex}
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                                transition={{ duration: 0.5 }}
+                                                className="absolute inset-0 w-full h-full"
+                                            >
+                                                <Image
+                                                    src={eventImages[safeInnerImageIndex]}
+                                                    alt={event.title}
+                                                    fill
+                                                    priority
+                                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                    className="object-cover"
+                                                />
+                                            </motion.div>
+                                        </AnimatePresence>
 
                                     {/* Image dots for multiple images */}
                                     {eventImages.length > 1 && (
@@ -157,7 +157,7 @@ const HeroCarousel = memo(({ heroEvents }: { heroEvents: any[] }) => {
                                     <div suppressHydrationWarning className="font-semibold text-gray-300 tracking-wide">
                                         {event.date}
                                     </div>
-                                    <h1 className="text-hero leading-[1.1] text-white">
+                                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] text-white line-clamp-3">
                                         {event.title}
                                     </h1>
                                     <div className="text-lg lg:text-xl font-medium text-gray-300">

@@ -88,6 +88,7 @@ export default function EventDetailsPage() {
   const [quantity, setQuantity] = useState(1);
   const [step, setStep] = useState<'zone' | 'seats'>('zone');
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+  const [isAboutExpanded, setIsAboutExpanded] = useState(false);
 
   const zones = React.useMemo(() => {
     if (!fetchedEvent) return [];
@@ -105,6 +106,11 @@ export default function EventDetailsPage() {
       perks: z.perks || [],
     }));
   }, [fetchedEvent]);
+
+  const isCompletelySoldOut = React.useMemo(() => {
+    if (zones.length === 0) return false;
+    return zones.every((z: any) => (z.capacity - z.bookedCount) <= 0);
+  }, [zones]);
 
   const seatsArray = React.useMemo(() => {
     if (!selectedZone) return [];
@@ -149,8 +155,9 @@ export default function EventDetailsPage() {
 
   const handleSelectZone = React.useCallback((zone: any) => {
     if (zone.capacity - zone.bookedCount <= 0) return;
-    setSelectedZone(zone); setQuantity(1); setSelectedSeats([]); setStep('zone');
+    setSelectedZone(zone); setSelectedSeats([]); setStep('zone');
   }, []);
+
 
   if (isLoading) {
     return <div className="min-h-screen flex flex-col items-center justify-center bg-[#050505] text-white">
@@ -298,9 +305,16 @@ export default function EventDetailsPage() {
             <h2 className="text-2xl font-bold text-white">About</h2>
             <div className="text-white/60 leading-relaxed font-light">
               <p className="mb-4 text-white/80 font-medium">Join us for {event.title}</p>
-              <p>{event.about}</p>
+              <p className={isAboutExpanded ? "whitespace-pre-wrap" : "line-clamp-3"}>{event.about}</p>
             </div>
-            <button className="text-blue-400 font-bold text-sm hover:underline mt-2">Read more</button>
+            {event.about?.length > 150 && (
+              <button 
+                onClick={() => setIsAboutExpanded(!isAboutExpanded)}
+                className="text-blue-400 font-bold text-sm hover:underline mt-2"
+              >
+                {isAboutExpanded ? "Show less" : "Read more"}
+              </button>
+            )}
           </section>
 
           {/* Event Info Grid (Real Data) */}
@@ -341,15 +355,31 @@ export default function EventDetailsPage() {
               </div>
 
               <div className="bg-[#111111] border border-white/10 rounded-2xl p-5 shadow-xl flex flex-col justify-center">
-                <div className="flex items-center space-x-2 text-white/40 mb-2 text-[10px] tracking-widest font-bold uppercase">
-                  <div className="w-5 h-5 rounded-md bg-emerald-500/20 flex items-center justify-center">
-                    <Ticket className="w-3 h-3 text-emerald-500" />
-                  </div>
-                  <span>Tickets Live Since</span>
-                </div>
-                <div className="text-white font-bold text-sm md:text-base">
-                  {event.ticketsLive}
-                </div>
+                {isCompletelySoldOut ? (
+                  <>
+                    <div className="flex items-center space-x-2 text-red-400 mb-2 text-[10px] tracking-widest font-bold uppercase">
+                      <div className="w-5 h-5 rounded-md bg-red-500/20 flex items-center justify-center">
+                        <Ticket className="w-3 h-3 text-red-500" />
+                      </div>
+                      <span>Status</span>
+                    </div>
+                    <div className="text-red-500 font-black text-lg">
+                      SOLD OUT
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center space-x-2 text-white/40 mb-2 text-[10px] tracking-widest font-bold uppercase">
+                      <div className="w-5 h-5 rounded-md bg-emerald-500/20 flex items-center justify-center">
+                        <Ticket className="w-3 h-3 text-emerald-500" />
+                      </div>
+                      <span>Tickets Live Since</span>
+                    </div>
+                    <div className="text-white font-bold text-sm md:text-base">
+                      {event.ticketsLive}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </section>
@@ -410,9 +440,15 @@ export default function EventDetailsPage() {
                 {event.price} <span className="text-sm font-medium text-white/40 line-through tracking-normal ml-1"></span>
                 <span className="text-sm font-medium text-white/40 block -mt-1">{event.price !== 'Free' ? 'onwards' : ''}</span>
               </div>
-              <Button onClick={scrollToTickets} className="h-12 px-8 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg">
-                Book Tickets
-              </Button>
+              {isCompletelySoldOut ? (
+                <Button disabled className="h-12 px-8 bg-white/10 text-white/40 font-bold rounded-xl cursor-not-allowed border border-white/5">
+                  Sold Out
+                </Button>
+              ) : (
+                <Button onClick={scrollToTickets} className="h-12 px-8 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg">
+                  Book Tickets
+                </Button>
+              )}
             </div>
 
           </div>
@@ -423,7 +459,15 @@ export default function EventDetailsPage() {
       <div ref={ticketsRef} className="w-full bg-[#0A0A0A] border-t border-white/10 pt-16 pb-32 mt-10">
         <div className="max-w-6xl mx-auto px-4 md:px-8">
           
-          {step === 'zone' ? (
+          {isCompletelySoldOut ? (
+            <div className="w-full flex flex-col items-center justify-center py-24 bg-[#111111] border border-white/10 rounded-3xl shadow-2xl">
+              <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mb-6">
+                <Ticket className="w-10 h-10 text-red-500" />
+              </div>
+              <h2 className="text-4xl md:text-5xl font-black text-white mb-3">SOLD OUT</h2>
+              <p className="text-white/50 text-lg">No more tickets or tables are available for this event.</p>
+            </div>
+          ) : step === 'zone' ? (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* LEFT COLUMN: Main Selections */}
               <div className="lg:col-span-2 space-y-10">
@@ -687,7 +731,35 @@ export default function EventDetailsPage() {
 
                     {selectedSeats.length > 0 && (
                       <div className="space-y-2">
-                        <p className="text-[10px] text-white/50 font-bold uppercase tracking-widest">Selected Tables</p>
+                        <div className="flex items-center justify-between">
+                          <p className="text-[10px] text-white/50 font-bold uppercase tracking-widest">Selected Tables</p>
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => { setQuantity(q => Math.max(1, q - 1)); setSelectedSeats([]); }}
+                              disabled={quantity <= 1}
+                              className="w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 disabled:opacity-30 flex items-center justify-center transition-colors"
+                            >
+                              <Minus className="w-3 h-3 text-white" />
+                            </button>
+                            <span className="text-xs font-bold text-white w-4 text-center">{quantity}</span>
+                            <button
+                              onClick={() => {
+                                if (selectedZone) {
+                                  const available = selectedZone.capacity - selectedZone.bookedCount;
+                                  if (quantity >= available) {
+                                    toast.warning("Only " + available + " spots available in selected zone.");
+                                    return;
+                                  }
+                                }
+                                setQuantity(q => Math.min(20, q + 1));
+                                setSelectedSeats([]);
+                              }}
+                              className="w-6 h-6 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-[0_0_10px_rgba(37,99,235,0.4)]"
+                            >
+                              <Plus className="w-3 h-3 text-white" />
+                            </button>
+                          </div>
+                        </div>
                         <div className="flex flex-wrap gap-2">
                           {selectedSeats.map(id => (
                             <span key={id} className="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-sm font-bold">{id}</span>
