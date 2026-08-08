@@ -3,11 +3,14 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { MongoClient, ObjectId } from 'mongodb';
 import jwt from 'jsonwebtoken';
 
-const mongoUri = process.env.MONGO_URI;
-if (!mongoUri) {
-  throw new Error("MONGO_URI is not defined. Please set it in your environment variables.");
-}
-const client = new MongoClient(mongoUri);
+const getMongoClient = () => {
+  const mongoUri = process.env.MONGO_URI;
+  if (!mongoUri) {
+    throw new Error("MONGO_URI is not defined. Please set it in your environment variables.");
+  }
+  return new MongoClient(mongoUri);
+};
+
 
 // Helper to authenticate user from token by proxying to backend
 async function authenticate(req: Request) {
@@ -58,6 +61,7 @@ export async function GET(req: Request) {
   if (!userId) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
 
   try {
+    const client = getMongoClient();
     await client.connect();
     const db = client.db('test');
     const messages = await db.collection('supportmessages')
@@ -81,6 +85,7 @@ export async function POST(req: Request) {
     const { message } = await req.json();
     if (!message) return NextResponse.json({ success: false, message: 'Message required' }, { status: 400 });
 
+    const client = getMongoClient();
     await client.connect();
     const db = client.db('test');
     const collection = db.collection('supportmessages');
@@ -155,13 +160,12 @@ export async function DELETE(req: Request) {
   if (!userId) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
 
   try {
+    const client = getMongoClient();
     await client.connect();
     const db = client.db('test');
     await db.collection('supportmessages').deleteMany({ userId: new ObjectId(userId) });
     return NextResponse.json({ success: true, message: 'Chat cleared' });
   } catch (error: any) {
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
-  } finally {
-    await client.close();
   }
 }
