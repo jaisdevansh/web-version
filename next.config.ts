@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   output: 'standalone', // Drastically reduces deployment size and startup time
   images: {
     unoptimized: true,
-    qualities: [60, 75],
+    qualities: [50, 60, 75],
     remotePatterns: [
       {
         protocol: 'https',
@@ -40,7 +40,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://*.razorpay.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: http:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https: http: wss:; frame-src 'self' https://www.google.com/recaptcha/ https://*.razorpay.com/;"
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://*.razorpay.com https://vercel.live https://*.vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: http:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https: http: wss:; frame-src 'self' https://www.google.com/recaptcha/ https://*.razorpay.com/ https://vercel.live;"
           },
           {
             key: 'X-Frame-Options',
