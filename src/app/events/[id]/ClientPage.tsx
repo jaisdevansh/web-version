@@ -89,6 +89,7 @@ export default function EventDetailsPage() {
   const [step, setStep] = useState<'zone' | 'seats'>('zone');
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
   const [isAboutExpanded, setIsAboutExpanded] = useState(false);
+  const [hostImageError, setHostImageError] = useState(false);
 
   const zones = React.useMemo(() => {
     if (!fetchedEvent) return [];
@@ -155,7 +156,10 @@ export default function EventDetailsPage() {
 
   const handleSelectZone = React.useCallback((zone: any) => {
     if (zone.capacity - zone.bookedCount <= 0) return;
-    setSelectedZone(zone); setSelectedSeats([]); setStep('zone');
+    setSelectedZone(zone); 
+    setSelectedSeats([]); 
+    setQuantity(1);
+    setStep('zone');
   }, []);
 
 
@@ -287,8 +291,14 @@ export default function EventDetailsPage() {
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-white">Hosted By</h2>
             <div className="flex items-center space-x-4 bg-[#111111] border border-white/10 rounded-2xl p-5 shadow-xl">
-              <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-blue-500/30 shrink-0">
-                <Image src={event.hostImage} alt={event.hostName} fill className="object-cover" />
+              <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-blue-500/30 shrink-0 bg-white/5 flex items-center justify-center">
+                <Image 
+                  src={hostImageError ? 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop' : event.hostImage} 
+                  alt={event.hostName} 
+                  fill 
+                  className="object-cover" 
+                  onError={() => setHostImageError(true)}
+                />
               </div>
               <div className="flex-1">
                 <h3 className="font-bold text-lg text-white">{event.hostName}</h3>
