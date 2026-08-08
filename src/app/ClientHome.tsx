@@ -290,16 +290,9 @@ export default function WelcomeScreen() {
 
     useEffect(() => {
         setIsMounted(true);
-        // Request location on first load if not already requested
-        const hasRequestedLocation = sessionStorage.getItem('locationRequested');
-        if (!hasRequestedLocation) {
-            sessionStorage.setItem('locationRequested', 'true');
-            // Small delay to ensure smooth loading before prompting
-            setTimeout(() => {
-                requestLocation();
-            }, 1000);
-        }
-    }, [requestLocation]);
+        // We do not auto-request location on load so that 'All Cities' remains the default
+        // The user can manually click the location button if they want to filter by proximity
+    }, []);
 
     const allGridEvents = useMemo(() => {
         if (!activeEvents || activeEvents.length === 0) return [];
