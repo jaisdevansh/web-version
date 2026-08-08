@@ -760,8 +760,36 @@ export default function EventDetailsPage() {
                   
                   <div className="px-6 py-6 space-y-6">
                     <div className="rounded-xl bg-blue-500/10 border border-blue-500/20 p-4">
-                      <p className="text-[10px] text-blue-400 font-bold uppercase tracking-widest mb-1">Selected Zone</p>
-                      <p className="font-bold text-lg text-white">{selectedZone?.name}</p>
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-[10px] text-blue-400 font-bold uppercase tracking-widest">Selected Zone</p>
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={() => { setQuantity(q => Math.max(1, q - 1)); setSelectedSeats([]); }}
+                            disabled={quantity <= 1}
+                            className="w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 disabled:opacity-30 flex items-center justify-center transition-colors"
+                          >
+                            <Minus className="w-3 h-3 text-white" />
+                          </button>
+                          <span className="text-xs font-bold text-white w-4 text-center">{quantity}</span>
+                          <button
+                            onClick={() => {
+                              if (selectedZone) {
+                                const available = selectedZone.capacity - selectedZone.bookedCount;
+                                if (quantity >= available) {
+                                  toast.warning("Only " + available + " spots available in selected zone.");
+                                  return;
+                                }
+                              }
+                              setQuantity(q => Math.min(20, q + 1));
+                              setSelectedSeats([]);
+                            }}
+                            className="w-6 h-6 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-[0_0_10px_rgba(37,99,235,0.4)]"
+                          >
+                            <Plus className="w-3 h-3 text-white" />
+                          </button>
+                        </div>
+                      </div>
+                      <p className="font-bold text-lg text-white leading-tight">{selectedZone?.name}</p>
                       <p className="text-sm text-white/60 mt-1">{selectedZone?.price > 0 ? ("Rs " + selectedZone?.price.toLocaleString("en-IN") + " x " + quantity) : "Free Entry"}</p>
                     </div>
 
@@ -769,32 +797,6 @@ export default function EventDetailsPage() {
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
                           <p className="text-[10px] text-white/50 font-bold uppercase tracking-widest">Selected Tables</p>
-                          <div className="flex items-center gap-1">
-                            <button
-                              onClick={() => { setQuantity(q => Math.max(1, q - 1)); setSelectedSeats([]); }}
-                              disabled={quantity <= 1}
-                              className="w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 disabled:opacity-30 flex items-center justify-center transition-colors"
-                            >
-                              <Minus className="w-3 h-3 text-white" />
-                            </button>
-                            <span className="text-xs font-bold text-white w-4 text-center">{quantity}</span>
-                            <button
-                              onClick={() => {
-                                if (selectedZone) {
-                                  const available = selectedZone.capacity - selectedZone.bookedCount;
-                                  if (quantity >= available) {
-                                    toast.warning("Only " + available + " spots available in selected zone.");
-                                    return;
-                                  }
-                                }
-                                setQuantity(q => Math.min(20, q + 1));
-                                setSelectedSeats([]);
-                              }}
-                              className="w-6 h-6 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-[0_0_10px_rgba(37,99,235,0.4)]"
-                            >
-                              <Plus className="w-3 h-3 text-white" />
-                            </button>
-                          </div>
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {selectedSeats.map(id => (
