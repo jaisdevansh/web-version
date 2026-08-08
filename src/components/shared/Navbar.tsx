@@ -10,7 +10,7 @@ import { Sparkles, MapPin, ChevronDown, Navigation, Check, User } from 'lucide-r
 
 import { MobileSidebar } from '@/components/shared/Sidebar';
 
-const CITIES = ['Mumbai', 'Delhi', 'Bengaluru', 'Pune', 'Hyderabad', 'Kolkata', 'Chennai'];
+const CITIES = ['Mumbai', 'Delhi', 'Bengaluru', 'Pune', 'Hyderabad', 'Kolkata', 'Chennai', 'Indore'];
 
 export default function Navbar() {
   const [mounted, setMounted] = useState(false);

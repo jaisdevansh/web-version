@@ -27,7 +27,7 @@ const fetchEvents = async (page: number = 1) => {
   return response.data;
 };
 
-const CITIES = ['All', 'Delhi', 'Mumbai', 'Bengaluru', 'Pune', 'Hyderabad', 'Goa', 'Chandigarh', 'Chennai', 'Kolkata'];
+const CITIES = ['All', 'Delhi', 'Mumbai', 'Bengaluru', 'Pune', 'Hyderabad', 'Goa', 'Chandigarh', 'Chennai', 'Kolkata', 'Indore'];
 
 export default function EventsPage() {
   const { user } = useAuthStore();

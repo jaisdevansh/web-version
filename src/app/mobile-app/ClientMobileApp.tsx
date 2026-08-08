@@ -62,7 +62,7 @@ export default function DashboardPage() {
     const pastBookings = bookings.filter((b: any) => ['completed', 'past'].includes(b.status?.toLowerCase()));
 
     const renderHomeTab = () => {
-        const filters = ["All", "Delhi", "Mumbai", "Bengaluru", "Goa", "Pune"];
+        const filters = ["All", "Delhi", "Mumbai", "Bengaluru", "Goa", "Pune", "Indore"];
         
         return (
             <motion.div 

@@ -406,7 +406,7 @@ export default function WelcomeScreen() {
 
                     {/* City Chips */}
                     <div className="flex items-center space-x-2 sm:space-x-3 overflow-x-auto pb-3 sm:pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-                        {['All Cities', 'Mumbai', 'Delhi', 'Bengaluru', 'Pune', 'Hyderabad', 'Kolkata', 'Chennai'].map((cityOption) => (
+                        {['All Cities', 'Mumbai', 'Delhi', 'Bengaluru', 'Pune', 'Hyderabad', 'Kolkata', 'Chennai', 'Indore'].map((cityOption) => (
                             <button
                                 key={cityOption}
                                 onClick={() => setSelectedCity(cityOption)}
