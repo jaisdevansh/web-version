@@ -60,8 +60,8 @@ export async function GET(req: Request) {
   const userId = await authenticate(req);
   if (!userId) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
 
+  const client = getMongoClient();
   try {
-    const client = getMongoClient();
     await client.connect();
     const db = client.db('test');
     const messages = await db.collection('supportmessages')
@@ -81,11 +81,11 @@ export async function POST(req: Request) {
   const userId = await authenticate(req);
   if (!userId) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
 
+  const client = getMongoClient();
   try {
     const { message } = await req.json();
     if (!message) return NextResponse.json({ success: false, message: 'Message required' }, { status: 400 });
 
-    const client = getMongoClient();
     await client.connect();
     const db = client.db('test');
     const collection = db.collection('supportmessages');
