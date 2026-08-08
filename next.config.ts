@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   output: 'standalone', // Drastically reduces deployment size and startup time
   images: {
     unoptimized: true,
+    qualities: [60, 75],
     remotePatterns: [
       {
         protocol: 'https',
