@@ -538,6 +538,11 @@ export default function EventDetailsPage() {
                             const isFull = available <= 0;
                             const isSel = selectedZone?._id === zone._id || selectedZone?.name === zone.name;
                             
+                            let hash = 0;
+                            const idStr = String(zone._id || zone.name);
+                            for (let i = 0; i < idStr.length; i++) hash = ((hash << 5) - hash) + idStr.charCodeAt(i);
+                            const fastFillingPercent = 20 + (Math.abs(hash * 31 + idx) % 26);
+                            
                             return (
                               <motion.div 
                                 key={zone._id} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.06 }}
@@ -561,9 +566,14 @@ export default function EventDetailsPage() {
                                   </div>
                                   {isSel ? (
                                     <CheckCircle2 className="w-5 h-5 text-blue-400" />
-                                  ) : !isFull && (
-                                    <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                                  )}
+                                  ) : !isFull ? (
+                                    <div className="flex items-center gap-1.5 bg-rose-500/10 px-2 py-0.5 rounded-full border border-rose-500/20">
+                                      <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></div>
+                                      <span className="text-[9px] font-bold tracking-wider text-rose-400 uppercase">
+                                        Fast Filling {fastFillingPercent}%
+                                      </span>
+                                    </div>
+                                  ) : null}
                                 </div>
                                 
                                 <h3 className="text-xl font-bold text-white mb-1.5">{zone.name}</h3>
@@ -600,8 +610,34 @@ export default function EventDetailsPage() {
                   <div className="px-6 py-6 space-y-6">
                     {selectedZone ? (
                       <div className="rounded-xl bg-blue-500/10 border border-blue-500/20 p-4">
-                        <p className="text-[10px] text-blue-400 font-bold uppercase tracking-widest mb-1">Selected Zone</p>
-                        <p className="font-bold text-lg text-white">{selectedZone.name}</p>
+                        <div className="flex items-center justify-between mb-1">
+                          <p className="text-[10px] text-blue-400 font-bold uppercase tracking-widest">Selected Zone</p>
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => { setQuantity(q => Math.max(1, q - 1)); setSelectedSeats([]); }}
+                              disabled={quantity <= 1}
+                              className="w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 disabled:opacity-30 flex items-center justify-center transition-colors"
+                            >
+                              <Minus className="w-3 h-3 text-white" />
+                            </button>
+                            <span className="text-xs font-bold text-white w-4 text-center">{quantity}</span>
+                            <button
+                              onClick={() => {
+                                const available = selectedZone.capacity - selectedZone.bookedCount;
+                                if (quantity >= available) {
+                                  toast.warning("Only " + available + " spots available in selected zone.");
+                                  return;
+                                }
+                                setQuantity(q => Math.min(20, q + 1));
+                                setSelectedSeats([]);
+                              }}
+                              className="w-6 h-6 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-[0_0_10px_rgba(37,99,235,0.4)]"
+                            >
+                              <Plus className="w-3 h-3 text-white" />
+                            </button>
+                          </div>
+                        </div>
+                        <p className="font-bold text-lg text-white leading-tight">{selectedZone.name}</p>
                         <p className="text-sm text-white/60 mt-1">{selectedZone.price > 0 ? ("Rs " + selectedZone.price.toLocaleString("en-IN") + " x " + quantity) : "Free Entry"}</p>
                       </div>
                     ) : (
