@@ -49,7 +49,7 @@ export default function SeatAllocationPage() {
       name: z.name || z.type || 'General Entry',
       type: z.type,
       price: Number(z.price) || 0,
-      capacity: Number(z.capacity) || 50,
+      capacity: 50,
       bookedCount: Number(z.bookedCount) || Number(z.sold) || 0,
       description: z.description,
       perks: z.perks || [],
@@ -91,8 +91,9 @@ export default function SeatAllocationPage() {
   const totalPrice = basePrice + platformFee;
 
   const handleSelectZone = useCallback((zone: Zone) => {
-    if (zone.capacity - zone.bookedCount <= 0) return;
-    setSelectedZone(zone); setQuantity(1); setSelectedSeats([]); setStep('zone');
+    const available = zone.capacity - zone.bookedCount;
+    if (available <= 0) return;
+    setSelectedZone(zone); setQuantity(prev => Math.min(prev, available)); setSelectedSeats([]); setStep('zone');
   }, []);
 
   const handleSeatClick = (seatId: string, isSold: boolean) => {
