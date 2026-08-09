@@ -49,7 +49,7 @@ export default function SeatAllocationPage() {
       name: z.name || z.type || 'General Entry',
       type: z.type,
       price: Number(z.price) || 0,
-      capacity: 50,
+      capacity: Number(z.capacity) || 50,
       bookedCount: Number(z.bookedCount) || Number(z.sold) || 0,
       description: z.description,
       perks: z.perks || [],
