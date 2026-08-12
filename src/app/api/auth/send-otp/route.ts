@@ -71,12 +71,15 @@ export async function POST(req: Request) {
             subject: 'Your Login OTP Code',
             html: `
               <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-                <h2 style="color: #000;">Welcome to Entry Club</h2>
-                <p style="color: #444; font-size: 16px;">Here is your one-time password to log in:</p>
+                <div style="text-align: center; margin-bottom: 20px;">
+                  <img src="${process.env.NEXT_PUBLIC_APP_URL || 'https://web-version-seven.vercel.app'}/icon.png" alt="Entry Club Logo" style="width: 80px; height: 80px; border-radius: 50%; display: inline-block;" />
+                </div>
+                <h2 style="color: #000; text-align: center; margin-top: 0;">Welcome to Entry Club</h2>
+                <p style="color: #444; font-size: 16px; text-align: center;">Here is your one-time password to log in:</p>
                 <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; margin: 20px 0;">
                   <h1 style="font-size: 32px; letter-spacing: 6px; color: #2563eb; margin: 0;">${otp}</h1>
                 </div>
-                <p style="color: #666; font-size: 14px;">This code is valid for 10 minutes. Please do not share it with anyone.</p>
+                <p style="color: #666; font-size: 14px; text-align: center;">This code is valid for 10 minutes. Please do not share it with anyone.</p>
               </div>
             `,
           };
