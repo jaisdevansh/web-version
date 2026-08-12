@@ -63,7 +63,7 @@ export default function EventDetailsPage() {
       time: fetchedEvent.startTime,
       endTime: fetchedEvent.endTime || 'TBA',
       ticketsLive: fetchedEvent.bookingOpenDate ? new Date(fetchedEvent.bookingOpenDate).toLocaleDateString('en-GB', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Available Now',
-      location: fetchedEvent.locationData?.address || fetchedEvent.venueName || 'Secret Location',
+      location: fetchedEvent.locationData?.address || fetchedEvent.venueName || 'Indore',
       distance: '',
       price: minPrice > 0 ? `₹${minPrice}` : 'Free',
       image: fetchedEvent.coverImage || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop',
@@ -621,17 +621,21 @@ export default function EventDetailsPage() {
                   <div className="px-6 py-6 space-y-6">
                     {selectedZone ? (
                       <div className="rounded-xl bg-blue-500/10 border border-blue-500/20 p-4">
-                        <div className="flex items-center justify-between mb-1">
-                          <p className="text-[10px] text-blue-400 font-bold uppercase tracking-widest">Selected Zone</p>
-                          <div className="flex items-center gap-1">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <p className="text-[10px] text-blue-400 font-bold uppercase tracking-widest mb-1">Selected Zone</p>
+                            <p className="font-bold text-lg text-white leading-tight">{selectedZone.name}</p>
+                            <p className="text-sm text-white/60 mt-1">{selectedZone.price > 0 ? ("Rs " + selectedZone.price.toLocaleString("en-IN") + " x " + quantity) : "Free Entry"}</p>
+                          </div>
+                          <div className="flex items-center gap-2 mt-1">
                             <button
                               onClick={() => { setQuantity(q => Math.max(1, q - 1)); setSelectedSeats([]); }}
                               disabled={quantity <= 1}
-                              className="w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 disabled:opacity-30 flex items-center justify-center transition-colors"
+                              className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 disabled:opacity-30 flex items-center justify-center transition-colors"
                             >
-                              <Minus className="w-3 h-3 text-white" />
+                              <Minus className="w-4 h-4 text-white" />
                             </button>
-                            <span className="text-xs font-bold text-white w-4 text-center">{quantity}</span>
+                            <span className="text-sm font-bold text-white w-6 text-center">{quantity}</span>
                             <button
                               onClick={() => {
                                 const available = selectedZone.capacity - selectedZone.bookedCount;
@@ -642,14 +646,12 @@ export default function EventDetailsPage() {
                                 setQuantity(q => Math.min(20, q + 1));
                                 setSelectedSeats([]);
                               }}
-                              className="w-6 h-6 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-[0_0_10px_rgba(37,99,235,0.4)]"
+                              className="w-8 h-8 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-[0_0_10px_rgba(37,99,235,0.4)]"
                             >
-                              <Plus className="w-3 h-3 text-white" />
+                              <Plus className="w-4 h-4 text-white" />
                             </button>
                           </div>
                         </div>
-                        <p className="font-bold text-lg text-white leading-tight">{selectedZone.name}</p>
-                        <p className="text-sm text-white/60 mt-1">{selectedZone.price > 0 ? ("Rs " + selectedZone.price.toLocaleString("en-IN") + " x " + quantity) : "Free Entry"}</p>
                       </div>
                     ) : (
                       <div className="rounded-xl bg-white/[0.03] border border-white/5 p-6 text-center border-dashed">
@@ -771,17 +773,21 @@ export default function EventDetailsPage() {
                   
                   <div className="px-6 py-6 space-y-6">
                     <div className="rounded-xl bg-blue-500/10 border border-blue-500/20 p-4">
-                      <div className="flex items-center justify-between mb-1">
-                        <p className="text-[10px] text-blue-400 font-bold uppercase tracking-widest">Selected Zone</p>
-                        <div className="flex items-center gap-1">
+                      <div className="flex items-start justify-between mb-1">
+                        <div>
+                          <p className="text-[10px] text-blue-400 font-bold uppercase tracking-widest">Selected Zone</p>
+                          <p className="font-bold text-lg text-white leading-tight">{selectedZone?.name}</p>
+                          <p className="text-sm text-white/60 mt-1">{selectedZone?.price > 0 ? ("Rs " + selectedZone?.price.toLocaleString("en-IN") + " x " + quantity) : "Free Entry"}</p>
+                        </div>
+                        <div className="flex items-center gap-2 mt-4">
                           <button
                             onClick={() => { setQuantity(q => Math.max(1, q - 1)); setSelectedSeats([]); }}
                             disabled={quantity <= 1}
-                            className="w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 disabled:opacity-30 flex items-center justify-center transition-colors"
+                            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 disabled:opacity-30 flex items-center justify-center transition-colors"
                           >
-                            <Minus className="w-3 h-3 text-white" />
+                            <Minus className="w-4 h-4 text-white" />
                           </button>
-                          <span className="text-xs font-bold text-white w-4 text-center">{quantity}</span>
+                          <span className="text-sm font-bold text-white w-6 text-center">{quantity}</span>
                           <button
                             onClick={() => {
                               if (selectedZone) {
@@ -794,14 +800,12 @@ export default function EventDetailsPage() {
                               setQuantity(q => Math.min(20, q + 1));
                               setSelectedSeats([]);
                             }}
-                            className="w-6 h-6 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-[0_0_10px_rgba(37,99,235,0.4)]"
+                            className="w-8 h-8 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors shadow-[0_0_10px_rgba(37,99,235,0.4)]"
                           >
-                            <Plus className="w-3 h-3 text-white" />
+                            <Plus className="w-4 h-4 text-white" />
                           </button>
                         </div>
                       </div>
-                      <p className="font-bold text-lg text-white leading-tight">{selectedZone?.name}</p>
-                      <p className="text-sm text-white/60 mt-1">{selectedZone?.price > 0 ? ("Rs " + selectedZone?.price.toLocaleString("en-IN") + " x " + quantity) : "Free Entry"}</p>
                     </div>
 
                     {selectedSeats.length > 0 && (

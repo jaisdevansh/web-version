@@ -237,7 +237,7 @@ export default function WelcomeScreen() {
             title: ev.title,
             date: new Date(ev.date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) + ', ' + ev.startTime,
             rawDate: ev.date, // Preserve raw date for filtering
-            location: ev.venueName || 'Secret Location',
+            location: ev.venueName || 'Indore',
             price: ev.displayPrice !== null && ev.displayPrice !== undefined ? `₹${ev.displayPrice} onwards` : 'Free',
             image: ev.coverImage || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop',
             images: ev.images?.length > 0 ? ev.images : [ev.coverImage || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1000&auto=format&fit=crop'],
@@ -369,17 +369,7 @@ export default function WelcomeScreen() {
                     <div className="flex flex-col gap-3 mb-6">
                         <div className="flex items-center justify-between">
                             <h2 className="text-section text-white mb-0">All events</h2>
-                            {/* Location button - icon only on mobile, full text on sm+ */}
-                            <button 
-                                onClick={requestLocation}
-                                disabled={isLocating}
-                                aria-label="Request Location"
-                                className="flex items-center gap-1.5 bg-blue-600/20 text-blue-400 border border-blue-500/30 hover:bg-blue-600/30 rounded-full px-3 py-2 sm:px-4 text-xs sm:text-sm transition-colors shrink-0"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                                <span suppressHydrationWarning className="hidden xs:inline">{isLocating ? "Locating..." : userLat ? "Location On" : "Location"}</span>
-                                <span suppressHydrationWarning className="xs:hidden">{isLocating ? "..." : userLat ? "On" : null}</span>
-                            </button>
+
                         </div>
                         {/* Filter Dropdown - full width on mobile */}
                         <div className="relative flex items-center w-full sm:w-auto">
