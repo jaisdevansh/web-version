@@ -237,7 +237,7 @@ export function BottomSections() {
                         <h3 className="text-subheading text-white mb-8">Ready To Party Smarter?</h3>
 
                         <div className="flex flex-wrap gap-4">
-                            <button aria-label="Get it on Google Play" className="flex items-center px-8 py-4 bg-white/[0.02] border border-white/10 rounded-2xl hover:bg-white/[0.05] hover:border-white/30 transition-all transform hover:-translate-y-1 group backdrop-blur-md shadow-xl">
+                            <a href="https://play.google.com/store/apps/details?id=com.entryclub.app&pcampaignid=web_share" target="_blank" rel="noopener noreferrer" aria-label="Get it on Google Play" className="flex items-center px-8 py-4 bg-white/[0.02] border border-white/10 rounded-2xl hover:bg-white/[0.05] hover:border-white/30 transition-all transform hover:-translate-y-1 group backdrop-blur-md shadow-xl">
                                 <svg viewBox="0 0 512 512" className="w-8 h-8 mr-4 group-hover:scale-110 transition-transform">
                                     <defs>
                                         <linearGradient id="google-play-gradient-promo" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -253,8 +253,8 @@ export function BottomSections() {
                                     <div className="text-[11px] text-white/60 uppercase tracking-widest font-bold">Get it on</div>
                                     <div className="text-lg font-semibold text-white">Google Play</div>
                                 </div>
-                            </button>
-                            <button aria-label="Download on the App Store" className="flex items-center px-8 py-4 bg-white/[0.02] border border-white/10 rounded-2xl hover:bg-white/[0.05] hover:border-white/30 transition-all transform hover:-translate-y-1 group backdrop-blur-md shadow-xl">
+                            </a>
+                            <a href="https://apps.apple.com/in/app/entry-club/id6772794209" target="_blank" rel="noopener noreferrer" aria-label="Download on the App Store" className="flex items-center px-8 py-4 bg-white/[0.02] border border-white/10 rounded-2xl hover:bg-white/[0.05] hover:border-white/30 transition-all transform hover:-translate-y-1 group backdrop-blur-md shadow-xl">
                                 <svg viewBox="0 0 384 512" className="w-8 h-8 mr-4 group-hover:scale-110 transition-transform">
                                     <defs>
                                         <linearGradient id="apple-gradient-promo" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -268,7 +268,7 @@ export function BottomSections() {
                                     <div className="text-[11px] text-white/60 uppercase tracking-widest font-bold">Download on the</div>
                                     <div className="text-lg font-semibold text-white">App Store</div>
                                 </div>
-                            </button>
+                            </a>
                         </div>
                     </motion.div>
 
