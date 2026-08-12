@@ -156,9 +156,6 @@ export default function AllEventsList() {
                                 </option>
                             ))}
                         </select>
-                        <svg className="w-3.5 h-3.5 text-white/70 absolute right-3 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
                     </div>
                 </div>
 
