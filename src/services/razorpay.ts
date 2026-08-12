@@ -78,7 +78,7 @@ export const initiateRazorpayPayment = async (
         currency: 'INR',
         name: 'Entry Club',
         description: paymentOptions.description,
-        image: 'https://i.imgur.com/n5tjHFD.png',
+        image: 'https://web-version-seven.vercel.app/icon.png',
         order_id: order.id,
         handler: async function (response: any) {
           try {
