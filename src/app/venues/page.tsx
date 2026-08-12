@@ -76,7 +76,7 @@ export default function VenuesPage() {
                 
                 <div className="flex items-center text-white/50 text-sm mb-2">
                   <MapPin className="w-4 h-4 mr-2" />
-                  {venue.locationData?.address || venue.city || 'Secret Location'}
+                  {venue.locationData?.address || venue.city || 'Indore'}
                 </div>
                 
                 <div className="flex items-center text-white/50 text-sm mb-6">
