@@ -31,7 +31,7 @@ export default function Footer() {
               The premier ecosystem for exclusive nightlife venues, bringing enterprise-grade technology to host approvals, ticketing, and guest management.
             </p>
             <div className="flex space-x-4 mt-6">
-              <a href="#" aria-label="Instagram" className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:bg-blue-600 hover:text-white hover:border-blue-500 transition-all duration-300">
+              <a href="https://www.instagram.com/entryclub_?igsh=MWk3cmE0MmtzNjZ1OA==" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:bg-blue-600 hover:text-white hover:border-blue-500 transition-all duration-300">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
               </a>
               <a href="#" aria-label="X (formerly Twitter)" className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:bg-blue-600 hover:text-white hover:border-blue-500 transition-all duration-300">
