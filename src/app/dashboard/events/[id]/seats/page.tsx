@@ -113,10 +113,6 @@ export default function SeatAllocationPage() {
 
   const handleProceedToPayment = () => {
     if (!selectedZone || !event) return;
-    if (selectedSeats.length !== quantity) {
-      toast.error('Please select exactly ' + quantity + ' table/seat' + (quantity > 1 ? 's' : '') + ' before proceeding.');
-      return;
-    }
     const params = new URLSearchParams({
       zone: selectedZone.name,
       zoneId: selectedZone._id,
@@ -494,14 +490,14 @@ export default function SeatAllocationPage() {
 
               <div className="pt-2">
                 <button 
-                  onClick={() => setStep('seats')} 
+                  onClick={handleProceedToPayment} 
                   disabled={!selectedZone}
                   className={"w-full h-14 rounded-xl font-bold text-base flex items-center justify-center gap-2 transition-all duration-200 " + 
                     (!selectedZone 
                       ? "bg-white/5 text-white/30 cursor-not-allowed border border-white/10" 
                       : "bg-blue-600 hover:bg-blue-700 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)] active:scale-[0.98]")}
                 >
-                  Choose Seats <ArrowRight className="w-5 h-5" />
+                  Proceed to Payment <ArrowRight className="w-5 h-5" />
                 </button>
               </div>
               
