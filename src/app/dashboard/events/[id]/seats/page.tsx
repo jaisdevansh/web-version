@@ -430,9 +430,11 @@ export default function SeatAllocationPage() {
                               {zone.price > 0 ? ("Rs " + zone.price.toLocaleString("en-IN")) : "FREE"}
                               <span className="text-xs font-normal text-white/40 ml-1">/ person</span>
                             </div>
-                            <div className="inline-block px-3 py-1 rounded bg-white/10 text-white/70 text-[10px] font-bold tracking-wider uppercase">
-                              {isFull ? "SOLD OUT" : `${available} LEFT`}
-                            </div>
+                            {isFull && (
+                              <div className="inline-block px-3 py-1 rounded bg-white/10 text-white/70 text-[10px] font-bold tracking-wider uppercase">
+                                SOLD OUT
+                              </div>
+                            )}
                           </div>
                         </motion.div>
                       );
